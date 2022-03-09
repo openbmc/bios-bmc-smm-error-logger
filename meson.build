@@ -19,6 +19,7 @@ sys_lib = static_library(
 sys_dep = declare_dependency(
   link_with: sys_lib)
 
+bios_bmc_smm_error_logger_inc = include_directories('include')
 subdir('src')
 
 # installation of systemd service files
