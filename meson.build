@@ -10,6 +10,7 @@ project(
   ])
 
 root_inc = include_directories('.')
+bios_bmc_smm_error_logger_inc = include_directories('include')
 
 subdir('internal')
 subdir('src')
