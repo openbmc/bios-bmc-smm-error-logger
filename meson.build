@@ -10,3 +10,6 @@ project(
   ])
 
 subdir('src')
+
+# installation of systemd service files
+subdir('service_files')
