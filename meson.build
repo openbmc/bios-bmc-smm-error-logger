@@ -9,7 +9,13 @@ project(
     'werror=true',
   ])
 
+root_inc = include_directories('.')
+bios_bmc_smm_error_logger_inc = include_directories('include')
+
 subdir('src')
+if not get_option('tests').disabled()
+  subdir('test')
+endif
 
 # installation of systemd service files
 subdir('service_files')
