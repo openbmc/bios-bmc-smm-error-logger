@@ -1,6 +1,7 @@
 bios_bmc_smm_error_logger_pre = declare_dependency(
   dependencies: [
     dependency('threads'),
+    sys_dep,
   ])
 
 bios_bmc_smm_error_logger_dep = declare_dependency(

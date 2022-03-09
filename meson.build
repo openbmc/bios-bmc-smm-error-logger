@@ -9,6 +9,9 @@ project(
     'werror=true',
   ])
 
+root_inc = include_directories('.')
+
+subdir('internal')
 subdir('src')
 
 # installation of systemd service files
