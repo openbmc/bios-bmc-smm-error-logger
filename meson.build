@@ -20,3 +20,6 @@ sys_dep = declare_dependency(
   link_with: sys_lib)
 
 subdir('src')
+
+# installation of systemd service files
+subdir('service_files')
