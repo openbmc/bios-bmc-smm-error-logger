@@ -40,4 +40,5 @@ int SysImpl::ioctl(int fd, unsigned long request, void* param) const
 {
     return ::ioctl(fd, request, param);
 }
+
 } // namespace internal

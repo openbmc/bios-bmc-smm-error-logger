@@ -13,3 +13,6 @@ root_inc = include_directories('.')
 
 subdir('internal')
 subdir('src')
+
+# installation of systemd service files
+subdir('service_files')
