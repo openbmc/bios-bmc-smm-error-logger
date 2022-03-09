@@ -42,4 +42,7 @@ class SysImpl : public Sys
     int ioctl(int fd, unsigned long request, void* param) const override;
 };
 
+/** @brief Default instantiation of sys */
+extern SysImpl sys_impl;
+
 } // namespace internal
