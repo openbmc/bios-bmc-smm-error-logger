@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6b6dc483_68207a88",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-10T21:46:55Z",
+      "side": 1,
+      "message": "Hmm, it looks like other repos either have it taken out or haven\u0027t filled it out (bmcweb actually also has this with default LICENSE https://github.com/openbmc/bmcweb/blob/master/LICENSE#L190)\n\nAlso does it make sense to make it exclusive to Google?",
+      "parentUuid": "2faaec08_2c08737f",
+      "range": {
+        "startLine": 189,
+        "startChar": 13,
+        "endLine": 189,
+        "endChar": 45
+      },
+      "revId": "159fc7d6c6a422b7333e85fee670a3e737d915bd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "855902b2_a35be646",
         "filename": "MAINTAINERS",
         "patchSetId": 1
