@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a65bc121_3173c2c1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-10T21:31:13Z",
+      "side": 1,
+      "message": "Also, it looks like I don\u0027t have +2 power which I\u0027m guessing is governed by a separate github group thing ",
+      "revId": "159fc7d6c6a422b7333e85fee670a3e737d915bd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a000c097_60bef29f",
@@ -24,6 +41,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2faaec08_2c08737f",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-10T21:31:13Z",
+      "side": 1,
+      "message": "Wow, sharp eyes! Good catch, will fix",
+      "parentUuid": "a000c097_60bef29f",
+      "range": {
+        "startLine": 189,
+        "startChar": 13,
+        "endLine": 189,
+        "endChar": 45
+      },
+      "revId": "159fc7d6c6a422b7333e85fee670a3e737d915bd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "855902b2_a35be646",
@@ -37,6 +78,30 @@
       "writtenOn": "2022-05-10T21:26:59Z",
       "side": 1,
       "message": "nit, list maintainers alphabetically to remove perceived bias.",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 38
+      },
+      "revId": "159fc7d6c6a422b7333e85fee670a3e737d915bd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34ba7dde_f2b7f542",
+        "filename": "MAINTAINERS",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-10T21:31:13Z",
+      "side": 1,
+      "message": "Great point will restructure.",
+      "parentUuid": "855902b2_a35be646",
       "range": {
         "startLine": 45,
         "startChar": 0,
