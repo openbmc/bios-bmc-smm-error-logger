@@ -89,6 +89,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8062c4e2_ebd209f5",
+        "filename": "LICENSE",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-11T22:35:38Z",
+      "side": 1,
+      "message": "I think we concluded here that we\u0027ll just leave it as is: https://gerrit.openbmc-project.xyz/c/openbmc/libbej/+/53632",
+      "parentUuid": "6b6dc483_68207a88",
+      "range": {
+        "startLine": 189,
+        "startChar": 13,
+        "endLine": 189,
+        "endChar": 45
+      },
+      "revId": "159fc7d6c6a422b7333e85fee670a3e737d915bd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "855902b2_a35be646",
