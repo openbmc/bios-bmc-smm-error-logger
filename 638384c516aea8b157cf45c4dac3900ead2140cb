@@ -16,6 +16,23 @@
       "message": "+2 🙏",
       "revId": "638384c516aea8b157cf45c4dac3900ead2140cb",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b65fbf6_070a80d6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-12T20:28:21Z",
+      "side": 1,
+      "message": "Willy is having problem +2ing things (maybe it takes time for  https://github.com/orgs/openbmc/teams/bios-bmc-smm-error-logger-maintainers to propagate?) Will +2 this myself to submit this (to get reviews ready in the chain)",
+      "revId": "638384c516aea8b157cf45c4dac3900ead2140cb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
