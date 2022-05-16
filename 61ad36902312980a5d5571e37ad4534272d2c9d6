@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f98659df_95ee641d",
+        "filename": "internal/sys.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T22:21:27Z",
+      "side": 1,
+      "message": "rm std:: for size_t.",
+      "range": {
+        "startLine": 20,
+        "startChar": 40,
+        "endLine": 20,
+        "endChar": 45
+      },
+      "revId": "61ad36902312980a5d5571e37ad4534272d2c9d6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
