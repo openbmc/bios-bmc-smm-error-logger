@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36cfd96f_748d6fb1",
+        "filename": "src/main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T00:23:42Z",
+      "side": 1,
+      "message": "nit: remove std::?",
+      "range": {
+        "startLine": 4,
+        "startChar": 17,
+        "endLine": 4,
+        "endChar": 28
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "701cea1b_642e0734",
+        "filename": "src/main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T00:23:42Z",
+      "side": 1,
+      "message": "I think we want std::chrono now? I think the newer version of boost use std::chrono now. same with below.",
+      "range": {
+        "startLine": 9,
+        "startChar": 32,
+        "endLine": 9,
+        "endChar": 76
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e047dfc_c4d9b0cc",
+        "filename": "src/main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T00:23:42Z",
+      "side": 1,
+      "message": "`std::bind_front(read,t)` instead? same with below.",
+      "range": {
+        "startLine": 10,
+        "startChar": 18,
+        "endLine": 10,
+        "endChar": 29
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe0d756b_94d8b8ba",
+        "filename": "src/main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T00:23:42Z",
+      "side": 1,
+      "message": "duplicate?",
+      "range": {
+        "startLine": 15,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 40
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "369ecd73_9802ec01",
+        "filename": "src/meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T00:23:42Z",
+      "side": 1,
+      "message": "nit: should have space before it to line up with `dependencies`.",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 2
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85efaa20_9a7b3965",
+        "filename": "src/meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T00:23:42Z",
+      "side": 1,
+      "message": "explicitly declare where it it installed. I am not sure what the default is.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 1
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
