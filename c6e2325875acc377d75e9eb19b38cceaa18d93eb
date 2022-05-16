@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2723beb0_82e10f49",
+        "filename": "src/main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T05:34:49Z",
+      "side": 1,
+      "message": "not used anymore.",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 30
+      },
+      "revId": "c6e2325875acc377d75e9eb19b38cceaa18d93eb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd302a19_fd4eb71d",
+        "filename": "src/main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T05:34:49Z",
+      "side": 1,
+      "message": "let\u0027s just do this in this change.\n\nif you need a reference, you can take a look at `config.h` in https://gerrit.openbmc-project.xyz/c/openbmc/phosphor-host-ipmid/+/47748/46/meson.build.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 57
+      },
+      "revId": "c6e2325875acc377d75e9eb19b38cceaa18d93eb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ebb4ce86_dda6c0ae",
+        "filename": "src/main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T05:34:49Z",
+      "side": 1,
+      "message": "this conversation should not be needed.",
+      "range": {
+        "startLine": 26,
+        "startChar": 32,
+        "endLine": 26,
+        "endChar": 77
+      },
+      "revId": "c6e2325875acc377d75e9eb19b38cceaa18d93eb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "90d5a9ff_33d7d524",
+        "filename": "src/meson.build",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T05:34:49Z",
+      "side": 1,
+      "message": "is this needed?",
+      "revId": "c6e2325875acc377d75e9eb19b38cceaa18d93eb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
