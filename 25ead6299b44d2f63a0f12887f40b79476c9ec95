@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6df94fd_4671f1d0",
+        "filename": "include/pci_handler.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-05-16T23:20:01Z",
+      "side": 1,
+      "message": "What happens if this offset is wrong? Is there a way to check whether the offset is within bounds?",
+      "range": {
+        "startLine": 32,
+        "startChar": 18,
+        "endLine": 32,
+        "endChar": 24
+      },
+      "revId": "25ead6299b44d2f63a0f12887f40b79476c9ec95",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cab82450_744c957b",
+        "filename": "include/pci_handler.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-05-16T23:20:01Z",
+      "side": 1,
+      "message": "Shared?",
+      "range": {
+        "startLine": 40,
+        "startChar": 22,
+        "endLine": 40,
+        "endChar": 28
+      },
+      "revId": "25ead6299b44d2f63a0f12887f40b79476c9ec95",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62479da8_370b3eb0",
+        "filename": "include/pci_handler.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-05-16T23:20:01Z",
+      "side": 1,
+      "message": "same comment above regarding the offset.",
+      "range": {
+        "startLine": 42,
+        "startChar": 18,
+        "endLine": 42,
+        "endChar": 24
+      },
+      "revId": "25ead6299b44d2f63a0f12887f40b79476c9ec95",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50ece088_6a849e11",
+        "filename": "include/pci_handler.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-05-16T23:20:01Z",
+      "side": 1,
+      "message": "Since you are only declaring all the other methods, would it make sense to move the constructor definition to the cpp file?",
+      "range": {
+        "startLine": 66,
+        "startChar": 8,
+        "endLine": 67,
+        "endChar": 48
+      },
+      "revId": "25ead6299b44d2f63a0f12887f40b79476c9ec95",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "963ebccb_79150c39",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-05-16T23:20:01Z",
+      "side": 1,
+      "message": "Do you think printing errno would be helpful as well?",
+      "range": {
+        "startLine": 25,
+        "startChar": 8,
+        "endLine": 25,
+        "endChar": 20
+      },
+      "revId": "25ead6299b44d2f63a0f12887f40b79476c9ec95",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c27cffff_3db96085",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-05-16T23:20:01Z",
+      "side": 1,
+      "message": "Since this will create an array of size \"length\", it has the potential to cause a stack overflow right?",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 41
+      },
+      "revId": "25ead6299b44d2f63a0f12887f40b79476c9ec95",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
