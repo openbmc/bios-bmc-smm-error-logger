@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e40147b_90fb46e7",
+        "filename": "src/main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-16T02:33:10Z",
+      "side": 1,
+      "message": "Done + put this in an anonymous namespace",
+      "parentUuid": "36cfd96f_748d6fb1",
+      "range": {
+        "startLine": 4,
+        "startChar": 17,
+        "endLine": 4,
+        "endChar": 28
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "701cea1b_642e0734",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-05-16T00:23:42Z",
       "side": 1,
       "message": "I think we want std::chrono now? I think the newer version of boost use std::chrono now. same with below.",
+      "range": {
+        "startLine": 9,
+        "startChar": 32,
+        "endLine": 9,
+        "endChar": 76
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "622c59d7_a5525d4b",
+        "filename": "src/main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-16T02:33:10Z",
+      "side": 1,
+      "message": "Good point - changed to use std::chrono",
+      "parentUuid": "701cea1b_642e0734",
       "range": {
         "startLine": 9,
         "startChar": 32,
@@ -70,6 +118,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b177df73_8c226f96",
+        "filename": "src/main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-16T02:33:10Z",
+      "side": 1,
+      "message": "Neat, I didn\u0027t realize we got this new bind_front support from C++20 std::\n\nChanged.",
+      "parentUuid": "8e047dfc_c4d9b0cc",
+      "range": {
+        "startLine": 10,
+        "startChar": 18,
+        "endLine": 10,
+        "endChar": 29
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fe0d756b_94d8b8ba",
@@ -83,6 +155,30 @@
       "writtenOn": "2022-05-16T00:23:42Z",
       "side": 1,
       "message": "duplicate?",
+      "range": {
+        "startLine": 15,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 40
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89a3baab_48f85b69",
+        "filename": "src/main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-16T02:33:10Z",
+      "side": 1,
+      "message": "Ah yeah will take this one out.",
+      "parentUuid": "fe0d756b_94d8b8ba",
       "range": {
         "startLine": 15,
         "startChar": 4,
@@ -116,6 +212,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "62739815_ab662d42",
+        "filename": "src/meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-16T02:33:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "369ecd73_9802ec01",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 2
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "85efaa20_9a7b3965",
@@ -129,6 +249,30 @@
       "writtenOn": "2022-05-16T00:23:42Z",
       "side": 1,
       "message": "explicitly declare where it it installed. I am not sure what the default is.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 1
+      },
+      "revId": "245eb34fd448d2e7f191bfee0c5bc696a2732a26",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33ac1c84_d7f0e0f1",
+        "filename": "src/meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-16T02:33:10Z",
+      "side": 1,
+      "message": "Yup, good point - default is bindir, but better to be explicit.",
+      "parentUuid": "85efaa20_9a7b3965",
       "range": {
         "startLine": 9,
         "startChar": 0,
