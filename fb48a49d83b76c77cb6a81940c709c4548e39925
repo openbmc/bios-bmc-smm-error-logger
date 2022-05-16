@@ -22,6 +22,98 @@
       },
       "revId": "fb48a49d83b76c77cb6a81940c709c4548e39925",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d372983_49b45351",
+        "filename": "include/pci_handler.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T00:41:03Z",
+      "side": 1,
+      "message": "getting kind of tired of the `std::`. Can we just remove it? for all primitive types?",
+      "range": {
+        "startLine": 36,
+        "startChar": 49,
+        "endLine": 36,
+        "endChar": 62
+      },
+      "revId": "fb48a49d83b76c77cb6a81940c709c4548e39925",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76f221b3_156077e9",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T00:41:03Z",
+      "side": 1,
+      "message": "This should also be wrapped with https://github.com/openbmc/stdplus/blob/master/src/stdplus/handle/managed.hpp. Probably should be handle in `sys`.",
+      "range": {
+        "startLine": 22,
+        "startChar": 4,
+        "endLine": 22,
+        "endChar": 50
+      },
+      "revId": "fb48a49d83b76c77cb6a81940c709c4548e39925",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14ad29a3_188ab1c0",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T00:41:03Z",
+      "side": 1,
+      "message": "this will fail if `offset + length` overflows.\n\nMight need to check offset and length separately first\n- offset \u003c max(uint16)\n- length \u003c max(uint16)\n- offset + length \u003c max(uint16)\n\nWith that being said, this will be an issue in the second case when.\n\n```\nlength \u003e max(uint16)\n```\nwill underflow and mess with things.\n\nNot sure how we want to handle the cases, but there are a number of failure cases as is.",
+      "range": {
+        "startLine": 50,
+        "startChar": 9,
+        "endLine": 50,
+        "endChar": 63
+      },
+      "revId": "fb48a49d83b76c77cb6a81940c709c4548e39925",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5677c5a_0e35127f",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-05-16T00:41:03Z",
+      "side": 1,
+      "message": "same issue here addressed in the comment above.",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 65
+      },
+      "revId": "fb48a49d83b76c77cb6a81940c709c4548e39925",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
