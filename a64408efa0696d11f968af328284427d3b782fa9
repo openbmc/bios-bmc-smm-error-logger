@@ -33,6 +33,24 @@
       "message": "You might want to consider using https://github.com/openbmc/stdplus/blob/master/src/stdplus/fd/intf.hpp for the file ops if it makes sense.",
       "revId": "a64408efa0696d11f968af328284427d3b782fa9",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfbdfc4e_101cf9e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-17T19:21:02Z",
+      "side": 1,
+      "message": "Thanks for the suggestion - What are some benefits of using the stdplus::fd?",
+      "parentUuid": "ab55320f_02cd35ee",
+      "revId": "a64408efa0696d11f968af328284427d3b782fa9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
