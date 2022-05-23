@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12f57a7a_6e63e9ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-23T23:12:42Z",
+      "side": 1,
+      "message": "As suggested by William in the now abandoned previous CL with sys mock, moved to stdplus::fd so that we can \"Management\" for free\n\nNo more need to manually call open / close.",
+      "revId": "00eff5f9c0196c6af0d941927ce6c207981c395e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
