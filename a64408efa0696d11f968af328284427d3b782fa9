@@ -105,6 +105,24 @@
       "parentUuid": "905184f4_457e2b89",
       "revId": "a64408efa0696d11f968af328284427d3b782fa9",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e3d214a_33b6e5cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-23T23:07:48Z",
+      "side": 1,
+      "message": "Transition to using stdplus::fd is complete - will abandon this change.",
+      "parentUuid": "b0515d30_53e663da",
+      "revId": "a64408efa0696d11f968af328284427d3b782fa9",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
