@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffefdcfa_88e54b6f",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-05-24T06:15:23Z",
+      "side": 1,
+      "message": "Could there be a scenario where this allocation can fail? Since this is in the constructor, if mmap fails, what would happen?",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 8
+      },
+      "revId": "c24b95d829c8b75819d1260dbad93b9d417ba2a6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e188675_09f624f7",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-05-24T06:15:23Z",
+      "side": 1,
+      "message": "Is this check required? Because you has a another check, \n\n\"uint32_t finalLength \u003d (offset + length \u003c regionSize) ? length : regionSize offset;\"\n\nSo even if the (length \u003e regionSize), finalLength \u003d regionSize - offset.\n\nSame for write function.",
+      "range": {
+        "startLine": 29,
+        "startChar": 8,
+        "endLine": 29,
+        "endChar": 27
+      },
+      "revId": "c24b95d829c8b75819d1260dbad93b9d417ba2a6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05272e4c_d67677b7",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-05-24T06:15:23Z",
+      "side": 1,
+      "message": "Do you think printing error messages here, would be helpful?",
+      "range": {
+        "startLine": 29,
+        "startChar": 31,
+        "endLine": 29,
+        "endChar": 65
+      },
+      "revId": "c24b95d829c8b75819d1260dbad93b9d417ba2a6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
