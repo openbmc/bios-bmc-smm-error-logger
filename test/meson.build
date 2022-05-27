@@ -21,10 +21,11 @@ endif
 
 gtests = [
   'pci_handler',
+  'rde_dictionary_manager',
 ]
 foreach t : gtests
   test(t, executable(t.underscorify(), t + '_test.cpp',
                      build_by_default: false,
                      implicit_include_directories: false,
-                     dependencies: [bios_bmc_smm_error_logger_dep, gtest, gmock]))
+                     dependencies: [bios_bmc_smm_error_logger_dep, gtest, gmock, rde_dep]))
 endforeach
