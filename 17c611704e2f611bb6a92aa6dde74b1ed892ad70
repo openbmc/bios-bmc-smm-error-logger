@@ -16,6 +16,24 @@
       "message": "I\u0027m thinking - would it make sense to perhaps separate out the RDE dictionary portion as a separate library? I\u0027m actually not 100% sure how the split looks now that we have the BEJ as the separate repo / library so if there\u0027s not much code that goes in this repo, this is fine too",
       "revId": "17c611704e2f611bb6a92aa6dde74b1ed892ad70",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ace87b0_a9bf76c6",
+        "filename": "src/meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-05-27T22:09:47Z",
+      "side": 1,
+      "message": "I am not sure putting this in another repo make sense since this is only used by RDE handler and RDE handler is used by the bios-bmc circular buffer.\n \nWhen you said \"separate\" library, did you mean inside this same repo but use a separate static_library() call?",
+      "parentUuid": "450bc1b9_c64edf02",
+      "revId": "17c611704e2f611bb6a92aa6dde74b1ed892ad70",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
