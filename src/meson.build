@@ -5,7 +5,6 @@ bios_bmc_smm_error_logger_pre = declare_dependency(
     dependency('stdplus'),
   ])
 
-
 bios_bmc_smm_error_logger_lib = static_library(
   'bios_bmc_smm_error_logger',
   'pci_handler.cpp',
