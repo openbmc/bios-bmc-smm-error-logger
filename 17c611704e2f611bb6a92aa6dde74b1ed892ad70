@@ -34,6 +34,24 @@
       "parentUuid": "450bc1b9_c64edf02",
       "revId": "17c611704e2f611bb6a92aa6dde74b1ed892ad70",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63eabb2a_959defd9",
+        "filename": "src/meson.build",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-05-27T22:48:10Z",
+      "side": 1,
+      "message": "Sorry for the confusion, I meant within this repo, just a separate library as you said.\n\nThe split is easier if we split out the RDE part as a separate directory here - but again, depends on how much code / files you expect to be here",
+      "parentUuid": "1ace87b0_a9bf76c6",
+      "revId": "17c611704e2f611bb6a92aa6dde74b1ed892ad70",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
