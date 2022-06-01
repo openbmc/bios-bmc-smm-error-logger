@@ -3,6 +3,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3d7ed84a_bb4aceca",
+        "filename": "include/rde/rde_dictionary_manager.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T18:29:09Z",
+      "side": 1,
+      "message": "nit: an",
+      "range": {
+        "startLine": 24,
+        "startChar": 16,
+        "endLine": 24,
+        "endChar": 17
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bceeca48_e32bcbad",
+        "filename": "include/rde/rde_dictionary_manager.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T18:29:09Z",
+      "side": 1,
+      "message": "minor nit: should we take out the \"more\"? as it\u0027s implicit in \"add\" that we\u0027d add more",
+      "range": {
+        "startLine": 70,
+        "startChar": 12,
+        "endLine": 70,
+        "endChar": 16
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8ce9d555_5463f2a8",
         "filename": "meson.build",
         "patchSetId": 5
@@ -37,6 +83,121 @@
       "writtenOn": "2022-06-01T18:14:43Z",
       "side": 1,
       "message": "nit: trailing whitespace",
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1324f6b_248aeeea",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T18:29:09Z",
+      "side": 1,
+      "message": "nit: an",
+      "range": {
+        "startLine": 24,
+        "startChar": 77,
+        "endLine": 24,
+        "endChar": 78
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e52789f_48bab2f1",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T18:29:09Z",
+      "side": 1,
+      "message": "I\u0027m trying to figure out why we decrease this. Is it when we invalidate an already valid dictionary? If so, should we be covering this case in addMoreDictionaryData as well?\n\nTo avoid this, I wonder if we should have a helper function for updating validity. If we only update validity with the helper function, it\u0027ll automatically keep count of the dictionary count",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 26
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7932104_586567e9",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T18:29:09Z",
+      "side": 1,
+      "message": "Maybe we should call this, validDictionaryCount to be easier to understand what this counter is for",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 22
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c65a97c_70a0fae0",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T18:29:09Z",
+      "side": 1,
+      "message": "what I meant above - should we check for if it was already valid and decrement the dictionary count?\n\nWhat will the dictionary count be used for later?",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 34
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "143ad9e9_b4337cd1",
+        "filename": "test/rde_dictionary_manager_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T18:29:09Z",
+      "side": 1,
+      "message": "If you did markDataComplete here, I think you\u0027ll see that we don\u0027t decrement the DictionaryCount I think which may be a bug",
+      "range": {
+        "startLine": 140,
+        "startChar": 3,
+        "endLine": 141,
+        "endChar": 75
+      },
       "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
