@@ -70,6 +70,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0451f3ee_f1f11f55",
+        "filename": "src/meson.build",
+        "patchSetId": 17
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T19:47:07Z",
+      "side": 1,
+      "message": "Oh, I think stdplus doesn\u0027t need it - but it seems it\u0027s good to add the subprojects wrap file for it, so I\u0027ll fix that https://github.com/openbmc/google-misc/blob/master/subprojects/ncsid/src/meson.build#L33",
+      "parentUuid": "d242ba73_e3ce30cf",
+      "revId": "6c617d144efc60123ab2869408b9f258a245934c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf514158_e900495e",
@@ -83,6 +101,30 @@
       "writtenOn": "2022-06-01T18:51:53Z",
       "side": 1,
       "message": "I think this can be just\n\n```\nreturn std::vector\u003cuint8_t\u003e(mmap.get().data() + offset, finalLength);\n```\n\nMaybe not if you needed to memcpy it.",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 19
+      },
+      "revId": "6c617d144efc60123ab2869408b9f258a245934c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0697439_dc8bbfe9",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T19:47:07Z",
+      "side": 1,
+      "message": "The memcpy allows us to bypass some std::byte to uint8_t conversion (Which just trying to create a uint8_t vector with {} is refusing to do with:\n\n```\n../src/pci_handler.cpp:43:72: error: no matching function for call to ‘std::vector\u003cunsigned char\u003e::vector(std::span\u003cstd::byte\u003e::pointer, size_t\u0026)’\n   43 |     return std::vector\u003cuint8_t\u003e(mmap.get().data() + offset, finalLength);\n      |                                                                        ^\nIn file included from /usr/include/c++/11/vector:67,\n```\n\nI can get around this by doing an reinterpret_cast separately, something like:\n```\n    uint8_t* mmapIt \u003d reinterpret_cast\u003cuint8_t*\u003e(mmap.get().data() + offset);\n    return std::vector\u003cuint8_t\u003e(mmapIt, mmapIt + finalLength);\n```\n\nhowever, this is giving me a funky error:\n\n```\nclang-tidy-13 --use-color -export-fixes /tmp/tmpi6f5go2_/tmpdpoqu74e.yaml -p\u003d. .../bios-bmc-smm-error-logger/src/pci_handler.cpp\n../src/pci_handler.cpp:44:13: error: avoid repeating the return type from the declaration; use a braced initializer list instead [modernize-return-braced-init-list,-warnings-as-errors]\n    return std::vector\u003cuint8_t\u003e(mmapIt, mmapIt + finalLength);\n            ^\n```\n\nI\u0027ll keep the memcpy if that\u0027s alright with you",
+      "parentUuid": "cf514158_e900495e",
       "range": {
         "startLine": 37,
         "startChar": 0,
