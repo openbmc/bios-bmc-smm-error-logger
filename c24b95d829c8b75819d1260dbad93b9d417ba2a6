@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70b57c80_9c45bec0",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T18:07:03Z",
+      "side": 1,
+      "message": "Throwing in the constructor is a good way to signal failure for allocation - I\u0027ll have to remember to catch and handle the exception properly in the main.",
+      "parentUuid": "ffefdcfa_88e54b6f",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 8
+      },
+      "revId": "c24b95d829c8b75819d1260dbad93b9d417ba2a6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5e188675_09f624f7",
@@ -60,6 +84,54 @@
       "writtenOn": "2022-05-24T06:15:23Z",
       "side": 1,
       "message": "Do you think printing error messages here, would be helpful?",
+      "range": {
+        "startLine": 29,
+        "startChar": 31,
+        "endLine": 29,
+        "endChar": 65
+      },
+      "revId": "c24b95d829c8b75819d1260dbad93b9d417ba2a6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2958482_a93ce85f",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T18:07:03Z",
+      "side": 1,
+      "message": "You\u0027re right. Let me get rid of the length bigger than regionsize checks.",
+      "parentUuid": "5e188675_09f624f7",
+      "range": {
+        "startLine": 29,
+        "startChar": 8,
+        "endLine": 29,
+        "endChar": 27
+      },
+      "revId": "c24b95d829c8b75819d1260dbad93b9d417ba2a6",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f9cefcc_47c2645d",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T18:07:03Z",
+      "side": 1,
+      "message": "Good point, will add.\n\nIt now looks like:\n\n```\n[read] Offset [0] was bigger than regionSize [8] OR length [0] was equal to 0\n[read] Offset [9] was bigger than regionSize [8] OR length [1] was equal to 0\n[write] Offset [0] was bigger than regionSize [8] OR length [0] was equal to 0\n[write] Offset [9] was bigger than regionSize [8] OR length [7] was equal to 0\n```",
+      "parentUuid": "05272e4c_d67677b7",
       "range": {
         "startLine": 29,
         "startChar": 31,
