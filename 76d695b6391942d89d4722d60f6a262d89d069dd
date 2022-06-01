@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19e5793b_6ced739b",
+        "filename": "include/rde/rde_dictionary_manager.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-01T18:57:10Z",
+      "side": 1,
+      "message": "do you want `const std::span\u003cconst uint8_t\u003e`? since you did it in the other change. I think they don\u0027t do anything, but should be consistent.",
+      "range": {
+        "startLine": 28,
+        "startChar": 32,
+        "endLine": 28,
+        "endChar": 56
+      },
+      "revId": "76d695b6391942d89d4722d60f6a262d89d069dd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e81055d_8b7e210d",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-01T18:57:10Z",
+      "side": 1,
+      "message": "no need for std::span it should just work with `itemIt-\u003esecond-\u003edata`.\n\nIf not, then try `{itemIt-\u003esecond-\u003edata}`.",
+      "range": {
+        "startLine": 82,
+        "startChar": 11,
+        "endLine": 82,
+        "endChar": 43
+      },
+      "revId": "76d695b6391942d89d4722d60f6a262d89d069dd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c307634_50afa7ee",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-01T18:57:10Z",
+      "side": 1,
+      "message": "const auth \u0026",
+      "range": {
+        "startLine": 100,
+        "startChar": 9,
+        "endLine": 100,
+        "endChar": 14
+      },
+      "revId": "76d695b6391942d89d4722d60f6a262d89d069dd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
