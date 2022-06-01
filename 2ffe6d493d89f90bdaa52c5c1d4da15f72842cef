@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "94531de4_e3acd0f9",
+        "filename": "include/rde/rde_dictionary_manager.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d7ed84a_bb4aceca",
+      "range": {
+        "startLine": 24,
+        "startChar": 16,
+        "endLine": 24,
+        "endChar": 17
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bceeca48_e32bcbad",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-06-01T18:29:09Z",
       "side": 1,
       "message": "minor nit: should we take out the \"more\"? as it\u0027s implicit in \"add\" that we\u0027d add more",
+      "range": {
+        "startLine": 70,
+        "startChar": 12,
+        "endLine": 70,
+        "endChar": 16
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "53581c3a_ff799991",
+        "filename": "include/rde/rde_dictionary_manager.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bceeca48_e32bcbad",
       "range": {
         "startLine": 70,
         "startChar": 12,
@@ -70,6 +118,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ff3a67b_2426a35c",
+        "filename": "meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "I kept it as \"include\", so that we can include the headers as \"rde/header_1\" rather than \"header_1\".",
+      "parentUuid": "8ce9d555_5463f2a8",
+      "range": {
+        "startLine": 14,
+        "startChar": 31,
+        "endLine": 14,
+        "endChar": 38
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99367664_f465b17e",
@@ -87,6 +159,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cdcd484_40422214",
+        "filename": "src/rde/meson.build",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99367664_f465b17e",
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a1324f6b_248aeeea",
@@ -100,6 +190,30 @@
       "writtenOn": "2022-06-01T18:29:09Z",
       "side": 1,
       "message": "nit: an",
+      "range": {
+        "startLine": 24,
+        "startChar": 77,
+        "endLine": 24,
+        "endChar": 78
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08c8cde9_6ab93ae0",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1324f6b_248aeeea",
       "range": {
         "startLine": 24,
         "startChar": 77,
@@ -133,6 +247,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f578b71_18daf5e9",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "Good idea. Added a 2 helper functions to validate and invalidate.",
+      "parentUuid": "0e52789f_48bab2f1",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 26
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7932104_586567e9",
@@ -146,6 +284,30 @@
       "writtenOn": "2022-06-01T18:29:09Z",
       "side": 1,
       "message": "Maybe we should call this, validDictionaryCount to be easier to understand what this counter is for",
+      "range": {
+        "startLine": 45,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 22
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c61a9443_40c8a760",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7932104_586567e9",
       "range": {
         "startLine": 45,
         "startChar": 4,
@@ -179,6 +341,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6719e2df_96e6f42c",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3c65a97c_70a0fae0",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 34
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "143ad9e9_b4337cd1",
@@ -192,6 +378,30 @@
       "writtenOn": "2022-06-01T18:29:09Z",
       "side": 1,
       "message": "If you did markDataComplete here, I think you\u0027ll see that we don\u0027t decrement the DictionaryCount I think which may be a bug",
+      "range": {
+        "startLine": 140,
+        "startChar": 3,
+        "endLine": 141,
+        "endChar": 75
+      },
+      "revId": "2ffe6d493d89f90bdaa52c5c1d4da15f72842cef",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8393d30f_ca4732f3",
+        "filename": "test/rde_dictionary_manager_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "Good catch!",
+      "parentUuid": "143ad9e9_b4337cd1",
       "range": {
         "startLine": 140,
         "startChar": 3,

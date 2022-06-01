@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e02cdb0_23236674",
+        "filename": "include/rde/rde_dictionary_manager.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "By other change, did you mean the libbej changes? That is a different repo. I\u0027ll remove the const in that.",
+      "parentUuid": "19e5793b_6ced739b",
+      "range": {
+        "startLine": 28,
+        "startChar": 32,
+        "endLine": 28,
+        "endChar": 56
+      },
+      "revId": "76d695b6391942d89d4722d60f6a262d89d069dd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6e81055d_8b7e210d",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "692a5297_e6a34c6a",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e81055d_8b7e210d",
+      "range": {
+        "startLine": 82,
+        "startChar": 11,
+        "endLine": 82,
+        "endChar": 43
+      },
+      "revId": "76d695b6391942d89d4722d60f6a262d89d069dd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8c307634_50afa7ee",
@@ -60,6 +108,30 @@
       "writtenOn": "2022-06-01T18:57:10Z",
       "side": 1,
       "message": "const auth \u0026",
+      "range": {
+        "startLine": 100,
+        "startChar": 9,
+        "endLine": 100,
+        "endChar": 14
+      },
+      "revId": "76d695b6391942d89d4722d60f6a262d89d069dd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bbd2e75_c88dbc50",
+        "filename": "src/rde/rde_dictionary_manager.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-01T21:06:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c307634_50afa7ee",
       "range": {
         "startLine": 100,
         "startChar": 9,
