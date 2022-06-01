@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "197979e9_8c1308ed",
+        "filename": "meson.build",
+        "patchSetId": 17
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-01T18:51:53Z",
+      "side": 1,
+      "message": "should have if not get_option(\u0027tests\u0027).disabled() around this instead.",
+      "revId": "6c617d144efc60123ab2869408b9f258a245934c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d242ba73_e3ce30cf",
+        "filename": "src/meson.build",
+        "patchSetId": 17
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-01T18:51:53Z",
+      "side": 1,
+      "message": "Need the subproject wrapper.",
+      "revId": "6c617d144efc60123ab2869408b9f258a245934c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf514158_e900495e",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-01T18:51:53Z",
+      "side": 1,
+      "message": "I think this can be just\n\n```\nreturn std::vector\u003cuint8_t\u003e(mmap.get().data() + offset, finalLength);\n```\n\nMaybe not if you needed to memcpy it.",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 19
+      },
+      "revId": "6c617d144efc60123ab2869408b9f258a245934c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
