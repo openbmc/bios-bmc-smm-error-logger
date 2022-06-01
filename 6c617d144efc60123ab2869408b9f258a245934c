@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "99965737_8c3af686",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T19:29:36Z",
+      "side": 1,
+      "message": "It looks like Kasun\u0027s latest update to his change led to this being updated. Reverting to patchset 16 and addressing Willy\u0027s comments.",
+      "revId": "6c617d144efc60123ab2869408b9f258a245934c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "197979e9_8c1308ed",
@@ -14,6 +31,24 @@
       "writtenOn": "2022-06-01T18:51:53Z",
       "side": 1,
       "message": "should have if not get_option(\u0027tests\u0027).disabled() around this instead.",
+      "revId": "6c617d144efc60123ab2869408b9f258a245934c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20905022_c5081d60",
+        "filename": "meson.build",
+        "patchSetId": 17
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-01T19:29:36Z",
+      "side": 1,
+      "message": "yeah makes sense, I\u0027ll move some of that test check from the test/meson.build to here",
+      "parentUuid": "197979e9_8c1308ed",
       "revId": "6c617d144efc60123ab2869408b9f258a245934c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
