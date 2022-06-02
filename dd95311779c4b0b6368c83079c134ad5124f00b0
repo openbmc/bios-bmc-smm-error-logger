@@ -3,6 +3,69 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a45c3754_e5b3df05",
+        "filename": "include/pci_handler.hpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-02T08:16:34Z",
+      "side": 1,
+      "message": "namespace should be `lower_snake_case`.\n\nhttps://github.com/openbmc/docs/blob/master/cpp-style-and-conventions.md#namespaces",
+      "revId": "dd95311779c4b0b6368c83079c134ad5124f00b0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b66b3f8_9ac061aa",
+        "filename": "src/meson.build",
+        "patchSetId": 21
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-02T08:16:34Z",
+      "side": 1,
+      "message": "fallback is not needed with `provide` in the wrapper.\n\nYou can test it out with changing `stdplus` to like `stdplus_2`\n\nand \n\n```\n[provide]\nstdplus_2 \u003d stdplus_dep\n```",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 63
+      },
+      "revId": "dd95311779c4b0b6368c83079c134ad5124f00b0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36b1e543_750ba778",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-02T08:16:34Z",
+      "side": 1,
+      "message": "just return 0 here.",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 18
+      },
+      "revId": "dd95311779c4b0b6368c83079c134ad5124f00b0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "02e20d40_a17b8caa",
         "filename": "test/meson.build",
         "patchSetId": 21
