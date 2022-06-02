@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c4df436_e92d8e48",
+        "filename": "include/config.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-02T20:10:42Z",
+      "side": 1,
+      "message": "Unfortunately the design doc is still in review so I can\u0027t point to it.. I\u0027ll explain that this is the Uncorrectable Error region in the comment.\n\nI may add some of the details in the README for this repo in the meantime.",
+      "parentUuid": "4dfd6c68_1098b12a",
+      "range": {
+        "startLine": 18,
+        "startChar": 13,
+        "endLine": 18,
+        "endChar": 25
+      },
+      "revId": "8934353f942b3e19ad44ef256a2d3e3815331b8b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8036402a_330a5ea4",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9666e821_e2a7121a",
+        "filename": "src/config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-02T20:10:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8036402a_330a5ea4",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 79
+      },
+      "revId": "8934353f942b3e19ad44ef256a2d3e3815331b8b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "17820466_37718e56",
@@ -60,6 +108,30 @@
       "writtenOn": "2022-06-02T18:29:03Z",
       "side": 1,
       "message": "```\n    EXPECT_THROW(\n        try { createConfig(\"\"); } catch (const std::runtime_error\u0026 e) {\n            EXPECT_STREQ(e.what(), \"Configuration file is missing\");\n            throw;\n        },\n        std::runtime_error);\n```\n\nto make sure you target the right exceptions.",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 55
+      },
+      "revId": "8934353f942b3e19ad44ef256a2d3e3815331b8b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82c29904_c24e58ce",
+        "filename": "test/config_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-02T20:10:42Z",
+      "side": 1,
+      "message": "Done. One thing though, sometimes making the tests match the error message directly makes the tests brittle - but in this case I think it\u0027s valid since it\u0027s hard to decipher what the differences are between some of these different conditionals.",
+      "parentUuid": "17820466_37718e56",
       "range": {
         "startLine": 21,
         "startChar": 4,
