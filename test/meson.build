@@ -19,6 +19,7 @@ endif
 
 gtests = [
   'pci_handler',
+  'config',
 ]
 foreach t : gtests
   test(t, executable(t.underscorify(), t + '_test.cpp',
