@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bda6ba4_3bf7d1d4",
+        "filename": "include/pci_handler.hpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-02T15:35:47Z",
+      "side": 1,
+      "message": "huh! I swear I\u0027ve always done lowerCamelCase for namespaces - oops TIL I\u0027ll fix this and Kasun\u0027s as well.",
+      "parentUuid": "a45c3754_e5b3df05",
+      "revId": "dd95311779c4b0b6368c83079c134ad5124f00b0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6b66b3f8_9ac061aa",
@@ -31,6 +49,30 @@
       "writtenOn": "2022-06-02T08:16:34Z",
       "side": 1,
       "message": "fallback is not needed with `provide` in the wrapper.\n\nYou can test it out with changing `stdplus` to like `stdplus_2`\n\nand \n\n```\n[provide]\nstdplus_2 \u003d stdplus_dep\n```",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 63
+      },
+      "revId": "dd95311779c4b0b6368c83079c134ad5124f00b0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2137ae43_8576da8d",
+        "filename": "src/meson.build",
+        "patchSetId": 21
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-02T15:35:47Z",
+      "side": 1,
+      "message": "Oh yeah, that\u0027s right with the wrapper provide, I\u0027ll remove.",
+      "parentUuid": "6b66b3f8_9ac061aa",
       "range": {
         "startLine": 21,
         "startChar": 4,
@@ -64,6 +106,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5787e90d_608a3b0c",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-02T15:35:47Z",
+      "side": 1,
+      "message": "Oh yeah this is actually sorta wrong (luckily, I think it defaults to 0) - good catch. It was from copy pasting from above",
+      "parentUuid": "36b1e543_750ba778",
+      "range": {
+        "startLine": 58,
+        "startChar": 8,
+        "endLine": 58,
+        "endChar": 18
+      },
+      "revId": "dd95311779c4b0b6368c83079c134ad5124f00b0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "02e20d40_a17b8caa",
@@ -77,6 +143,30 @@
       "writtenOn": "2022-06-02T08:10:37Z",
       "side": 1,
       "message": "this is not needed anymore tests folder will only be used that this is true.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 37
+      },
+      "revId": "dd95311779c4b0b6368c83079c134ad5124f00b0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7c02dc2_49bc78d8",
+        "filename": "test/meson.build",
+        "patchSetId": 21
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-02T15:35:47Z",
+      "side": 1,
+      "message": "Sure, will remove.",
+      "parentUuid": "02e20d40_a17b8caa",
       "range": {
         "startLine": 1,
         "startChar": 0,
