@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b3706064_0a937c74",
+        "filename": "include/rde/rde_dictionary_manager.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-02T08:22:02Z",
+      "side": 1,
+      "message": "I meant Brandon\u0027s change in https://gerrit.openbmc.org/c/openbmc/bios-bmc-smm-error-logger/+/53738/20.",
+      "parentUuid": "6e02cdb0_23236674",
+      "range": {
+        "startLine": 28,
+        "startChar": 32,
+        "endLine": 28,
+        "endChar": 56
+      },
+      "revId": "76d695b6391942d89d4722d60f6a262d89d069dd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6e81055d_8b7e210d",
         "filename": "src/rde/rde_dictionary_manager.cpp",
         "patchSetId": 6
