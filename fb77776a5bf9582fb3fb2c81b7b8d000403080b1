@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b0e87c7_0285196d",
+        "filename": "include/rde/rde_dictionary_manager.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-02T18:27:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3afefe5a_7432bd46",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 19
+      },
+      "revId": "fb77776a5bf9582fb3fb2c81b7b8d000403080b1",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "245a2344_eab9b3f0",
