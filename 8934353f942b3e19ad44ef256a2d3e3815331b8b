@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4dfd6c68_1098b12a",
+        "filename": "include/config.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-02T18:41:51Z",
+      "side": 1,
+      "message": "It is not obvious to me what ueRegionSize is. Maybe add a comment for some of these? or point to the design doc?",
+      "range": {
+        "startLine": 18,
+        "startChar": 13,
+        "endLine": 18,
+        "endChar": 25
+      },
+      "revId": "8934353f942b3e19ad44ef256a2d3e3815331b8b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8036402a_330a5ea4",
