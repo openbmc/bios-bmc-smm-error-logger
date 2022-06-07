@@ -24,6 +24,7 @@ bios_bmc_smm_error_logger_pre = declare_dependency(
 bios_bmc_smm_error_logger_lib = static_library(
   'bios_bmc_smm_error_logger',
   'pci_handler.cpp',
+  'buffer.cpp',
   implicit_include_directories: false,
   dependencies: bios_bmc_smm_error_logger_pre)
 
