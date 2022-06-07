@@ -20,6 +20,7 @@ endif
 gtests = [
   'pci_handler',
   'rde_dictionary_manager',
+  'external_storer_file',
 ]
 foreach t : gtests
   test(t, executable(t.underscorify(), t + '_test.cpp',
