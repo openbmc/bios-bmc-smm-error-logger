@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbcf30a7_eb58c22d",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-07T23:47:24Z",
+      "side": 1,
+      "message": "Just tried this, clang-tidy cleans this up to look the same as this 😞",
+      "parentUuid": "4940beed_9c0a4ac3",
+      "range": {
+        "startLine": 39,
+        "startChar": 10,
+        "endLine": 40,
+        "endChar": 37
+      },
+      "revId": "08cbc2829edc49e0669bff465631ed3fadd4e644",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a3a3c01_e5ee2aa6",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-06-07T23:29:52Z",
       "side": 1,
       "message": "`std::span\u003cuint32_t, 4\u003e` instead?\n\nsame below.",
+      "range": {
+        "startLine": 63,
+        "startChar": 28,
+        "endLine": 63,
+        "endChar": 70
+      },
+      "revId": "08cbc2829edc49e0669bff465631ed3fadd4e644",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec545dfc_ca03f302",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-07T23:47:24Z",
+      "side": 1,
+      "message": "We need to create an array to store in the struct so we\u0027d need to create another array if we pass in a span, so I think it makes sense to pass in const reference instead - but let me know if I\u0027m missing something.\n\nBasically the problem comes from not having a good way to assign the header.magicNumber array from the data in span",
+      "parentUuid": "9a3a3c01_e5ee2aa6",
       "range": {
         "startLine": 63,
         "startChar": 28,
