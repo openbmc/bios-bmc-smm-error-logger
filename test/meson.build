@@ -17,13 +17,19 @@ if not gtest.found() or not gmock.found()
   endif
 endif
 
+test_dep = declare_dependency(
+  include_directories: include_directories('include'),
+  dependencies: [bios_bmc_smm_error_logger_dep, gtest, gmock, rde_dep]
+)
+
 gtests = [
   'pci_handler',
   'rde_dictionary_manager',
+  'external_storer_file',
 ]
 foreach t : gtests
   test(t, executable(t.underscorify(), t + '_test.cpp',
                      build_by_default: false,
                      implicit_include_directories: false,
-                     dependencies: [bios_bmc_smm_error_logger_dep, gtest, gmock, rde_dep]))
+                     dependencies: test_dep))
 endforeach
