@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "02c5d64b_7f6d12d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2022-06-07T16:21:38Z",
+      "side": 1,
+      "message": "Certainly not all of them need configurable per platform.  Magic number for example, I would expect to never change on any platform using this.\n\nParsing config files for things that we know at compile time (as a pattern, not just this) is why openbmc userspace is slow to boot.  I would much prefer that we add these parameters one at a time, in the places they\u0027re needed.\n\nYeah, I get bbappends and configure options are a downer, but a big part of the reason they\u0027re meh is that they impose some level of compile-time safety over just fixed config files.",
+      "parentUuid": "94034b05_f2987105",
+      "revId": "33f011baa56ec16af19cfeea916c8f641ce88fb3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c246e27_112fa23a",
         "filename": "src/config.cpp",
         "patchSetId": 3
@@ -144,6 +162,30 @@
       "side": 1,
       "message": "Oops, forgot that string_view doesn\u0027t have .to_string() conversion and requires an explicitly new string (which is even more ugly)",
       "parentUuid": "3d83a9bb_7692c6be",
+      "range": {
+        "startLine": 25,
+        "startChar": 39,
+        "endLine": 25,
+        "endChar": 46
+      },
+      "revId": "33f011baa56ec16af19cfeea916c8f641ce88fb3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5da4b1d0_7871d417",
+        "filename": "src/config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2022-06-07T16:21:38Z",
+      "side": 1,
+      "message": "Generally i\u0027ll just revert to passing by const std::string\u0026, which is a worse API, but prevents copying the string just to gaurantee null termination.",
+      "parentUuid": "c064fe42_09bb8722",
       "range": {
         "startLine": 25,
         "startChar": 39,
