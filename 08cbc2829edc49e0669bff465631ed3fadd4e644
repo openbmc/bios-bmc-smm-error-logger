@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4940beed_9c0a4ac3",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-07T23:29:52Z",
+      "side": 1,
+      "message": "nit: move the `;` after the comment. then maybe it will lineup with the other lines.",
+      "range": {
+        "startLine": 39,
+        "startChar": 10,
+        "endLine": 40,
+        "endChar": 37
+      },
+      "revId": "08cbc2829edc49e0669bff465631ed3fadd4e644",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a3a3c01_e5ee2aa6",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-07T23:29:52Z",
+      "side": 1,
+      "message": "`std::span\u003cuint32_t, 4\u003e` instead?\n\nsame below.",
+      "range": {
+        "startLine": 63,
+        "startChar": 28,
+        "endLine": 63,
+        "endChar": 70
+      },
+      "revId": "08cbc2829edc49e0669bff465631ed3fadd4e644",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
