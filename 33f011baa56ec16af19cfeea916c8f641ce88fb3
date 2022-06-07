@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "94034b05_f2987105",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-07T04:21:37Z",
+      "side": 1,
+      "message": "Hm. We definitely need some of these to be a configurable option per platform / BMC hardware, etc. so I guess the question is why I decided to do this in json config file rather than a build config?\n\nMy reasoning was that it\u0027s easier to see the different configs across different platforms in json rather than looking through the different bbappend files and whatnot but I\u0027m down to change this to something else - let me know what you think",
+      "parentUuid": "eb6664ef_c04aeb05",
+      "revId": "33f011baa56ec16af19cfeea916c8f641ce88fb3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c246e27_112fa23a",
         "filename": "src/config.cpp",
         "patchSetId": 3
