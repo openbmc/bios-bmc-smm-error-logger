@@ -40,12 +40,14 @@ class BufferTest : public ::testing::Test
     static constexpr uint16_t testUeRegionSize = 0x50;
     static constexpr std::array<uint32_t, 4> testMagicNumber = {
         0x12345678, 0x22345678, 0x32345678, 0x42345678};
+    static constexpr size_t bufferHeaderSize =
+        sizeof(struct CircularBufferHeader);
+
     struct CircularBufferHeader testInitializationHeader
     {};
 
     std::unique_ptr<DataInterfaceMock> dataInterfaceMock;
     DataInterfaceMock* dataInterfaceMockPtr;
-
     std::unique_ptr<BufferImpl> bufferImpl;
 };
 
@@ -100,14 +102,43 @@ TEST_F(BufferTest, BufferInitializePass)
 
     uint8_t* testInitializationHeaderPtr =
         reinterpret_cast<uint8_t*>(&testInitializationHeader);
-    size_t initializationHeaderSize = sizeof(testInitializationHeader);
     EXPECT_CALL(*dataInterfaceMockPtr,
                 write(0, ElementsAreArray(testInitializationHeaderPtr,
-                                          initializationHeaderSize)))
-        .WillOnce(Return(initializationHeaderSize));
+                                          bufferHeaderSize)))
+        .WillOnce(Return(bufferHeaderSize));
     EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
                                            testQueueSize, testUeRegionSize,
                                            testMagicNumber));
+}
+
+TEST_F(BufferTest, BufferHeaderReadFail)
+{
+    std::vector<std::uint8_t> testBytesRead{};
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(testBytesRead));
+    EXPECT_THROW(
+        try {
+            bufferImpl->readBufferHeader();
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(e.what(),
+                         "Buffer header read only read '0', expected '48'");
+            throw;
+        },
+        std::runtime_error);
+}
+
+TEST_F(BufferTest, BufferHeaderReadPass)
+{
+    uint8_t* testInitializationHeaderPtr =
+        reinterpret_cast<uint8_t*>(&testInitializationHeader);
+    std::vector<uint8_t> testInitializationHeaderVector(
+        testInitializationHeaderPtr,
+        testInitializationHeaderPtr + bufferHeaderSize);
+
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(testInitializationHeaderVector));
+    EXPECT_NO_THROW(bufferImpl->readBufferHeader());
+    EXPECT_EQ(bufferImpl->getCachedBufferHeader(), testInitializationHeader);
 }
 
 } // namespace

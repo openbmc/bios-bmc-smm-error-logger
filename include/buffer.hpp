@@ -5,6 +5,7 @@
 #include <array>
 #include <cstdint>
 #include <memory>
+#include <tuple>
 
 namespace bios_bmc_smm_error_logger
 {
@@ -27,17 +28,15 @@ struct CircularBufferHeader
 
     bool operator==(const CircularBufferHeader& other) const
     {
-        return this->bmcInterfaceVersion == other.bmcInterfaceVersion &&
-               this->biosInterfaceVersion == other.biosInterfaceVersion &&
-               this->magicNumber == other.magicNumber &&
-               this->queueSize == other.queueSize &&
-               this->ueRegionSize == other.ueRegionSize &&
-               this->bmcFlags == other.bmcFlags &&
-               this->bmcReadPtr == other.bmcReadPtr &&
-               /* Skip comparing padding1 */
-               this->biosFlags == other.biosFlags &&
-               this->biosWritePtr == other.biosWritePtr;
-        /* Skip comparing padding2 */
+        /* Skip comparing padding1 and padding 2*/
+        return std::tie(this->bmcInterfaceVersion, this->biosInterfaceVersion,
+                        this->magicNumber, this->queueSize, this->ueRegionSize,
+                        this->bmcFlags, this->bmcReadPtr, this->biosFlags,
+                        this->biosWritePtr) ==
+               std::tie(other.bmcInterfaceVersion, other.biosInterfaceVersion,
+                        other.magicNumber, other.queueSize, other.ueRegionSize,
+                        other.bmcFlags, other.bmcReadPtr, other.biosFlags,
+                        other.biosWritePtr);
     }
 } __attribute__((__packed__));
 
@@ -61,6 +60,17 @@ class BufferInterface
     virtual void initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
                             uint16_t ueRegionSize,
                             const std::array<uint32_t, 4>& magicNumber) = 0;
+
+    /**
+     * Read the buffer header from shared buffer
+     */
+    virtual void readBufferHeader() = 0;
+
+    /**
+     * Getter API for the cached buffer header
+     * @return cached CircularBufferHeader
+     */
+    virtual struct CircularBufferHeader getCachedBufferHeader() const = 0;
 };
 
 /**
@@ -76,9 +86,12 @@ class BufferImpl : public BufferInterface
     void initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
                     uint16_t ueRegionSize,
                     const std::array<uint32_t, 4>& magicNumber) override;
+    void readBufferHeader() override;
+    struct CircularBufferHeader getCachedBufferHeader() const override;
 
   private:
     std::unique_ptr<DataInterface> dataInterface;
+    struct CircularBufferHeader cachedBufferHeader;
 };
 
 } // namespace bios_bmc_smm_error_logger
