@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70855298_8dbf4e83",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-08T07:35:01Z",
+      "side": 1,
+      "message": "do we need this comment?",
+      "range": {
+        "startLine": 50,
+        "startChar": 31,
+        "endLine": 50,
+        "endChar": 41
+      },
+      "revId": "113847121c6ddb0041bd7b4cc42a4dbe1212e9df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fd00f7c_08b549bd",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-08T07:35:01Z",
+      "side": 1,
+      "message": "maybe\n```\nstd::tie(this-\u003esequenceId, this-\u003eentrySize, this-\u003echecksum, this-\u003erdeCommandType) \u003d\u003d std::tie(other.sequenceId, other.entrySize, other.checksum, other.rdeCommandType)\n```\n?\n\nmaybe cleaner.",
+      "range": {
+        "startLine": 53,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 60
+      },
+      "revId": "113847121c6ddb0041bd7b4cc42a4dbe1212e9df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
