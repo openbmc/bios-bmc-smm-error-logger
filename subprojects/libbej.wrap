@@ -1,0 +1,6 @@
+[wrap-git]
+url = https://github.com/openbmc/libbej
+revision = HEAD
+
+[provide]
+libbej = libbej
