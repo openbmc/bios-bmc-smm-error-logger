@@ -1,9 +1,17 @@
+libbej_dep = dependency('libbej')
+
+rde_pre = declare_dependency(
+  include_directories: [rde_inc],
+  dependencies: [libbej_dep])
+
 rde_lib = static_library(
   'rde',
   'rde_dictionary_manager.cpp',
   'external_storer_file.cpp',
-  include_directories : rde_inc,
-  implicit_include_directories: false)
+  'rde_handler.cpp',
+  implicit_include_directories: false,
+  dependencies: rde_pre)
 
 rde_dep = declare_dependency(
-  link_with: rde_lib)
+  link_with: rde_lib,
+  dependencies: rde_pre)
