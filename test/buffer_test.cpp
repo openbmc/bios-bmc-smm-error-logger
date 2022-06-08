@@ -149,5 +149,54 @@ TEST_F(BufferTest, BufferHeaderReadPass)
     EXPECT_EQ(bufferImpl->getCachedBufferHeader(), testInitializationHeader);
 }
 
+class BufferEntryHeaderTest : public BufferTest
+{
+  protected:
+    BufferEntryHeaderTest()
+    {
+        testEntryHeader.sequenceId = testSequenceId;
+        testEntryHeader.entrySize = testEntrySize;
+        testEntryHeader.checksum = testChecksum;
+        testEntryHeader.rdeCommandType = testRdeCommandType;
+    }
+    ~BufferEntryHeaderTest() override = default;
+
+    static constexpr size_t entryHeaderSize = sizeof(struct QueueEntryHeader);
+    static constexpr uint16_t testSequenceId = 0;
+    static constexpr uint16_t testEntrySize = 0x20;
+    static constexpr uint8_t testChecksum = 1;
+    static constexpr uint8_t testRdeCommandType = 0x01;
+    size_t testOffset = 0x50;
+
+    struct QueueEntryHeader testEntryHeader
+    {};
+};
+
+TEST_F(BufferEntryHeaderTest, ReadEntryHeaderFail)
+{
+    std::vector<std::uint8_t> testBytesRead{};
+    EXPECT_CALL(*dataInterfaceMockPtr, read(testOffset, entryHeaderSize))
+        .WillOnce(Return(testBytesRead));
+    EXPECT_THROW(
+        try {
+            bufferImpl->readEntryHeader(testOffset);
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(e.what(),
+                         "Entry header read only read '0', expected '6'");
+            throw;
+        },
+        std::runtime_error);
+}
+
+TEST_F(BufferEntryHeaderTest, ReadEntryHeaderPass)
+{
+    uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
+    std::vector<uint8_t> testEntryHeaderVector(
+        testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
+    EXPECT_CALL(*dataInterfaceMockPtr, read(testOffset, entryHeaderSize))
+        .WillOnce(Return(testEntryHeaderVector));
+    EXPECT_EQ(bufferImpl->readEntryHeader(testOffset), testEntryHeader);
+}
+
 } // namespace
 } // namespace bios_bmc_smm_error_logger
