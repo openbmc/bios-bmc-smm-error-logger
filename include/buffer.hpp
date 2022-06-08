@@ -41,6 +41,22 @@ struct CircularBufferHeader
     }
 } __attribute__((__packed__));
 
+struct QueueEntryHeader
+{
+    uint16_t sequenceId;    // Offset 0x0
+    uint16_t entrySize;     // Offset 0x2
+    uint8_t checksum;       // Offset 0x4
+    uint8_t rdeCommandType; // Offset 0x5
+    // RDE Command             Offset 0x6
+    bool operator==(const QueueEntryHeader& other) const
+    {
+        return this->sequenceId == other.sequenceId &&
+               this->entrySize == other.entrySize &&
+               this->checksum == other.checksum &&
+               this->rdeCommandType == other.rdeCommandType;
+    }
+} __attribute__((__packed__));
+
 /**
  * An interface class for the buffer helper APIs
  */
@@ -72,6 +88,14 @@ class BufferInterface
      * @return cached CircularBufferHeader
      */
     virtual struct CircularBufferHeader getCachedBufferHeader() = 0;
+
+    /**
+     * Read the entry header from shared buffer
+     *
+     * @param[in] offset - bytes read from buffer
+     * @return the entry header
+     */
+    virtual struct QueueEntryHeader readEntryHeader(size_t offset) = 0;
 };
 
 /**
@@ -89,6 +113,7 @@ class BufferImpl : public BufferInterface
                     const std::array<uint32_t, 4>& magicNumber) override;
     void readBufferHeader() override;
     struct CircularBufferHeader getCachedBufferHeader() override;
+    struct QueueEntryHeader readEntryHeader(size_t offset) override;
 
   private:
     std::unique_ptr<DataInterface> dataInterface;
