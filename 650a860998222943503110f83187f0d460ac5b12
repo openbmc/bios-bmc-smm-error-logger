@@ -63,6 +63,30 @@
       },
       "revId": "650a860998222943503110f83187f0d460ac5b12",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b65ebdf_1adf48d2",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-08T00:45:01Z",
+      "side": 1,
+      "message": "Oh, I thought I submitted this already. I\u0027ll fix it here.",
+      "parentUuid": "5943ed8c_72dc0c6d",
+      "range": {
+        "startLine": 14,
+        "startChar": 41,
+        "endLine": 15,
+        "endChar": 54
+      },
+      "revId": "650a860998222943503110f83187f0d460ac5b12",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
