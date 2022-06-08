@@ -75,4 +75,22 @@ struct CircularBufferHeader BufferImpl::getCachedBufferHeader() const
     return cachedBufferHeader;
 }
 
+struct QueueEntryHeader BufferImpl::readEntryHeader(size_t offset)
+{
+    size_t headerSize = sizeof(struct QueueEntryHeader);
+    std::vector<std::uint8_t> bytesRead =
+        dataInterface->read(offset, headerSize);
+    if (bytesRead.size() != headerSize)
+    {
+        throw std::runtime_error(
+            fmt::format("Entry header read only read '{}', expected '{}'",
+                        bytesRead.size(), headerSize));
+    }
+
+    // Copy over the read header content to QueueEntryHeader struct
+    struct QueueEntryHeader* entryHeader =
+        reinterpret_cast<QueueEntryHeader*>(bytesRead.data());
+    return *entryHeader;
+}
+
 } // namespace bios_bmc_smm_error_logger
