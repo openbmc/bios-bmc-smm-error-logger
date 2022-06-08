@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4dd88b46_677b10a2",
+        "filename": "include/rde/external_storer_file.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-08T23:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2500afb_88337d49",
+      "range": {
+        "startLine": 28,
+        "startChar": 18,
+        "endLine": 28,
+        "endChar": 28
+      },
+      "revId": "005f457965efa9073a5c46c26545e0dc5399933d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "77f4af00_03678d59",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-06-08T07:01:20Z",
       "side": 1,
       "message": "const nlohmann::json\u0026? for all of them. Doesn\u0027t look like you are updating the jsonSchema\n\nSeems like you update in some of them.",
+      "range": {
+        "startLine": 98,
+        "startChar": 30,
+        "endLine": 98,
+        "endChar": 46
+      },
+      "revId": "005f457965efa9073a5c46c26545e0dc5399933d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9dd23932_575934ca",
+        "filename": "include/rde/external_storer_file.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-08T23:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77f4af00_03678d59",
       "range": {
         "startLine": 98,
         "startChar": 30,
@@ -70,6 +118,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "250fbc0c_4107d6da",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-08T23:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f642c783_76ebddb9",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 43
+      },
+      "revId": "005f457965efa9073a5c46c26545e0dc5399933d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eedcf750_ebc3b8c4",
@@ -93,6 +165,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5f79bcb_7b9abcce",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-08T23:54:12Z",
+      "side": 1,
+      "message": "@odata.type is a string. In JSON, This will be something like,\n\n\"@odata.type\": \"#LogService.v1_1_0.LogService\",",
+      "parentUuid": "eedcf750_ebc3b8c4",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 104,
+        "endChar": 0
+      },
+      "revId": "005f457965efa9073a5c46c26545e0dc5399933d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "97c77976_ae1ee5d1",
@@ -106,6 +202,30 @@
       "writtenOn": "2022-06-08T07:01:20Z",
       "side": 1,
       "message": "check .empty() instead.",
+      "range": {
+        "startLine": 112,
+        "startChar": 8,
+        "endLine": 112,
+        "endChar": 26
+      },
+      "revId": "005f457965efa9073a5c46c26545e0dc5399933d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33e8d1ca_e01f25a6",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-08T23:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97c77976_ae1ee5d1",
       "range": {
         "startLine": 112,
         "startChar": 8,
