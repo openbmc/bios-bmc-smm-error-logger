@@ -160,4 +160,14 @@ std::vector<uint8_t>
     return bytesRead;
 }
 
+struct QueueEntryHeader BufferImpl::readEntryHeader(size_t offset)
+{
+    size_t headerSize = sizeof(struct QueueEntryHeader);
+    // wraparonudRead will throw if it did not read all the bytes, let it
+    // propagate up the stack
+    std::vector<uint8_t> bytesRead = wraparoundRead(offset, headerSize);
+
+    return *reinterpret_cast<struct QueueEntryHeader*>(bytesRead.data());
+}
+
 } // namespace bios_bmc_smm_error_logger
