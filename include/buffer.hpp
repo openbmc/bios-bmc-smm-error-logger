@@ -61,6 +61,17 @@ class BufferInterface
     virtual void initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
                             uint16_t ueRegionSize,
                             const std::array<uint32_t, 4>& magicNumber) = 0;
+
+    /**
+     * Read the buffer header from shared buffer
+     */
+    virtual void readBufferHeader() = 0;
+
+    /**
+     * Getter API for the cached buffer header
+     * @return cached CircularBufferHeader
+     */
+    virtual struct CircularBufferHeader getCachedBufferHeader() = 0;
 };
 
 /**
@@ -76,9 +87,12 @@ class BufferImpl : public BufferInterface
     void initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
                     uint16_t ueRegionSize,
                     const std::array<uint32_t, 4>& magicNumber) override;
+    void readBufferHeader() override;
+    struct CircularBufferHeader getCachedBufferHeader() override;
 
   private:
     std::unique_ptr<DataInterface> dataInterface;
+    struct CircularBufferHeader cachedBufferHeader;
 };
 
 } // namespace bios_bmc_smm_error_logger

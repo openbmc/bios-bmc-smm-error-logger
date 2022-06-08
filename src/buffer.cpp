@@ -52,4 +52,27 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
     }
 }
 
+void BufferImpl::readBufferHeader()
+{
+    size_t headerSize = sizeof(struct CircularBufferHeader);
+    std::vector<std::uint8_t> bytesRead = dataInterface->read(0, headerSize);
+
+    if (bytesRead.size() != headerSize)
+    {
+        throw std::runtime_error(
+            fmt::format("Buffer header read only read '{}'", bytesRead.size()));
+    }
+
+    // Copy over the read header content to CircularBufferHeader struct
+    struct CircularBufferHeader bufferHeader = {};
+    std::memcpy(&bufferHeader, bytesRead.data(), headerSize);
+    // Update the cachedBufferHeader
+    cachedBufferHeader = bufferHeader;
+};
+
+struct CircularBufferHeader BufferImpl::getCachedBufferHeader()
+{
+    return cachedBufferHeader;
+}
+
 } // namespace bios_bmc_smm_error_logger
