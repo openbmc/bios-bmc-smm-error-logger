@@ -68,6 +68,29 @@
       },
       "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "843692dc_a9b831b2",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2022-06-08T15:16:19Z",
+      "side": 1,
+      "message": "Just memcpying the data in has endian issues that you should account for.\n\nAlso, memcpy is generally banned within the project.  use memcpy_s instead (which takes two sizes, and should remove the need for the size variable as well).",
+      "range": {
+        "startLine": 68,
+        "startChar": 46,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
