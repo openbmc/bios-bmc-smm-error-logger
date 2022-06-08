@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2500afb_88337d49",
+        "filename": "include/rde/external_storer_file.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-08T07:01:20Z",
+      "side": 1,
+      "message": "path. to match the actual parameter name. Or change the other way.\n\nSame below.",
+      "range": {
+        "startLine": 28,
+        "startChar": 18,
+        "endLine": 28,
+        "endChar": 28
+      },
+      "revId": "005f457965efa9073a5c46c26545e0dc5399933d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77f4af00_03678d59",
+        "filename": "include/rde/external_storer_file.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-08T07:01:20Z",
+      "side": 1,
+      "message": "const nlohmann::json\u0026? for all of them. Doesn\u0027t look like you are updating the jsonSchema\n\nSeems like you update in some of them.",
+      "range": {
+        "startLine": 98,
+        "startChar": 30,
+        "endLine": 98,
+        "endChar": 46
+      },
+      "revId": "005f457965efa9073a5c46c26545e0dc5399933d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f642c783_76ebddb9",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-08T07:01:20Z",
+      "side": 1,
+      "message": "string_view is not null terminated. So best to just use `const std::string \u0026` in this case.\n\nSame with the other one below.",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 19,
+        "endChar": 43
+      },
+      "revId": "005f457965efa9073a5c46c26545e0dc5399933d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eedcf750_ebc3b8c4",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-08T07:01:20Z",
+      "side": 1,
+      "message": "What are the possible `@odata.type`?",
+      "range": {
+        "startLine": 91,
+        "startChar": 4,
+        "endLine": 104,
+        "endChar": 0
+      },
+      "revId": "005f457965efa9073a5c46c26545e0dc5399933d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97c77976_ae1ee5d1",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-08T07:01:20Z",
+      "side": 1,
+      "message": "check .empty() instead.",
+      "range": {
+        "startLine": 112,
+        "startChar": 8,
+        "endLine": 112,
+        "endChar": 26
+      },
+      "revId": "005f457965efa9073a5c46c26545e0dc5399933d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
