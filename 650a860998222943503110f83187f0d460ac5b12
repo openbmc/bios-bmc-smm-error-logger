@@ -16,6 +16,29 @@
       "message": "Thank you for the quick reviews Willy!",
       "revId": "650a860998222943503110f83187f0d460ac5b12",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7124fd6a_cd890257",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-08T00:11:16Z",
+      "side": 1,
+      "message": "Does the compiler guarantee to provide this sequentially? I am not sure we can expect that.\n\nShould we use a dedicated struct with __attribute__((__packed__))?",
+      "range": {
+        "startLine": 14,
+        "startChar": 41,
+        "endLine": 15,
+        "endChar": 54
+      },
+      "revId": "650a860998222943503110f83187f0d460ac5b12",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
