@@ -320,5 +320,49 @@ TEST_F(BufferWraparoundReadTest, WrapAroundReadPasses)
                 ElementsAreArray(expectedBytes));
 }
 
+class BufferEntryHeaderTest : public BufferWraparoundReadTest
+{
+  protected:
+    BufferEntryHeaderTest()
+    {
+        testEntryHeader.sequenceId = testSequenceId;
+        testEntryHeader.entrySize = testEntrySize;
+        testEntryHeader.checksum = testChecksum;
+        testEntryHeader.rdeCommandType = testRdeCommandType;
+    }
+    ~BufferEntryHeaderTest() override = default;
+
+    void wraparoundReadMock(std::span<std::uint8_t> expetedBytesOutput)
+    {
+        EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
+            .WillOnce(Return(testRegionSize));
+        EXPECT_CALL(*dataInterfaceMockPtr, read(_, _))
+            .WillOnce(Return(std::vector<std::uint8_t>(
+                expetedBytesOutput.begin(), expetedBytesOutput.end())));
+
+        EXPECT_CALL(*dataInterfaceMockPtr, write(_, _))
+            .WillOnce(Return(expectedWriteSize));
+    }
+
+    static constexpr size_t entryHeaderSize = sizeof(struct QueueEntryHeader);
+    static constexpr uint16_t testSequenceId = 0;
+    static constexpr uint16_t testEntrySize = 0x20;
+    static constexpr uint8_t testChecksum = 1;
+    static constexpr uint8_t testRdeCommandType = 0x01;
+    size_t testOffset = 0x50;
+
+    struct QueueEntryHeader testEntryHeader
+    {};
+};
+
+TEST_F(BufferEntryHeaderTest, ReadEntryHeaderPass)
+{
+    uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
+    std::vector<uint8_t> testEntryHeaderVector(
+        testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
+    wraparoundReadMock(testEntryHeaderVector);
+    EXPECT_EQ(bufferImpl->readEntryHeader(testOffset), testEntryHeader);
+}
+
 } // namespace
 } // namespace bios_bmc_smm_error_logger
