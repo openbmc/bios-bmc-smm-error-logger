@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "66d803e4_94aa0691",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2022-06-08T15:01:52Z",
+      "side": 1,
+      "message": "Lets also make sure we\u0027re adding configure options only for the things that actually need configured.\n\n\nGoing through your list for a sec:\n    \"BMCInterfaceVersion\": 3,\n  Do any systems support version 1, 2, or 4?  If so, this can just be a constant for now.\n    \n    \n    \"MagicNumber\": [\"0x12345678\", \"0x22345678\", \"0x32345678\", \"0x42345678\"],\nMentioned above.\n    \n    \n    \"QueueSizeBytes\": 15360,\n    \"UERegionSizeBytes\": 768,\n     \"MemoryRegionSize\": 16384,\n\nThese are probably the most reasonable, but do we expect them to need to be configured per platform?  When/why would we change them?\n    \n    \n    \"PollingIntervalMS\": 100,\nThis seems like it would be constant per system.\n    \n    \n    \"MemoryRegionOffset\": 4035215360\nThis doesn\u0027t feel like it should be coming from a config file, but the kernel driver for this.  Its a little odd userspace would even be able to offset into this stuff?",
+      "parentUuid": "0c65c66b_88441211",
+      "revId": "33f011baa56ec16af19cfeea916c8f641ce88fb3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c246e27_112fa23a",
         "filename": "src/config.cpp",
         "patchSetId": 3
