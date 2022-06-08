@@ -4,6 +4,10 @@
 
 #include <fmt/format.h>
 
+#include <boost/endian/arithmetic.hpp>
+#include <boost/endian/conversion.hpp>
+
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <memory>
@@ -32,10 +36,16 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
 
     // Create an initial buffer header and write to it
     struct CircularBufferHeader initializationHeader = {};
-    initializationHeader.bmcInterfaceVersion = bmcInterfaceVersion;
-    initializationHeader.queueSize = queueSize;
-    initializationHeader.ueRegionSize = ueRegionSize;
-    initializationHeader.magicNumber = magicNumber;
+    initializationHeader.bmcInterfaceVersion =
+        boost::endian::native_to_little(bmcInterfaceVersion);
+    initializationHeader.queueSize = boost::endian::native_to_little(queueSize);
+    initializationHeader.ueRegionSize =
+        boost::endian::native_to_little(ueRegionSize);
+    std::transform(magicNumber.begin(), magicNumber.end(),
+                   initializationHeader.magicNumber.begin(),
+                   [](uint32_t number) -> little_uint32_t {
+                       return boost::endian::native_to_little(number);
+                   });
 
     uint8_t* initializationHeaderPtr =
         reinterpret_cast<uint8_t*>(&initializationHeader);
@@ -50,6 +60,28 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
             "Buffer initialization buffer header write only wrote '{}'",
             byteWritten));
     }
+}
+
+void BufferImpl::readBufferHeader()
+{
+    size_t headerSize = sizeof(struct CircularBufferHeader);
+    std::vector<uint8_t> bytesRead =
+        dataInterface->read(/* offset */ 0, headerSize);
+
+    if (bytesRead.size() != headerSize)
+    {
+        throw std::runtime_error(
+            fmt::format("Buffer header read only read '{}', expected '{}'",
+                        bytesRead.size(), headerSize));
+    }
+
+    cachedBufferHeader =
+        *reinterpret_cast<CircularBufferHeader*>(bytesRead.data());
+};
+
+struct CircularBufferHeader BufferImpl::getCachedBufferHeader() const
+{
+    return cachedBufferHeader;
 }
 
 } // namespace bios_bmc_smm_error_logger
