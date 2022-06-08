@@ -27,6 +27,7 @@ gtests = [
   'rde_dictionary_manager',
   'buffer',
   'external_storer_file',
+  'rde_handler',
 ]
 foreach t : gtests
   test(t, executable(t.underscorify(), t + '_test.cpp',
