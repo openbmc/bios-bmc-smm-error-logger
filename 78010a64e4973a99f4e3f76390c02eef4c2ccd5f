@@ -307,6 +307,30 @@
       },
       "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "90c7c6c3_70ed3168",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2022-06-09T18:14:20Z",
+      "side": 1,
+      "message": "FWIW, I generally tend to just do the braindead thing, and construct a new struct manually.\n\nint32_t myInt \u003d bytes[0] \u003c\u003c 24 + bytes[1] \u003c\u003c 16 + bytes[2] \u003c\u003c 8 + bytes[3];\n\nSo it\u0027s brutally obvious what the intended endianness is to someone reading it, and your in-process data structures aren\u0027t tied directly to the data structures that are being sent over the wire.  This works fine so long as you\u0027re not doing anything super performance sensitive (in practice the optimizer is pretty good about recognizing patterns like this for most architectures).\n\nFWIW, there are other approaches that involve doing the cast like willy suggests, then relying on the ntoh class of methods to convert any integers from network to native.\nhttps://linux.die.net/man/3/ntohl\n\nIf you\u0027re in a project that uses boost, boost endian wraps those functions in some \"endian safe\" numeric primitives (for example big_int32_buf_t) that make it brutally obvious to the reader what the encoding is, and makes them very hard to do wrong, as they overload all the numeric operators to convert the endianness on the way back out.\n\nAs with anything, lots of ways to solve it, do what makes sense to your sensibilities.",
+      "parentUuid": "a1b02a18_7f16fb55",
+      "range": {
+        "startLine": 68,
+        "startChar": 46,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
