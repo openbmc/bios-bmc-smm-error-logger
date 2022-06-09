@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54ed24fc_0aadd457",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-09T02:01:34Z",
+      "side": 1,
+      "message": "Copy might not be correct since you are simply casting here.",
+      "range": {
+        "startLine": 90,
+        "startChar": 7,
+        "endLine": 90,
+        "endChar": 11
+      },
+      "revId": "d066f59c270b5479974deb6fa735b5ca45b8c8ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5dc1e57_ebf6d709",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-09T02:01:34Z",
+      "side": 1,
+      "message": "I think you can simply return *reinterpret_cast\u003c...\u003e(...);",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 23
+      },
+      "revId": "d066f59c270b5479974deb6fa735b5ca45b8c8ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
