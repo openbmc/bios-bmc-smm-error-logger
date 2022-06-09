@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34659b8b_9f157c10",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T22:55:56Z",
+      "side": 1,
+      "message": "nit: It may be good to create a github issue to capture this future feature (I forget if there was a good way to link the TODO to the issue, so we don\u0027t have to link it here).",
+      "range": {
+        "startLine": 111,
+        "startChar": 11,
+        "endLine": 111,
+        "endChar": 12
+      },
+      "revId": "60980d1c51e85b38b126620e494ad69a6e601dc0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39998e94_96f90e35",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T22:55:56Z",
+      "side": 1,
+      "message": "Assuming we are the only generator of the UUID, we can be confident that this is \"unique\" https://stackoverflow.com/a/10951940",
+      "range": {
+        "startLine": 119,
+        "startChar": 4,
+        "endLine": 120,
+        "endChar": 20
+      },
+      "revId": "60980d1c51e85b38b126620e494ad69a6e601dc0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f2595d8_200d6de0",
+        "filename": "test/external_storer_file_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T22:55:56Z",
+      "side": 1,
+      "message": "Huh, weird, I usually don\u0027t require this dynamic_cast",
+      "range": {
+        "startLine": 35,
+        "startChar": 28,
+        "endLine": 35,
+        "endChar": 41
+      },
+      "revId": "60980d1c51e85b38b126620e494ad69a6e601dc0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3276be7a_0816238b",
+        "filename": "test/external_storer_file_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T22:55:56Z",
+      "side": 1,
+      "message": "could this be failing because it\u0027s missing odata.id?",
+      "range": {
+        "startLine": 114,
+        "startChar": 34,
+        "endLine": 118,
+        "endChar": 7
+      },
+      "revId": "60980d1c51e85b38b126620e494ad69a6e601dc0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23e0ff82_6171ba65",
+        "filename": "test/external_storer_file_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T22:55:56Z",
+      "side": 1,
+      "message": "very minor nit: another",
+      "range": {
+        "startLine": 160,
+        "startChar": 11,
+        "endLine": 160,
+        "endChar": 18
+      },
+      "revId": "60980d1c51e85b38b126620e494ad69a6e601dc0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
