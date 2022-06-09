@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbf81912_929a1f40",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T00:42:03Z",
+      "side": 1,
+      "message": "I think it\u0027s nice to know where the offset is at after the last header struct. Prefer to keep it.",
+      "parentUuid": "70855298_8dbf4e83",
+      "range": {
+        "startLine": 50,
+        "startChar": 31,
+        "endLine": 50,
+        "endChar": 41
+      },
+      "revId": "113847121c6ddb0041bd7b4cc42a4dbe1212e9df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8fd00f7c_08b549bd",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-06-08T07:35:01Z",
       "side": 1,
       "message": "maybe\n```\nstd::tie(this-\u003esequenceId, this-\u003eentrySize, this-\u003echecksum, this-\u003erdeCommandType) \u003d\u003d std::tie(other.sequenceId, other.entrySize, other.checksum, other.rdeCommandType)\n```\n?\n\nmaybe cleaner.",
+      "range": {
+        "startLine": 53,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 60
+      },
+      "revId": "113847121c6ddb0041bd7b4cc42a4dbe1212e9df",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7db0abb6_a8f38a3a",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T00:42:03Z",
+      "side": 1,
+      "message": "Ah that\u0027s what it was, I remember seeing that somewhere and couldn\u0027t remember what it was. I\u0027ll fix this - the other struct will be fixed in the prior commit.",
+      "parentUuid": "8fd00f7c_08b549bd",
       "range": {
         "startLine": 53,
         "startChar": 8,
