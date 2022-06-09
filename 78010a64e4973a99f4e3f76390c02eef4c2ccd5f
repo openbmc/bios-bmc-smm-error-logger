@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "74491084_bc289cc3",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T00:42:09Z",
+      "side": 1,
+      "message": "Good catch, remnant of my old local code that I\u0027m copying from",
+      "parentUuid": "ebc96db4_69bfe303",
+      "range": {
+        "startLine": 58,
+        "startChar": 16,
+        "endLine": 58,
+        "endChar": 21
+      },
+      "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec4d722e_5a6da656",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-06-08T07:32:03Z",
       "side": 1,
       "message": "add the expected read size",
+      "range": {
+        "startLine": 63,
+        "startChar": 23,
+        "endLine": 63,
+        "endChar": 80
+      },
+      "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b4c9e6c_77e59121",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T00:42:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec4d722e_5a6da656",
       "range": {
         "startLine": 63,
         "startChar": 23,
@@ -107,6 +155,54 @@
       "side": 1,
       "message": "FYI for learning, list of banned functions and alternatives.\n\nhttps://github.com/intel/safestringlib/wiki/SDL-List-of-Banned-Functions",
       "parentUuid": "843692dc_a9b831b2",
+      "range": {
+        "startLine": 68,
+        "startChar": 46,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bcd5e91c_61f03014",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T00:42:09Z",
+      "side": 1,
+      "message": "Thanks, that\u0027s much cleaner and a pattern I meant to do (and forgot the last step).",
+      "parentUuid": "ade4d5f0_68d8a092",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 61
+      },
+      "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50f95617_68a0391a",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T00:42:09Z",
+      "side": 1,
+      "message": "Ah, I thought memcpy was not so safe (as I learned in college) but I saw it being used elsewhere and thought it was ok on the newer C++ (I definitely learned C++99 when I was in school). Good to know that the _s variant of functions are still the safer version of these functions, thanks!.\n\nGood point on the endianness, I think what Willy proposed may work better for us here.",
+      "parentUuid": "03fbc848_39ea72bb",
       "range": {
         "startLine": 68,
         "startChar": 46,
