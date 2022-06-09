@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3da2624b_b8a80c6f",
+        "filename": "src/rde/meson.build",
+        "patchSetId": 6
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-09T17:42:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd6e0391_d0f76a9b",
+      "range": {
+        "startLine": 1,
+        "startChar": 13,
+        "endLine": 6,
+        "endChar": 0
+      },
+      "revId": "eb54287628b7a4a0848df5b553d494b91c8cb11e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "191b3ffa_274341b4",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa728f6d_06f83bdd",
+        "filename": "src/rde/meson.build",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-09T17:42:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "191b3ffa_274341b4",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 3
+      },
+      "revId": "eb54287628b7a4a0848df5b553d494b91c8cb11e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6af6d4ef_1c6e2a44",
@@ -60,6 +108,24 @@
       "writtenOn": "2022-06-09T05:39:42Z",
       "side": 1,
       "message": "Add\n\n```\n[provide]\nlibbej \u003d libbej\n```",
+      "revId": "eb54287628b7a4a0848df5b553d494b91c8cb11e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "677c090d_9c8cb534",
+        "filename": "subprojects/libbej.wrap",
+        "patchSetId": 6
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-09T17:42:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6af6d4ef_1c6e2a44",
       "revId": "eb54287628b7a4a0848df5b553d494b91c8cb11e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
