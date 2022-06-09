@@ -211,6 +211,30 @@
       },
       "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30ce65e5_deac6879",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2022-06-09T00:52:16Z",
+      "side": 1,
+      "message": "what willy suggested has the same issues.  Casting to a struct doesn\u0027t fix endianness issues, and because it seems likely that we might have to share this struct between non biendian things (I\u0027m not sure what smm is) it seems important to handle this.\n\n\nTechnically memcpy_s is no more \"safe\" than memcpy, it\u0027s just easier to use properly and wraps up the range checks a little more helpfully.  Also, FWIW, you can actually get rid of the size check, as memcpy_s will now do that for you.",
+      "parentUuid": "50f95617_68a0391a",
+      "range": {
+        "startLine": 68,
+        "startChar": 46,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
