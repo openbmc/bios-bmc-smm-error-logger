@@ -235,6 +235,30 @@
       },
       "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1b02a18_7f16fb55",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-09T01:22:43Z",
+      "side": 1,
+      "message": "Good point on endianness - is there a common OpenBMC practice? Or would using something like boost endian library to set each of the multi-byte variables in this struct as a set endian be enough?",
+      "parentUuid": "30ce65e5_deac6879",
+      "range": {
+        "startLine": 68,
+        "startChar": 46,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
