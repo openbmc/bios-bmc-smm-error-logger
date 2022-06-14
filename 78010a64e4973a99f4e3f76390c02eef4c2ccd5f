@@ -355,6 +355,30 @@
       },
       "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bf21b59_cd6e15f6",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2022-06-14T15:19:59Z",
+      "side": 1,
+      "message": "\u003e but would declaring the variables in the struct with the boost endian library and reinterpret_casting / memcpying be enough?\n\nyes.  In this case, i don\u0027t think you need copyFrom.  If you use it, you need to catch and handle the exception it throws.",
+      "parentUuid": "502bdcd3_6dc83008",
+      "range": {
+        "startLine": 68,
+        "startChar": 46,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "78010a64e4973a99f4e3f76390c02eef4c2ccd5f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
