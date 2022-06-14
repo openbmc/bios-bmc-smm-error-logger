@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "2b382b43_f64ea4b4",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-14T03:56:55Z",
+      "side": 1,
+      "message": "Got it, actually took this out now.",
+      "parentUuid": "54ed24fc_0aadd457",
+      "range": {
+        "startLine": 90,
+        "startChar": 7,
+        "endLine": 90,
+        "endChar": 11
+      },
+      "revId": "d066f59c270b5479974deb6fa735b5ca45b8c8ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "c5dc1e57_ebf6d709",
         "filename": "src/buffer.cpp",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2022-06-09T02:01:34Z",
       "side": 1,
       "message": "I think you can simply return *reinterpret_cast\u003c...\u003e(...);",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 23
+      },
+      "revId": "d066f59c270b5479974deb6fa735b5ca45b8c8ea",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e887df6c_9c3ed1f7",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-14T03:56:55Z",
+      "side": 1,
+      "message": "Good point, took this out with a different implementation",
+      "parentUuid": "c5dc1e57_ebf6d709",
       "range": {
         "startLine": 93,
         "startChar": 4,
