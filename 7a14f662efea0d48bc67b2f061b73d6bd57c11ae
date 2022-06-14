@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "472b0686_deb33fc8",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-14T21:48:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d81d118_c8bce1c9",
+      "range": {
+        "startLine": 20,
+        "startChar": 7,
+        "endLine": 20,
+        "endChar": 27
+      },
+      "revId": "7a14f662efea0d48bc67b2f061b73d6bd57c11ae",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "575e74dd_ee8c091f",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ecbe2e1b_e8294d92",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-14T21:48:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "575e74dd_ee8c091f",
+      "range": {
+        "startLine": 29,
+        "startChar": 27,
+        "endLine": 29,
+        "endChar": 35
+      },
+      "revId": "7a14f662efea0d48bc67b2f061b73d6bd57c11ae",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5f4e721b_de0e403d",
@@ -60,6 +108,30 @@
       "writtenOn": "2022-06-14T21:34:15Z",
       "side": 1,
       "message": "read(/*param name\u003d*/0, headerSize) ?",
+      "range": {
+        "startLine": 68,
+        "startChar": 57,
+        "endLine": 68,
+        "endChar": 58
+      },
+      "revId": "7a14f662efea0d48bc67b2f061b73d6bd57c11ae",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8428e612_ccfbea51",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-14T21:48:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f4e721b_de0e403d",
       "range": {
         "startLine": 68,
         "startChar": 57,
