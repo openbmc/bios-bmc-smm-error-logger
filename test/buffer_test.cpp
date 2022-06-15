@@ -184,5 +184,141 @@ TEST_F(BufferTest, BufferUpdateReadPtrPass)
     EXPECT_NO_THROW(bufferImpl->updateReadPtr(testNewReadPtr));
 }
 
+class BufferWraparoundReadTest : public BufferTest
+{
+  protected:
+    BufferWraparoundReadTest()
+    {
+        // Initialize the memory and the cachedBufferHeader
+        InSequence s;
+        EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
+            .WillOnce(Return(testRegionSize));
+        const std::vector<uint8_t> emptyArray(testRegionSize, 0);
+        EXPECT_CALL(*dataInterfaceMockPtr,
+                    write(0, ElementsAreArray(emptyArray)))
+            .WillOnce(Return(testRegionSize));
+
+        uint8_t* testInitializationHeaderPtr =
+            reinterpret_cast<uint8_t*>(&testInitializationHeader);
+        EXPECT_CALL(*dataInterfaceMockPtr,
+                    write(0, ElementsAreArray(testInitializationHeaderPtr,
+                                              bufferHeaderSize)))
+            .WillOnce(Return(bufferHeaderSize));
+        EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
+                                               testQueueSize, testUeRegionSize,
+                                               testMagicNumber));
+    }
+    static constexpr size_t expectedWriteSize = 2;
+    static constexpr uint8_t expectedBmcReadPtrOffset = 0x20;
+    static constexpr size_t expectedqueueOffset = 0x30 + testUeRegionSize;
+};
+
+TEST_F(BufferWraparoundReadTest, TooBigReadFail)
+{
+    InSequence s;
+    EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
+        .WillOnce(Return(testRegionSize));
+    size_t tooBigLength = testRegionSize - expectedqueueOffset + 1;
+    EXPECT_THROW(
+        try {
+            bufferImpl->wraparoundRead(/* offset */ 0, tooBigLength);
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(
+                e.what(),
+                "[wraparoundRead] queueOffset '128' + length '385' was "
+                "bigger than memoryRegionSize '512'");
+            throw;
+        },
+        std::runtime_error);
+}
+
+TEST_F(BufferWraparoundReadTest, NoWrapAroundReadPass)
+{
+    InSequence s;
+    EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
+        .WillOnce(Return(testRegionSize));
+    size_t testLength = 0x10;
+    size_t testOffset = 0x50;
+
+    // Successfully read all the requested length without a wrap around
+    std::vector<std::uint8_t> testBytesRead(testLength);
+    EXPECT_CALL(*dataInterfaceMockPtr, read(testOffset, testLength))
+        .WillOnce(Return(testBytesRead));
+
+    // Call to updateReadPtr is triggered
+    const std::vector<uint8_t> expectedReadPtr{
+        static_cast<uint8_t>(testOffset + testLength), 0x0};
+    EXPECT_CALL(*dataInterfaceMockPtr, write(expectedBmcReadPtrOffset,
+                                             ElementsAreArray(expectedReadPtr)))
+        .WillOnce(Return(expectedWriteSize));
+
+    EXPECT_THAT(bufferImpl->wraparoundRead(testOffset, testLength),
+                ElementsAreArray(testBytesRead));
+}
+
+TEST_F(BufferWraparoundReadTest, WrapAroundReadFails)
+{
+    InSequence s;
+    EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
+        .WillOnce(Return(testRegionSize));
+    size_t testBytesLeft = 3;
+    size_t testLength = 0x10;
+    size_t testOffset = testRegionSize - (testLength - testBytesLeft);
+
+    // Read 3 bytes short
+    std::vector<std::uint8_t> testBytesReadShort(testLength - testBytesLeft);
+    EXPECT_CALL(*dataInterfaceMockPtr, read(testOffset, testLength))
+        .WillOnce(Return(testBytesReadShort));
+
+    // Read 1 byte short after wraparound
+    std::vector<std::uint8_t> testBytesLeftReadShort(testBytesLeft - 1);
+    EXPECT_CALL(*dataInterfaceMockPtr, read(expectedqueueOffset, testBytesLeft))
+        .WillOnce(Return(testBytesLeftReadShort));
+
+    EXPECT_THROW(
+        try {
+            bufferImpl->wraparoundRead(testOffset, testLength);
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(e.what(),
+                         "[wraparoundRead] Buffer wrapped around but was not "
+                         "able to read all of the requested info. "
+                         "Bytes remaining to read '1' of '16'");
+            throw;
+        },
+        std::runtime_error);
+}
+
+TEST_F(BufferWraparoundReadTest, WrapAroundReadPasses)
+{
+    InSequence s;
+    EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
+        .WillOnce(Return(testRegionSize));
+    size_t testBytesLeft = 3;
+    size_t testLength = 0x10;
+    size_t testOffset = testRegionSize - (testLength - testBytesLeft);
+
+    // Read 3 bytes short
+    std::vector<std::uint8_t> testBytesReadFirst{16, 15, 14, 13, 12, 11, 10,
+                                                 9,  8,  7,  6,  5,  4};
+    EXPECT_CALL(*dataInterfaceMockPtr, read(testOffset, testLength))
+        .WillOnce(Return(testBytesReadFirst));
+
+    std::vector<std::uint8_t> testBytesReadSecond{3, 2, 1};
+    EXPECT_CALL(*dataInterfaceMockPtr, read(expectedqueueOffset, testBytesLeft))
+        .WillOnce(Return(testBytesReadSecond));
+
+    // Call to updateReadPtr is triggered
+    const std::vector<uint8_t> expectedReadPtr{
+        static_cast<uint8_t>(expectedqueueOffset + testBytesLeft), 0x0};
+    EXPECT_CALL(*dataInterfaceMockPtr, write(expectedBmcReadPtrOffset,
+                                             ElementsAreArray(expectedReadPtr)))
+        .WillOnce(Return(expectedWriteSize));
+
+    std::vector<std::uint8_t> expectedBytes = {16, 15, 14, 13, 12, 11, 10, 9,
+                                               8,  7,  6,  5,  4,  3,  2,  1};
+    EXPECT_THAT(bufferImpl->wraparoundRead(testOffset, testLength),
+                ElementsAreArray(expectedBytes));
+}
+
 } // namespace
 } // namespace bios_bmc_smm_error_logger
