@@ -41,6 +41,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c469a98a_ba3dfad2",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-15T20:09:31Z",
+      "side": 1,
+      "message": "I thought I\u0027d do an explicit truncation since the offset that we\u0027d be passing this in (will come up with the next CL where we use this) is a uint32_t. offset should only be up to 16 bit, but I used uint32_t to avoid overflow calculation.",
+      "parentUuid": "5edb9585_6d31aa30",
+      "range": {
+        "startLine": 88,
+        "startChar": 37,
+        "endLine": 88,
+        "endChar": 45
+      },
+      "revId": "ab5a9754ff5ad91e10a7874c74fa8dd0489c3cc3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1382a638_9468b0ba",
@@ -54,6 +78,30 @@
       "writtenOn": "2022-06-15T18:51:10Z",
       "side": 1,
       "message": "Is this the only place you are updating the bmcReadPtr? \n\nDo you think it would be useful to have a dedicated function to update cachedBufferHeader members? Or else we need to make sure to remember to convert to little endian every time we update a cachedBufferHeader member",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 108,
+        "endChar": 33
+      },
+      "revId": "ab5a9754ff5ad91e10a7874c74fa8dd0489c3cc3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4aae6cc_95b0a41f",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-15T20:09:31Z",
+      "side": 1,
+      "message": "Yes, besides the header read where all the header gets updated, this will be the only place that the cachedBufferHeader.bmcReadPtr gets updated. The other use cases where we would write is to flag the fault registers, which are single bytes and endianness shouldn\u0027t matter. I think this is ok for now, but agreed that we may want a dedicated function in the future if we find that there\u0027s other instances where we may forget to update the cached header.",
+      "parentUuid": "1382a638_9468b0ba",
       "range": {
         "startLine": 108,
         "startChar": 4,
