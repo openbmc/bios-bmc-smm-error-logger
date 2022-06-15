@@ -60,6 +60,7 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
             "Buffer initialization buffer header write only wrote '{}'",
             byteWritten));
     }
+    cachedBufferHeader = initializationHeader;
 }
 
 void BufferImpl::readBufferHeader()
@@ -76,7 +77,7 @@ void BufferImpl::readBufferHeader()
     }
 
     cachedBufferHeader =
-        *reinterpret_cast<CircularBufferHeader*>(bytesRead.data());
+        *reinterpret_cast<struct CircularBufferHeader*>(bytesRead.data());
 };
 
 struct CircularBufferHeader BufferImpl::getCachedBufferHeader() const
