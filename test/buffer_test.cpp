@@ -320,17 +320,17 @@ TEST_F(BufferWraparoundReadTest, WrapAroundReadPasses)
                 ElementsAreArray(expectedBytes));
 }
 
-class BufferEntryHeaderTest : public BufferWraparoundReadTest
+class BufferEntryTest : public BufferWraparoundReadTest
 {
   protected:
-    BufferEntryHeaderTest()
+    BufferEntryTest()
     {
         testEntryHeader.sequenceId = testSequenceId;
         testEntryHeader.entrySize = testEntrySize;
         testEntryHeader.checksum = testChecksum;
         testEntryHeader.rdeCommandType = testRdeCommandType;
     }
-    ~BufferEntryHeaderTest() override = default;
+    ~BufferEntryTest() override = default;
 
     void wraparoundReadMock(std::span<std::uint8_t> expetedBytesOutput)
     {
@@ -347,7 +347,8 @@ class BufferEntryHeaderTest : public BufferWraparoundReadTest
     static constexpr size_t entryHeaderSize = sizeof(struct QueueEntryHeader);
     static constexpr uint16_t testSequenceId = 0;
     static constexpr uint16_t testEntrySize = 0x20;
-    static constexpr uint8_t testChecksum = 1;
+    // Calculated checksum for the header (0x100 - 0 - 0x20 - 0x01) & 0xff
+    static constexpr uint8_t testChecksum = 0xdf;
     static constexpr uint8_t testRdeCommandType = 0x01;
     size_t testOffset = 0x50;
 
@@ -355,13 +356,55 @@ class BufferEntryHeaderTest : public BufferWraparoundReadTest
     {};
 };
 
-TEST_F(BufferEntryHeaderTest, ReadEntryHeaderPass)
+TEST_F(BufferEntryTest, ReadEntryHeaderPass)
 {
     uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
     std::vector<uint8_t> testEntryHeaderVector(
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
     wraparoundReadMock(testEntryHeaderVector);
     EXPECT_EQ(bufferImpl->readEntryHeader(testOffset), testEntryHeader);
+}
+
+TEST_F(BufferEntryTest, ReadEntryChecksumFail)
+{
+    InSequence s;
+    // We expect this will bump checksum up by "testEntrySize" = 0x20
+    std::vector<uint8_t> testEntryVector(testEntrySize, 1);
+    // Offset the checksum by 1
+    testEntryHeader.checksum -= (0x20 - 1);
+    uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
+    std::vector<uint8_t> testEntryHeaderVector(
+        testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
+    wraparoundReadMock(testEntryHeaderVector);
+
+    wraparoundReadMock(testEntryVector);
+    EXPECT_THROW(
+        try {
+            bufferImpl->readEntry(testOffset);
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(e.what(),
+                         "[readEntry] Checksum was '1', expected '0'");
+            throw;
+        },
+        std::runtime_error);
+}
+
+TEST_F(BufferEntryTest, ReadEntryPass)
+{
+    InSequence s;
+    // We expect this will bump checksum up by "testEntrySize" = 0x40
+    std::vector<uint8_t> testEntryVector(testEntrySize, 2);
+    testEntryHeader.checksum -= (0x40);
+    uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
+    std::vector<uint8_t> testEntryHeaderVector(
+        testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
+    wraparoundReadMock(testEntryHeaderVector);
+    wraparoundReadMock(testEntryVector);
+
+    EntryPair testedEntryPair;
+    EXPECT_NO_THROW(testedEntryPair = bufferImpl->readEntry(testOffset));
+    EXPECT_EQ(testedEntryPair.first, testEntryHeader);
+    EXPECT_THAT(testedEntryPair.second, ElementsAreArray(testEntryVector));
 }
 
 } // namespace
