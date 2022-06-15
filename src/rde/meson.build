@@ -1,14 +1,18 @@
-libbej_dep = dependency('libbej')
-
 rde_pre = declare_dependency(
   include_directories: [rde_inc],
-  dependencies: [libbej_dep])
+  dependencies: [
+    dependency('libbej'),
+    dependency('phosphor-dbus-interfaces'),
+    dependency('sdbusplus'),
+  ]
+)
 
 rde_lib = static_library(
   'rde',
   'rde_dictionary_manager.cpp',
   'external_storer_file.cpp',
   'rde_handler.cpp',
+  'notifier_dbus_handler.cpp',
   implicit_include_directories: false,
   dependencies: rde_pre)
 
