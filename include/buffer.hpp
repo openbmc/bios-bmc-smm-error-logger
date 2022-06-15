@@ -17,6 +17,10 @@ using boost::endian::little_uint16_t;
 using boost::endian::little_uint32_t;
 using boost::endian::little_uint64_t;
 
+// EntryPair.first = QueueEntryHeader
+// EntryPair.second = Error entry in vector of bytes
+using EntryPair = std::pair<struct QueueEntryHeader, std::vector<uint8_t>>;
+
 struct CircularBufferHeader
 {
     little_uint32_t bmcInterfaceVersion;        // Offset 0x0
@@ -124,6 +128,14 @@ class BufferInterface
      * @return the entry header
      */
     virtual struct QueueEntryHeader readEntryHeader(size_t offset) = 0;
+
+    /**
+     * Read the queue entry from the error log queue
+     *
+     * @param[in] offset - offset to read from
+     * @return entry header and entry pair read from buffer
+     */
+    virtual EntryPair readEntry(size_t offset) = 0;
 };
 
 /**
@@ -146,6 +158,7 @@ class BufferImpl : public BufferInterface
         wraparoundRead(const uint32_t offset, const uint32_t length,
                        const uint32_t additionalBoundaryCheck = 0) override;
     struct QueueEntryHeader readEntryHeader(size_t offset) override;
+    EntryPair readEntry(size_t offset) override;
 
   private:
     /** @brief The Error log queue starts after the UE region, which is where

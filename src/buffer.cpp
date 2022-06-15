@@ -12,6 +12,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <numeric>
 #include <span>
 #include <vector>
 
@@ -168,6 +169,33 @@ struct QueueEntryHeader BufferImpl::readEntryHeader(size_t offset)
     std::vector<uint8_t> bytesRead = wraparoundRead(offset, headerSize);
 
     return *reinterpret_cast<struct QueueEntryHeader*>(bytesRead.data());
+}
+
+EntryPair BufferImpl::readEntry(size_t offset)
+{
+    struct QueueEntryHeader entryHeader = readEntryHeader(offset);
+
+    size_t entrySize = entryHeader.entrySize;
+
+    // wraparonudRead may throw if entrySize was bigger than the buffer or if it
+    // was not able to read all bytes, let it propagate up the stack
+    // - Use additionalBoundaryCheck parameter to tighten the boundary check
+    std::vector<uint8_t> entry =
+        wraparoundRead(offset + sizeof(struct QueueEntryHeader), entrySize,
+                       sizeof(struct QueueEntryHeader));
+
+    // Calculate the checksum
+    uint8_t* entryHeaderPtr = reinterpret_cast<uint8_t*>(&entryHeader);
+    uint8_t checksum = std::accumulate(
+        entryHeaderPtr, entryHeaderPtr + sizeof(struct QueueEntryHeader), 0);
+    checksum = std::accumulate(std::begin(entry), std::end(entry), checksum);
+    if (checksum)
+    {
+        throw std::runtime_error(fmt::format(
+            "[readEntry] Checksum was '{}', expected '0'", checksum));
+    }
+
+    return EntryPair{entryHeader, entry};
 }
 
 } // namespace bios_bmc_smm_error_logger
