@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70515f07_3549e318",
+        "filename": "include/rde/rde_handler.hpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-15T23:29:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62cf4b54_11daaa60",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 14
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cdbd26fa_26404291",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-06-15T07:10:38Z",
       "side": 1,
       "message": "`schemaDictOrErr \u003d\u003d std::nullopt`\n\ninstead.\n\nSame with annotationDictOrErr + other std::optional usage.",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 24
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5e21bd1_0c4a685a",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-15T23:29:59Z",
+      "side": 1,
+      "message": "Any particular reason for this?",
+      "parentUuid": "cdbd26fa_26404291",
       "range": {
         "startLine": 75,
         "startChar": 8,
@@ -70,6 +118,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0086ab40_3051f28d",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-15T23:29:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6fbf7ce5_90a6c17b",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 20
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54641861_cbeb6aec",
@@ -83,6 +155,30 @@
       "writtenOn": "2022-06-15T07:10:38Z",
       "side": 1,
       "message": "Error message here?",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 52
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b9e6b99_f963dfed",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-15T23:29:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54641861_cbeb6aec",
       "range": {
         "startLine": 108,
         "startChar": 0,
@@ -116,6 +212,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "47da9681_8b60067f",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-15T23:29:59Z",
+      "side": 1,
+      "message": "Good idea! I used a switch statement and put the code inside each if statement into a separate function.",
+      "parentUuid": "31f77d3e_a893f33f",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 136,
+        "endChar": 5
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "60e36de8_a785e4cd",
@@ -139,6 +259,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f55783d1_17f0f464",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-15T23:29:59Z",
+      "side": 1,
+      "message": "I felt like keeping it separate make things more obvious. If you disagree, I can change this.",
+      "parentUuid": "60e36de8_a785e4cd",
+      "range": {
+        "startLine": 163,
+        "startChar": 8,
+        "endLine": 168,
+        "endChar": 13
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dc99c1a4_db23c108",
@@ -152,6 +296,30 @@
       "writtenOn": "2022-06-15T07:10:38Z",
       "side": 1,
       "message": "how does the guarantee that it won\u0027t access invalid index?",
+      "range": {
+        "startLine": 264,
+        "startChar": 4,
+        "endLine": 267,
+        "endChar": 5
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a40edf12_fb946372",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-15T23:29:59Z",
+      "side": 1,
+      "message": "You mean crcTable[..]? crcTable keep a crc value for each byte values between 0 - 255.\n\nwe are using [() \u0026 0xff]. So the \"\u0026 0xff\" will truncate the value to 0 - 255 interval.",
+      "parentUuid": "dc99c1a4_db23c108",
       "range": {
         "startLine": 264,
         "startChar": 4,
