@@ -105,14 +105,16 @@ class BufferInterface
 
     /**
      * Write to the bufferHeader and update the read pointer
-     * @param[in] newReadPtr - read pointer to update to
+     * @param[in] newReadPtr - read pointer to update to.
+     *  "readPtr"s (including this one) are offset relative to the "Error Log
+     *  Queue region" = (sizeof(CircularBufferHeader) + UE reserved region)
      */
     virtual void updateReadPtr(const uint32_t newReadPtr) = 0;
 
     /**
      * Wrapper for the dataInterface->read, performs wraparound read
      *
-     * @param[in] offset - offset to read from
+     * @param[in] offset - offset relative to the beginning of MMIO space
      * @param[in] length - bytes to read
      * @param[in] additionalBoundaryCheck - bytes to add to the boundary check
      * for added restriction
@@ -124,7 +126,7 @@ class BufferInterface
     /**
      * Read the entry header from shared buffer
      *
-     * @param[in] offset - offset to read from
+     * @param[in] offset - offset relative to the beginning of MMIO space
      * @return the entry header
      */
     virtual struct QueueEntryHeader readEntryHeader(size_t offset) = 0;
@@ -132,7 +134,7 @@ class BufferInterface
     /**
      * Read the queue entry from the error log queue
      *
-     * @param[in] offset - offset to read from
+     * @param[in] offset - offset relative to the beginning of MMIO space
      * @return entry header and entry pair read from buffer
      */
     virtual EntryPair readEntry(size_t offset) = 0;
