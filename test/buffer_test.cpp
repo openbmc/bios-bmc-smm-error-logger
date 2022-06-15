@@ -149,5 +149,37 @@ TEST_F(BufferTest, BufferHeaderReadPass)
     EXPECT_EQ(bufferImpl->getCachedBufferHeader(), testInitializationHeader);
 }
 
+TEST_F(BufferTest, BufferUpdateReadPtrFail)
+{
+    // Return write size that is not 2 which is sizeof(little_uint16_t)
+    constexpr size_t wrongWriteSize = 1;
+    EXPECT_CALL(*dataInterfaceMockPtr, write(_, _))
+        .WillOnce(Return(wrongWriteSize));
+    EXPECT_THROW(
+        try {
+            bufferImpl->updateReadPtr(0);
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(
+                e.what(),
+                "[updateReadPtr] Wrote '1' bytes, instead of expected '2'");
+            throw;
+        },
+        std::runtime_error);
+}
+
+TEST_F(BufferTest, BufferUpdateReadPtrPass)
+{
+    constexpr size_t expectedWriteSize = 2;
+    constexpr uint8_t expectedBmcReadPtrOffset = 0x20;
+    // Check that we truncate the highest 16bits
+    const uint32_t testNewReadPtr = 0x99881234;
+    const std::vector<uint8_t> expectedReadPtr{0x34, 0x12};
+
+    EXPECT_CALL(*dataInterfaceMockPtr, write(expectedBmcReadPtrOffset,
+                                             ElementsAreArray(expectedReadPtr)))
+        .WillOnce(Return(expectedWriteSize));
+    EXPECT_NO_THROW(bufferImpl->updateReadPtr(testNewReadPtr));
+}
+
 } // namespace
 } // namespace bios_bmc_smm_error_logger

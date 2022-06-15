@@ -80,6 +80,12 @@ class BufferInterface
      * @return cached CircularBufferHeader
      */
     virtual struct CircularBufferHeader getCachedBufferHeader() const = 0;
+
+    /**
+     * Write to the bufferHeader and update the read pointer
+     * @param[in] newReadPtr - read pointer to update to
+     */
+    virtual void updateReadPtr(const uint32_t newReadPtr) = 0;
 };
 
 /**
@@ -97,6 +103,7 @@ class BufferImpl : public BufferInterface
                     const std::array<uint32_t, 4>& magicNumber) override;
     void readBufferHeader() override;
     struct CircularBufferHeader getCachedBufferHeader() const override;
+    void updateReadPtr(const uint32_t newReadPtr) override;
 
   private:
     std::unique_ptr<DataInterface> dataInterface;
