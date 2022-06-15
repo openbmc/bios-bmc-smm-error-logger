@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd4864e5_b0ebed25",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-15T18:23:05Z",
+      "side": 1,
+      "message": "This will go underneath readEntryHeader commit https://gerrit.openbmc.org/c/openbmc/bios-bmc-smm-error-logger/+/54367 (as well as one more helper function) ",
+      "revId": "ab5a9754ff5ad91e10a7874c74fa8dd0489c3cc3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
