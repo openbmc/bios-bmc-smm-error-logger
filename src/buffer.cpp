@@ -26,14 +26,24 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
                             uint16_t ueRegionSize,
                             const std::array<uint32_t, 4>& magicNumber)
 {
-    // Initialize the whole buffer with 0x00
     const size_t memoryRegionSize = dataInterface->getMemoryRegionSize();
-    const std::vector<uint8_t> emptyVector(memoryRegionSize, 0);
+    const size_t proposedBufferSize =
+        sizeof(struct CircularBufferHeader) + ueRegionSize + queueSize;
+    if (proposedBufferSize > memoryRegionSize)
+    {
+        throw std::runtime_error(fmt::format(
+            "[initialize] Proposed region size '{}' is bigger than the "
+            "BMC's allocated MMIO region of '{}'",
+            proposedBufferSize, memoryRegionSize));
+    }
+
+    // Initialize the whole buffer with 0x00
+    const std::vector<uint8_t> emptyVector(proposedBufferSize, 0);
     size_t byteWritten = dataInterface->write(0, emptyVector);
-    if (byteWritten != memoryRegionSize)
+    if (byteWritten != proposedBufferSize)
     {
         throw std::runtime_error(
-            fmt::format("Buffer initialization only erased '{}'", byteWritten));
+            fmt::format("[initialize] Only erased '{}'", byteWritten));
     }
 
     // Create an initial buffer header and write to it
@@ -59,8 +69,7 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
     if (byteWritten != initializationHeaderSize)
     {
         throw std::runtime_error(fmt::format(
-            "Buffer initialization buffer header write only wrote '{}'",
-            byteWritten));
+            "[initialize] Only wrote '{}' bytes of the header", byteWritten));
     }
     cachedBufferHeader = initializationHeader;
 }
@@ -120,16 +129,15 @@ std::vector<uint8_t>
     BufferImpl::wraparoundRead(const uint32_t offset, const uint32_t length,
                                const uint32_t additionalBoundaryCheck)
 {
-    const size_t memoryRegionSize = dataInterface->getMemoryRegionSize();
+    const size_t queueSize =
+        boost::endian::little_to_native(cachedBufferHeader.queueSize);
 
-    size_t queueOffset = getQueueOffset();
-    if (queueOffset + length + additionalBoundaryCheck > memoryRegionSize)
+    if (length + additionalBoundaryCheck > queueSize)
     {
         throw std::runtime_error(fmt::format(
-            "[wraparoundRead] queueOffset '{}' + length '{}' "
-            "+ additionalBoundaryCheck '{}' + was bigger "
-            "than memoryRegionSize '{}'",
-            queueOffset, length, additionalBoundaryCheck, memoryRegionSize));
+            "[wraparoundRead] length '{}' + additionalBoundaryCheck '{}' "
+            "was bigger than queueSize '{}'",
+            length, additionalBoundaryCheck, queueSize));
     }
 
     // Do a first read up to the end of the buffer (dataInerface->read should
@@ -140,6 +148,7 @@ std::vector<uint8_t>
 
     // If there are any more bytes to be read beyond the buffer, wrap around and
     // read from the beginning of the buffer (offset by the queueOffset)
+    size_t queueOffset = getQueueOffset();
     if (bytesRemaining > 0)
     {
         std::vector<uint8_t> wrappedBytesRead =
@@ -154,7 +163,7 @@ std::vector<uint8_t>
         }
         bytesRead.insert(bytesRead.end(), wrappedBytesRead.begin(),
                          wrappedBytesRead.end());
-        updatedReadOffset = queueOffset + wrappedBytesRead.size();
+        updatedReadOffset = wrappedBytesRead.size();
     }
     updateReadPtr(updatedReadOffset);
 
@@ -178,8 +187,9 @@ EntryPair BufferImpl::readEntry(size_t offset)
     size_t entrySize = entryHeader.entrySize;
 
     // wraparonudRead may throw if entrySize was bigger than the buffer or if it
-    // was not able to read all bytes, let it propagate up the stack
-    // - Use additionalBoundaryCheck parameter to tighten the boundary check
+    // was not able to read all the bytes, let it propagate up the stack
+    // - Use additionalBoundaryCheck parameter to add QueueEntryHeader size to
+    //   boundary condition calculation
     std::vector<uint8_t> entry =
         wraparoundRead(offset + sizeof(struct QueueEntryHeader), entrySize,
                        sizeof(struct QueueEntryHeader));
