@@ -86,6 +86,16 @@ class BufferInterface
      * @param[in] newReadPtr - read pointer to update to
      */
     virtual void updateReadPtr(const uint32_t newReadPtr) = 0;
+
+    /**
+     * Wrapper for the dataInterface->read, performs wraparound read
+     *
+     * @param[in] offset - offset to read from
+     * @param[in] length - bytes to read
+     * @return the bytes read
+     */
+    virtual std::vector<uint8_t> wraparoundRead(const uint32_t offset,
+                                                const uint32_t length) = 0;
 };
 
 /**
@@ -104,6 +114,8 @@ class BufferImpl : public BufferInterface
     void readBufferHeader() override;
     struct CircularBufferHeader getCachedBufferHeader() const override;
     void updateReadPtr(const uint32_t newReadPtr) override;
+    std::vector<uint8_t> wraparoundRead(const uint32_t offset,
+                                        const uint32_t length) override;
 
   private:
     std::unique_ptr<DataInterface> dataInterface;
