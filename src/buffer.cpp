@@ -109,4 +109,55 @@ void BufferImpl::updateReadPtr(const uint32_t newReadPtr)
     cachedBufferHeader.bmcReadPtr = truncatedReadPtr;
 }
 
+size_t BufferImpl::getQueueOffset()
+{
+    return sizeof(struct CircularBufferHeader) +
+           boost::endian::little_to_native(cachedBufferHeader.ueRegionSize);
+}
+
+std::vector<uint8_t>
+    BufferImpl::wraparoundRead(const uint32_t offset, const uint32_t length,
+                               const uint32_t additionalBoundaryCheck)
+{
+    const size_t memoryRegionSize = dataInterface->getMemoryRegionSize();
+
+    size_t queueOffset = getQueueOffset();
+    if (queueOffset + length + additionalBoundaryCheck > memoryRegionSize)
+    {
+        throw std::runtime_error(fmt::format(
+            "[wraparoundRead] queueOffset '{}' + length '{}' "
+            "+ additionalBoundaryCheck '{}' + was bigger "
+            "than memoryRegionSize '{}'",
+            queueOffset, length, additionalBoundaryCheck, memoryRegionSize));
+    }
+
+    // Do a first read up to the end of the buffer (dataInerface->read should
+    // only read up to the end of the buffer)
+    std::vector<uint8_t> bytesRead = dataInterface->read(offset, length);
+    size_t updatedReadOffset = offset + bytesRead.size();
+    size_t bytesRemaining = length - bytesRead.size();
+
+    // If there are any more bytes to be read beyond the buffer, wrap around and
+    // read from the beginning of the buffer (offset by the queueOffset)
+    if (bytesRemaining > 0)
+    {
+        std::vector<uint8_t> wrappedBytesRead =
+            dataInterface->read(queueOffset, bytesRemaining);
+        bytesRemaining -= wrappedBytesRead.size();
+        if (bytesRemaining != 0)
+        {
+            throw std::runtime_error(fmt::format(
+                "[wraparoundRead] Buffer wrapped around but was not able to read "
+                "all of the requested info. Bytes remaining to read '{}' of '{}'",
+                bytesRemaining, length));
+        }
+        bytesRead.insert(bytesRead.end(), wrappedBytesRead.begin(),
+                         wrappedBytesRead.end());
+        updatedReadOffset = queueOffset + wrappedBytesRead.size();
+    }
+    updateReadPtr(updatedReadOffset);
+
+    return bytesRead;
+}
+
 } // namespace bios_bmc_smm_error_logger
