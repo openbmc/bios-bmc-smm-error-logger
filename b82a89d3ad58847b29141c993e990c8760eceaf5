@@ -18,6 +18,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "23b8d593_2cbdd18f",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-15T05:41:05Z",
+      "side": 1,
+      "message": "That\u0027s a great catch!",
+      "parentUuid": "7b681903_f879a8ae",
+      "revId": "b82a89d3ad58847b29141c993e990c8760eceaf5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9af4816_45723226",
@@ -31,6 +49,24 @@
       "writtenOn": "2022-06-15T00:35:56Z",
       "side": 1,
       "message": "What about the rest of the CircularBufferHeader members like biosInterfaceVersion?\n\nSHouldn\u0027t we convert them to little endian too, wherever we set them ?",
+      "revId": "b82a89d3ad58847b29141c993e990c8760eceaf5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d77131e6_5330e04a",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-15T05:41:05Z",
+      "side": 1,
+      "message": "I guess you mean below with readBufferHeader - that\u0027s handled by the reinterpret_cast (I believe)",
+      "parentUuid": "e9af4816_45723226",
       "revId": "b82a89d3ad58847b29141c993e990c8760eceaf5",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
