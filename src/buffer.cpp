@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <memory>
 #include <span>
@@ -83,6 +84,29 @@ void BufferImpl::readBufferHeader()
 struct CircularBufferHeader BufferImpl::getCachedBufferHeader() const
 {
     return cachedBufferHeader;
+}
+
+void BufferImpl::updateReadPtr(const uint32_t newReadPtr)
+{
+    constexpr uint8_t bmcReadPtrOffset =
+        offsetof(struct CircularBufferHeader, bmcReadPtr);
+
+    little_uint16_t truncatedReadPtr =
+        boost::endian::native_to_little(newReadPtr & 0xffff);
+    uint8_t* truncatedReadPtrPtr =
+        reinterpret_cast<uint8_t*>(&truncatedReadPtr);
+
+    size_t writtenSize = dataInterface->write(
+        bmcReadPtrOffset, std::span<const uint8_t>{
+                              truncatedReadPtrPtr,
+                              truncatedReadPtrPtr + sizeof(little_uint16_t)});
+    if (writtenSize != sizeof(little_uint16_t))
+    {
+        throw std::runtime_error(fmt::format(
+            "[updateReadPtr] Wrote '{}' bytes, instead of expected '{}'",
+            writtenSize, sizeof(little_uint16_t)));
+    }
+    cachedBufferHeader.bmcReadPtr = truncatedReadPtr;
 }
 
 } // namespace bios_bmc_smm_error_logger
