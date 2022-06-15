@@ -1,0 +1,8 @@
+Code-Review+1: Brandon Kim <brandonkim@google.com>
+Code-Review+2: Willy Tu <wltu@google.com>
+Verified+1: OpenBMC CI <openbmcbump-ci@yahoo.com>
+Submitted-by: Kasun Athukorala <kasunath@google.com>
+Submitted-at: Wed, 15 Jun 2022 18:59:58 +0000
+Reviewed-on: https://gerrit.openbmc.org/c/openbmc/bios-bmc-smm-error-logger/+/54353
+Project: openbmc/bios-bmc-smm-error-logger
+Branch: refs/heads/main
