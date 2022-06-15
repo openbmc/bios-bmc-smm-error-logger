@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62cf4b54_11daaa60",
+        "filename": "include/rde/rde_handler.hpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-15T07:10:38Z",
+      "side": 1,
+      "message": "`RdeOk`\n\ninstead?",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 14
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cdbd26fa_26404291",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-15T07:10:38Z",
+      "side": 1,
+      "message": "`schemaDictOrErr \u003d\u003d std::nullopt`\n\ninstead.\n\nSame with annotationDictOrErr + other std::optional usage.",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 24
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6fbf7ce5_90a6c17b",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-15T07:10:38Z",
+      "side": 1,
+      "message": "combine?",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 20
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54641861_cbeb6aec",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-15T07:10:38Z",
+      "side": 1,
+      "message": "Error message here?",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 52
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31f77d3e_a893f33f",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-15T07:10:38Z",
+      "side": 1,
+      "message": "use switch statement for the lone if/else snippet?",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 136,
+        "endChar": 5
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60e36de8_a785e4cd",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-15T07:10:38Z",
+      "side": 1,
+      "message": "combine to else if",
+      "range": {
+        "startLine": 163,
+        "startChar": 8,
+        "endLine": 168,
+        "endChar": 13
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc99c1a4_db23c108",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-15T07:10:38Z",
+      "side": 1,
+      "message": "how does the guarantee that it won\u0027t access invalid index?",
+      "range": {
+        "startLine": 264,
+        "startChar": 4,
+        "endLine": 267,
+        "endChar": 5
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
