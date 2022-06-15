@@ -60,6 +60,7 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
             "Buffer initialization buffer header write only wrote '{}'",
             byteWritten));
     }
+    cachedBufferHeader = initializationHeader;
 }
 
 void BufferImpl::readBufferHeader()

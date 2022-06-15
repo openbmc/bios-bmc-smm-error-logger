@@ -78,6 +78,7 @@ TEST_F(BufferTest, BufferInitializeEraseFail)
             throw;
         },
         std::runtime_error);
+    EXPECT_NE(bufferImpl->getCachedBufferHeader(), testInitializationHeader);
 
     EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
         .WillOnce(Return(testRegionSize));
@@ -97,6 +98,7 @@ TEST_F(BufferTest, BufferInitializeEraseFail)
             throw;
         },
         std::runtime_error);
+    EXPECT_NE(bufferImpl->getCachedBufferHeader(), testInitializationHeader);
 }
 
 TEST_F(BufferTest, BufferInitializePass)
@@ -117,6 +119,7 @@ TEST_F(BufferTest, BufferInitializePass)
     EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
                                            testQueueSize, testUeRegionSize,
                                            testMagicNumber));
+    EXPECT_EQ(bufferImpl->getCachedBufferHeader(), testInitializationHeader);
 }
 
 TEST_F(BufferTest, BufferHeaderReadFail)
