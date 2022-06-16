@@ -13,7 +13,6 @@ root_inc = include_directories('.')
 bios_bmc_smm_error_logger_inc = include_directories('include')
 rde_inc = include_directories('include')
 
-# Setting up config data
 conf_data = configuration_data()
 
 conf_data.set('READ_INTERVAL_MS', get_option('read-interval-ms'))
