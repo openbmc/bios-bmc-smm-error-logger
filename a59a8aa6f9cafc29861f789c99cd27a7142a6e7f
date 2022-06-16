@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "14823347_9b2fa04d",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-16T00:20:21Z",
+      "side": 1,
+      "message": "Good catch, this is used a few times so I\u0027ll make this a static helper function at the top of this file instead.",
+      "parentUuid": "c2819458_b88b65d7",
+      "range": {
+        "startLine": 119,
+        "startChar": 46,
+        "endLine": 119,
+        "endChar": 77
+      },
+      "revId": "a59a8aa6f9cafc29861f789c99cd27a7142a6e7f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "480a2904_ae39f138",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-06-16T00:01:56Z",
       "side": 1,
       "message": "Does memoryRegionSize include headers as well? If so, I think we need to check\n\nlength \u003e [space just for queue data]",
+      "range": {
+        "startLine": 121,
+        "startChar": 8,
+        "endLine": 121,
+        "endChar": 47
+      },
+      "revId": "a59a8aa6f9cafc29861f789c99cd27a7142a6e7f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad0bc2e4_05d1970a",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-16T00:20:21Z",
+      "side": 1,
+      "message": "This will actually be used for the queue header as well as just the queue - I think the best of both worlds is to have an optional param we can pass in for this check since you\u0027re correct, we should be discounting the header size if we\u0027re just reading the entry from the queue.",
+      "parentUuid": "480a2904_ae39f138",
       "range": {
         "startLine": 121,
         "startChar": 8,
