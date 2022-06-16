@@ -44,10 +44,11 @@ bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
 }
 
 ExternalStorerFileInterface::ExternalStorerFileInterface(
-    std::string_view rootPath,
+    sdbusplus::bus::bus& bus, std::string_view rootPath,
     std::unique_ptr<FileHandlerInterface> fileHandler) :
-    rootPath(rootPath),
-    fileHandler(std::move(fileHandler)), logServiceId("")
+    bus(bus),
+    rootPath(rootPath), fileHandler(std::move(fileHandler)), logServiceId(""),
+    cperNotifier(std::make_unique<CperFileNotifierHandler>(bus))
 {}
 
 bool ExternalStorerFileInterface::publishJson(std::string_view jsonStr)
@@ -115,8 +116,9 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
     }
 
     std::string id = boost::uuids::to_string(randomGen());
-    std::string path = "/redfish/v1/Systems/system/LogServices/" +
-                       logServiceId + "/Entries/" + id;
+    std::string fullPath =
+        fmt::format("{}/redfish/v1/Systems/system/LogServices/{}/Entries/{}",
+                    rootPath, logServiceId, id);
 
     // Populate the "Id" with the UUID we generated.
     logEntry["Id"] = id;
@@ -124,7 +126,15 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
     // a client.
     logEntry.erase("@odata.id");
 
-    return createFile(path, logEntry);
+    if (!fileHandler->createFile(fullPath, logEntry))
+    {
+        fmt::print(stderr, "Failed to create a file for log entry path: {}\n",
+                   fullPath);
+        return false;
+    }
+
+    cperNotifier->createEntry(fullPath + "/index.json");
+    return true;
 }
 
 bool ExternalStorerFileInterface::processLogService(

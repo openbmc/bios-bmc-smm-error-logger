@@ -10,6 +10,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/endian/conversion.hpp>
+#include <sdbusplus/asio/object_server.hpp>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/impl.hpp>
 #include <stdplus/fd/managed.hpp>
@@ -87,11 +88,16 @@ int main()
         std::make_shared<BufferImpl>(std::move(pciDataHandler));
 
     // rdeCommandHandler initialization
+    std::shared_ptr<sdbusplus::asio::connection> conn =
+        std::make_shared<sdbusplus::asio::connection>(io);
+    conn->request_name("xyz.openbmc_project.bios_bmc_smm_error_logger");
+    sdbusplus::bus::bus& bus = static_cast<sdbusplus::bus::bus&>(*conn);
+
     std::unique_ptr<rde::FileHandlerInterface> fileIface =
         std::make_unique<rde::ExternalStorerFileWriter>();
     std::unique_ptr<rde::ExternalStorerInterface> exFileIface =
         std::make_unique<rde::ExternalStorerFileInterface>(
-            "/run/bmcweb", std::move(fileIface));
+            bus, "/run/bmcweb", std::move(fileIface));
     std::shared_ptr<rde::RdeCommandHandler> rdeCommandHandler =
         std::make_unique<rde::RdeCommandHandler>(std::move(exFileIface));
 
