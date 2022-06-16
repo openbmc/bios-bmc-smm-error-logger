@@ -121,6 +121,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "81271579_bd4e53a8",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-16T16:12:29Z",
+      "side": 1,
+      "message": "Yes, its the same: https://en.cppreference.com/w/cpp/utility/optional/operator_bool",
+      "parentUuid": "2d291317_43f8b6f4",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 24
+      },
+      "revId": "f2b6334e06dade88fb670ea56a2923c1482d7df5",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6fbf7ce5_90a6c17b",
         "filename": "src/rde/rde_handler.cpp",
         "patchSetId": 10
