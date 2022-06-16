@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2819458_b88b65d7",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-16T00:01:56Z",
+      "side": 1,
+      "message": "since this is in little endian format, we need to convert this to native right?",
+      "range": {
+        "startLine": 119,
+        "startChar": 46,
+        "endLine": 119,
+        "endChar": 77
+      },
+      "revId": "a59a8aa6f9cafc29861f789c99cd27a7142a6e7f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "480a2904_ae39f138",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-16T00:01:56Z",
+      "side": 1,
+      "message": "Does memoryRegionSize include headers as well? If so, I think we need to check\n\nlength \u003e [space just for queue data]",
+      "range": {
+        "startLine": 121,
+        "startChar": 8,
+        "endLine": 121,
+        "endChar": 47
+      },
+      "revId": "a59a8aa6f9cafc29861f789c99cd27a7142a6e7f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
