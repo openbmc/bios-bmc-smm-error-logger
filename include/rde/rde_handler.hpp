@@ -15,13 +15,15 @@ namespace rde
 
 /**
  * @brief Supported RDE commands.
+ *
+ * The values used are the same as what BIOS uses.
  */
 enum class RdeCommandType : char
 {
-    // Used for RDE BEJ encoded data.
-    RdeOperationInitRequest,
     // Used for RDE BEJ dictionary transfer.
-    RdeMultiPartReceiveResponse,
+    RdeMultiPartReceiveResponse = 1 << 0,
+    // Used for RDE BEJ encoded data.
+    RdeOperationInitRequest = 1 << 1,
 };
 
 /**
