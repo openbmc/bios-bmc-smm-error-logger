@@ -105,6 +105,30 @@
       },
       "revId": "2a59f26d99b80a8e767445771d171c2207f8d8dc",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1df074d6_ca28dbd4",
+        "filename": "include/rde/rde_handler.hpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-16T17:26:12Z",
+      "side": 1,
+      "message": "checked with Marco, verified that \"MultipartReceive is BIT0 and OpInit is BIT1\" as part of our design (we need to create an internal README with a lot of this detail I feel)",
+      "parentUuid": "a94e306b_b758cad9",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 32
+      },
+      "revId": "2a59f26d99b80a8e767445771d171c2207f8d8dc",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
