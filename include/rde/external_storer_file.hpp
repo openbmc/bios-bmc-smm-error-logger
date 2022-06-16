@@ -2,6 +2,7 @@
 
 #include "external_storer_interface.hpp"
 #include "nlohmann/json.hpp"
+#include "notifier_dbus_handler.hpp"
 
 #include <boost/uuid/uuid_generators.hpp>
 
@@ -75,21 +76,24 @@ class ExternalStorerFileInterface : public ExternalStorerInterface
     /**
      * @brief Constructor for the ExternalStorerFileInterface.
      *
+     * @param[in] bus - bus to attach to.
      * @param[in] rootPath - root path for creating redfish folders.
      * Eg: "/run/bmcweb"
      * @param[in] fileHandler - an ExternalStorerFileWriter object. This class
      * will take the ownership of this object.
      */
     ExternalStorerFileInterface(
-        std::string_view rootPath,
+        sdbusplus::bus::bus& bus, std::string_view rootPath,
         std::unique_ptr<FileHandlerInterface> fileHandler);
 
     bool publishJson(std::string_view jsonStr) override;
 
   private:
+    sdbusplus::bus::bus& bus;
     std::string rootPath;
     std::unique_ptr<FileHandlerInterface> fileHandler;
     std::string logServiceId;
+    std::unique_ptr<CperFileNotifierHandler> cperNotifier;
     boost::uuids::random_generator randomGen;
 
     /**
