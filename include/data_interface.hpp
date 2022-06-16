@@ -18,7 +18,7 @@ class DataInterface
     /**
      * Read bytes from shared buffer (blocking call).
      *
-     * @param[in] offset - offset to read from
+     * @param[in] offset - offset to read from relative to MMIO space
      * @param[in] length - number of bytes to read
      * @return the bytes read
      */
@@ -28,7 +28,7 @@ class DataInterface
     /**
      * Write bytes to shared buffer.
      *
-     * @param[in] offset - offset to write to
+     * @param[in] offset - offset to write to relative to MMIO space
      * @param[in] bytes - byte vector of data.
      * @return return the byte length written
      */

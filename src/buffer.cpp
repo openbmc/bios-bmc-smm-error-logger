@@ -125,74 +125,89 @@ size_t BufferImpl::getQueueOffset()
            boost::endian::little_to_native(cachedBufferHeader.ueRegionSize);
 }
 
-std::vector<uint8_t>
-    BufferImpl::wraparoundRead(const uint32_t offset, const uint32_t length,
-                               const uint32_t additionalBoundaryCheck)
+std::vector<uint8_t> BufferImpl::wraparoundRead(const uint32_t relativeOffset,
+                                                const uint32_t length)
 {
     const size_t queueSize =
         boost::endian::little_to_native(cachedBufferHeader.queueSize);
 
-    if (length + additionalBoundaryCheck > queueSize)
+    if (relativeOffset > queueSize)
+    {
+        throw std::runtime_error(
+            fmt::format("[wraparoundRead] relativeOffset '{}' was bigger "
+                        "than queueSize '{}'",
+                        relativeOffset, queueSize));
+    }
+    if (length > queueSize)
     {
         throw std::runtime_error(fmt::format(
-            "[wraparoundRead] length '{}' + additionalBoundaryCheck '{}' "
-            "was bigger than queueSize '{}'",
-            length, additionalBoundaryCheck, queueSize));
+            "[wraparoundRead] length '{}' was bigger than queueSize '{}'",
+            length, queueSize));
     }
 
-    // Do a first read up to the end of the buffer (dataInerface->read should
-    // only read up to the end of the buffer)
-    std::vector<uint8_t> bytesRead = dataInterface->read(offset, length);
-    size_t updatedReadOffset = offset + bytesRead.size();
-    size_t bytesRemaining = length - bytesRead.size();
+    // Do a calculation to see if the read will wraparound
+    const size_t queueOffset = getQueueOffset();
+    const size_t queueSizeToQueueEnd = queueSize - relativeOffset;
+    size_t numWraparoundBytesToRead = 0;
+    if (length > queueSizeToQueueEnd)
+    {
+        // This means we will wrap, count the bytes that are left to read
+        numWraparoundBytesToRead = length - queueSizeToQueueEnd;
+    }
+    const size_t numBytesToReadTillQueueEnd = length - numWraparoundBytesToRead;
+
+    std::vector<uint8_t> bytesRead = dataInterface->read(
+        queueOffset + relativeOffset, numBytesToReadTillQueueEnd);
+    if (bytesRead.size() != numBytesToReadTillQueueEnd)
+    {
+        throw std::runtime_error(
+            fmt::format("[wraparoundRead] Read '{}' which was not "
+                        "the requested length of '{}'",
+                        bytesRead.size(), numBytesToReadTillQueueEnd));
+    }
+    size_t updatedReadPtr = relativeOffset + numBytesToReadTillQueueEnd;
 
     // If there are any more bytes to be read beyond the buffer, wrap around and
     // read from the beginning of the buffer (offset by the queueOffset)
-    size_t queueOffset = getQueueOffset();
-    if (bytesRemaining > 0)
+    if (numWraparoundBytesToRead > 0)
     {
         std::vector<uint8_t> wrappedBytesRead =
-            dataInterface->read(queueOffset, bytesRemaining);
-        bytesRemaining -= wrappedBytesRead.size();
-        if (bytesRemaining != 0)
+            dataInterface->read(queueOffset, numWraparoundBytesToRead);
+        if (numWraparoundBytesToRead != wrappedBytesRead.size())
         {
             throw std::runtime_error(fmt::format(
-                "[wraparoundRead] Buffer wrapped around but was not able to read "
-                "all of the requested info. Bytes remaining to read '{}' of '{}'",
-                bytesRemaining, length));
+                "[wraparoundRead] Buffer wrapped around but read '{}' which "
+                "was not the requested lenght of '{}'",
+                wrappedBytesRead.size(), numWraparoundBytesToRead));
         }
         bytesRead.insert(bytesRead.end(), wrappedBytesRead.begin(),
                          wrappedBytesRead.end());
-        updatedReadOffset = wrappedBytesRead.size();
+        updatedReadPtr = numWraparoundBytesToRead;
     }
-    updateReadPtr(updatedReadOffset);
+    updateReadPtr(updatedReadPtr);
 
     return bytesRead;
 }
 
-struct QueueEntryHeader BufferImpl::readEntryHeader(size_t offset)
+struct QueueEntryHeader BufferImpl::readEntryHeader(size_t relativeOffset)
 {
     size_t headerSize = sizeof(struct QueueEntryHeader);
     // wraparonudRead will throw if it did not read all the bytes, let it
     // propagate up the stack
-    std::vector<uint8_t> bytesRead = wraparoundRead(offset, headerSize);
+    std::vector<uint8_t> bytesRead = wraparoundRead(relativeOffset, headerSize);
 
     return *reinterpret_cast<struct QueueEntryHeader*>(bytesRead.data());
 }
 
-EntryPair BufferImpl::readEntry(size_t offset)
+EntryPair BufferImpl::readEntry(size_t relativeOffset)
 {
-    struct QueueEntryHeader entryHeader = readEntryHeader(offset);
-
-    size_t entrySize = entryHeader.entrySize;
+    struct QueueEntryHeader entryHeader = readEntryHeader(relativeOffset);
+    size_t entrySize = boost::endian::little_to_native(entryHeader.entrySize);
 
     // wraparonudRead may throw if entrySize was bigger than the buffer or if it
     // was not able to read all the bytes, let it propagate up the stack
-    // - Use additionalBoundaryCheck parameter to add QueueEntryHeader size to
-    //   boundary condition calculation
-    std::vector<uint8_t> entry =
-        wraparoundRead(offset + sizeof(struct QueueEntryHeader), entrySize,
-                       sizeof(struct QueueEntryHeader));
+    std::vector<uint8_t> entry = wraparoundRead(
+        relativeOffset + sizeof(struct QueueEntryHeader), entrySize);
 
     // Calculate the checksum
     uint8_t* entryHeaderPtr = reinterpret_cast<uint8_t*>(&entryHeader);

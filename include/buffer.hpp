@@ -105,39 +105,37 @@ class BufferInterface
 
     /**
      * Write to the bufferHeader and update the read pointer
-     * @param[in] newReadPtr - read pointer to update to.
-     *  "readPtr"s (including this one) are offset relative to the "Error Log
-     *  Queue region" = (sizeof(CircularBufferHeader) + UE reserved region)
+     * @param[in] newReadPtr - read pointer to update to
      */
     virtual void updateReadPtr(const uint32_t newReadPtr) = 0;
 
     /**
      * Wrapper for the dataInterface->read, performs wraparound read
      *
-     * @param[in] offset - offset relative to the beginning of MMIO space
+     * @param[in] relativeOffset - offset relative the "Error Log
+     *  Queue region" = (sizeof(CircularBufferHeader) + UE reserved region)
      * @param[in] length - bytes to read
-     * @param[in] additionalBoundaryCheck - bytes to add to the boundary check
-     * for added restriction
      * @return the bytes read
      */
-    virtual std::vector<uint8_t>
-        wraparoundRead(const uint32_t offset, const uint32_t length,
-                       const uint32_t additionalBoundaryCheck) = 0;
+    virtual std::vector<uint8_t> wraparoundRead(const uint32_t relativeOffset,
+                                                const uint32_t length) = 0;
     /**
      * Read the entry header from shared buffer
      *
-     * @param[in] offset - offset relative to the beginning of MMIO space
+     * @param[in] relativeOffset - offset relative the "Error Log
+     *  Queue region" = (sizeof(CircularBufferHeader) + UE reserved region)
      * @return the entry header
      */
-    virtual struct QueueEntryHeader readEntryHeader(size_t offset) = 0;
+    virtual struct QueueEntryHeader readEntryHeader(size_t relativeOffset) = 0;
 
     /**
      * Read the queue entry from the error log queue
      *
-     * @param[in] offset - offset relative to the beginning of MMIO space
-     * @return entry header and entry pair read from buffer
+     * @param[in] relativeOffset - offset relative the "Error Log
+     *  Queue region" = (sizeof(CircularBufferHeader) + UE reserved region)
+     * * @return entry header and entry pair read from buffer
      */
-    virtual EntryPair readEntry(size_t offset) = 0;
+    virtual EntryPair readEntry(size_t relativeOffset) = 0;
 };
 
 /**
@@ -156,11 +154,10 @@ class BufferImpl : public BufferInterface
     void readBufferHeader() override;
     struct CircularBufferHeader getCachedBufferHeader() const override;
     void updateReadPtr(const uint32_t newReadPtr) override;
-    std::vector<uint8_t>
-        wraparoundRead(const uint32_t offset, const uint32_t length,
-                       const uint32_t additionalBoundaryCheck = 0) override;
-    struct QueueEntryHeader readEntryHeader(size_t offset) override;
-    EntryPair readEntry(size_t offset) override;
+    std::vector<uint8_t> wraparoundRead(const uint32_t relativeOffset,
+                                        const uint32_t length) override;
+    struct QueueEntryHeader readEntryHeader(size_t relativeOffset) override;
+    EntryPair readEntry(size_t relativeOffset) override;
 
   private:
     /** @brief The Error log queue starts after the UE region, which is where

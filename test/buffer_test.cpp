@@ -236,38 +236,53 @@ class BufferWraparoundReadTest : public BufferTest
     static constexpr size_t expectedqueueOffset = 0x30 + testUeRegionSize;
 };
 
-TEST_F(BufferWraparoundReadTest, TooBigReadFail)
+TEST_F(BufferWraparoundReadTest, ParamsTooBigFail)
 {
     InSequence s;
-    size_t tooBigLength = testQueueSize + 1;
+
+    size_t tooBigOffset = testQueueSize + 1;
     EXPECT_THROW(
         try {
-            bufferImpl->wraparoundRead(/* offset */ 0, tooBigLength);
+            bufferImpl->wraparoundRead(tooBigOffset, /* length */ 1);
         } catch (const std::runtime_error& e) {
             EXPECT_STREQ(
                 e.what(),
-                "[wraparoundRead] length '257' + additionalBoundaryCheck '0' "
-                "was bigger than queueSize '256'");
+                "[wraparoundRead] relativeOffset '257' was bigger than queueSize '256'");
+            throw;
+        },
+        std::runtime_error);
+
+    size_t tooBigLength = testQueueSize + 1;
+    EXPECT_THROW(
+        try {
+            bufferImpl->wraparoundRead(/* relativeOffset */ 0, tooBigLength);
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(e.what(), "[wraparoundRead] length '257' was bigger "
+                                   "than queueSize '256'");
             throw;
         },
         std::runtime_error);
 }
 
-TEST_F(BufferWraparoundReadTest, TooBigReadWithAdditionalBoundaryCheckFail)
+TEST_F(BufferWraparoundReadTest, NoWrapAroundReadFails)
 {
     InSequence s;
-    // Use additionalBoundaryCheck to still go over the queueSize by 1
-    size_t additionalBoundaryCheck = 10;
-    size_t tooBigLength = testQueueSize - additionalBoundaryCheck + 1;
+    size_t testLength = 0x10;
+    size_t testOffset = 0x20;
+
+    // Fail the first read
+    std::vector<std::uint8_t> shortTestBytesRead(testLength - 1);
+    EXPECT_CALL(*dataInterfaceMockPtr,
+                read(testOffset + expectedqueueOffset, testLength))
+        .WillOnce(Return(shortTestBytesRead));
+
     EXPECT_THROW(
         try {
-            bufferImpl->wraparoundRead(/* offset */ 0, tooBigLength,
-                                       additionalBoundaryCheck);
+            bufferImpl->wraparoundRead(testOffset, testLength);
         } catch (const std::runtime_error& e) {
-            EXPECT_STREQ(
-                e.what(),
-                "[wraparoundRead] length '247' + additionalBoundaryCheck '10' "
-                "was bigger than queueSize '256'");
+            EXPECT_STREQ(e.what(),
+                         "[wraparoundRead] Read '15' which was not the "
+                         "requested length of '16'");
             throw;
         },
         std::runtime_error);
@@ -277,11 +292,12 @@ TEST_F(BufferWraparoundReadTest, NoWrapAroundReadPass)
 {
     InSequence s;
     size_t testLength = 0x10;
-    size_t testOffset = 0x50;
+    size_t testOffset = 0x20;
 
     // Successfully read all the requested length without a wrap around
     std::vector<std::uint8_t> testBytesRead(testLength);
-    EXPECT_CALL(*dataInterfaceMockPtr, read(testOffset, testLength))
+    EXPECT_CALL(*dataInterfaceMockPtr,
+                read(testOffset + expectedqueueOffset, testLength))
         .WillOnce(Return(testBytesRead));
 
     // Call to updateReadPtr is triggered
@@ -293,6 +309,11 @@ TEST_F(BufferWraparoundReadTest, NoWrapAroundReadPass)
 
     EXPECT_THAT(bufferImpl->wraparoundRead(testOffset, testLength),
                 ElementsAreArray(testBytesRead));
+    struct CircularBufferHeader cachedBufferHeader =
+        bufferImpl->getCachedBufferHeader();
+    // The bmcReadPtr should have been updated
+    EXPECT_EQ(boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
+              testOffset + testLength);
 }
 
 TEST_F(BufferWraparoundReadTest, WrapAroundReadFails)
@@ -302,9 +323,10 @@ TEST_F(BufferWraparoundReadTest, WrapAroundReadFails)
     size_t testLength = 0x10;
     size_t testOffset = testQueueSize - (testLength - testBytesLeft);
 
-    // Read 3 bytes short
+    // Read until the end of the queue
     std::vector<std::uint8_t> testBytesReadShort(testLength - testBytesLeft);
-    EXPECT_CALL(*dataInterfaceMockPtr, read(testOffset, testLength))
+    EXPECT_CALL(*dataInterfaceMockPtr, read(testOffset + expectedqueueOffset,
+                                            testLength - testBytesLeft))
         .WillOnce(Return(testBytesReadShort));
 
     // Read 1 byte short after wraparound
@@ -316,10 +338,10 @@ TEST_F(BufferWraparoundReadTest, WrapAroundReadFails)
         try {
             bufferImpl->wraparoundRead(testOffset, testLength);
         } catch (const std::runtime_error& e) {
-            EXPECT_STREQ(e.what(),
-                         "[wraparoundRead] Buffer wrapped around but was not "
-                         "able to read all of the requested info. "
-                         "Bytes remaining to read '1' of '16'");
+            EXPECT_STREQ(
+                e.what(),
+                "[wraparoundRead] Buffer wrapped around but read '2' which was "
+                "not the requested lenght of '3'");
             throw;
         },
         std::runtime_error);
@@ -332,10 +354,11 @@ TEST_F(BufferWraparoundReadTest, WrapAroundReadPasses)
     size_t testLength = 0x10;
     size_t testOffset = testQueueSize - (testLength - testBytesLeft);
 
-    // Read 3 bytes short
+    // Read to the end of the queue
     std::vector<std::uint8_t> testBytesReadFirst{16, 15, 14, 13, 12, 11, 10,
                                                  9,  8,  7,  6,  5,  4};
-    EXPECT_CALL(*dataInterfaceMockPtr, read(testOffset, testLength))
+    EXPECT_CALL(*dataInterfaceMockPtr, read(testOffset + expectedqueueOffset,
+                                            testLength - testBytesLeft))
         .WillOnce(Return(testBytesReadFirst));
 
     std::vector<std::uint8_t> testBytesReadSecond{3, 2, 1};
@@ -353,6 +376,11 @@ TEST_F(BufferWraparoundReadTest, WrapAroundReadPasses)
                                                8,  7,  6,  5,  4,  3,  2,  1};
     EXPECT_THAT(bufferImpl->wraparoundRead(testOffset, testLength),
                 ElementsAreArray(expectedBytes));
+    struct CircularBufferHeader cachedBufferHeader =
+        bufferImpl->getCachedBufferHeader();
+    // The bmcReadPtr should have been updated to reflect the wraparound
+    EXPECT_EQ(boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
+              testBytesLeft);
 }
 
 class BufferEntryTest : public BufferWraparoundReadTest
@@ -367,11 +395,30 @@ class BufferEntryTest : public BufferWraparoundReadTest
     }
     ~BufferEntryTest() override = default;
 
-    void wraparoundReadMock(std::span<std::uint8_t> expetedBytesOutput)
+    void wraparoundReadMock(const uint32_t relativeOffset,
+                            std::span<std::uint8_t> expetedBytesOutput)
     {
-        EXPECT_CALL(*dataInterfaceMockPtr, read(_, _))
-            .WillOnce(Return(std::vector<std::uint8_t>(
-                expetedBytesOutput.begin(), expetedBytesOutput.end())));
+        InSequence s;
+        const uint32_t queueSizeToQueueEnd = testQueueSize - relativeOffset;
+
+        // This will wrap, split the read mocks in 2
+        if (expetedBytesOutput.size() > queueSizeToQueueEnd)
+        {
+            EXPECT_CALL(*dataInterfaceMockPtr, read(_, _))
+                .WillOnce(Return(std::vector<std::uint8_t>(
+                    expetedBytesOutput.begin(),
+                    expetedBytesOutput.begin() + queueSizeToQueueEnd)));
+            EXPECT_CALL(*dataInterfaceMockPtr, read(_, _))
+                .WillOnce(Return(std::vector<std::uint8_t>(
+                    expetedBytesOutput.begin() + queueSizeToQueueEnd,
+                    expetedBytesOutput.end())));
+        }
+        else
+        {
+            EXPECT_CALL(*dataInterfaceMockPtr, read(_, _))
+                .WillOnce(Return(std::vector<std::uint8_t>(
+                    expetedBytesOutput.begin(), expetedBytesOutput.end())));
+        }
 
         EXPECT_CALL(*dataInterfaceMockPtr, write(_, _))
             .WillOnce(Return(expectedWriteSize));
@@ -383,7 +430,7 @@ class BufferEntryTest : public BufferWraparoundReadTest
     // Calculated checksum for the header (0x100 - 0 - 0x20 - 0x01) & 0xff
     static constexpr uint8_t testChecksum = 0xdf;
     static constexpr uint8_t testRdeCommandType = 0x01;
-    size_t testOffset = 0x50;
+    size_t testOffset = 0x20;
 
     struct QueueEntryHeader testEntryHeader
     {};
@@ -394,8 +441,13 @@ TEST_F(BufferEntryTest, ReadEntryHeaderPass)
     uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
     std::vector<uint8_t> testEntryHeaderVector(
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
-    wraparoundReadMock(testEntryHeaderVector);
+    wraparoundReadMock(testOffset, testEntryHeaderVector);
     EXPECT_EQ(bufferImpl->readEntryHeader(testOffset), testEntryHeader);
+    // Check the bmcReadPtr
+    struct CircularBufferHeader cachedBufferHeader =
+        bufferImpl->getCachedBufferHeader();
+    EXPECT_EQ(boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
+              testOffset + testEntryHeaderVector.size());
 }
 
 TEST_F(BufferEntryTest, ReadEntryChecksumFail)
@@ -408,9 +460,8 @@ TEST_F(BufferEntryTest, ReadEntryChecksumFail)
     uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
     std::vector<uint8_t> testEntryHeaderVector(
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
-    wraparoundReadMock(testEntryHeaderVector);
-
-    wraparoundReadMock(testEntryVector);
+    wraparoundReadMock(testOffset, testEntryHeaderVector);
+    wraparoundReadMock(testOffset + entryHeaderSize, testEntryVector);
     EXPECT_THROW(
         try {
             bufferImpl->readEntry(testOffset);
@@ -425,19 +476,28 @@ TEST_F(BufferEntryTest, ReadEntryChecksumFail)
 TEST_F(BufferEntryTest, ReadEntryPass)
 {
     InSequence s;
-    // We expect this will bump checksum up by "testEntrySize" = 0x40
-    std::vector<uint8_t> testEntryVector(testEntrySize, 2);
-    testEntryHeader.checksum -= (0x40);
+    // We expect this will bump checksum up by "testEntrySize" = 0xff * 0x20 =
+    // 0x1fe0 -> 0x1fe0 & 0xff = 0xe0.
+    std::vector<uint8_t> testEntryVector(testEntrySize, 0xff);
+    testEntryHeader.checksum -= (0xe0);
     uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
     std::vector<uint8_t> testEntryHeaderVector(
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
-    wraparoundReadMock(testEntryHeaderVector);
-    wraparoundReadMock(testEntryVector);
+    // Set testOffset so that we can test the wraparound here as well on our
+    // second read for the entry (by 1 byte)
+    testOffset = testQueueSize - entryHeaderSize - 1;
+    wraparoundReadMock(testOffset, testEntryHeaderVector);
+    wraparoundReadMock(testOffset + entryHeaderSize, testEntryVector);
 
     EntryPair testedEntryPair;
     EXPECT_NO_THROW(testedEntryPair = bufferImpl->readEntry(testOffset));
     EXPECT_EQ(testedEntryPair.first, testEntryHeader);
     EXPECT_THAT(testedEntryPair.second, ElementsAreArray(testEntryVector));
+    struct CircularBufferHeader cachedBufferHeader =
+        bufferImpl->getCachedBufferHeader();
+    // The bmcReadPtr should have been updated to reflect the wraparound
+    EXPECT_EQ(boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
+              testEntrySize - 1);
 }
 
 } // namespace
