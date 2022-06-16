@@ -16,6 +16,24 @@
       "message": "Is there HW test that will for sure know that it works?",
       "revId": "52affbfb4dd04f31ae9d0a05d39af20993f72ff2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed3fa217_57815e40",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-16T21:56:46Z",
+      "side": 1,
+      "message": "Yep, I\u0027m trying to get a machine with the new / special BIOS + this change to try this test out - but it might make more sense for that to come after the next change (which brings all of these together)",
+      "parentUuid": "d0732bc9_4bf54ec3",
+      "revId": "52affbfb4dd04f31ae9d0a05d39af20993f72ff2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
