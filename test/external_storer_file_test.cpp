@@ -1,5 +1,8 @@
 #include "rde/external_storer_file.hpp"
 
+#include <sdbusplus/bus.hpp>
+#include <sdbusplus/test/sdbus_mock.hpp>
+
 #include <string_view>
 
 #include <gmock/gmock-matchers.h>
@@ -15,6 +18,7 @@ using ::testing::_;
 using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::SaveArg;
+using ::testing::StrEq;
 
 class MockFileWriter : public FileHandlerInterface
 {
@@ -30,14 +34,17 @@ class ExternalStorerFileTest : public ::testing::Test
 {
   public:
     ExternalStorerFileTest() :
+        bus(sdbusplus::get_mocked_new(&sdbusMock)),
         mockFileWriter(std::make_unique<MockFileWriter>())
     {
         mockFileWriterPtr = dynamic_cast<MockFileWriter*>(mockFileWriter.get());
         exStorer = std::make_unique<ExternalStorerFileInterface>(
-            rootPath, std::move(mockFileWriter));
+            bus, rootPath, std::move(mockFileWriter));
     }
 
   protected:
+    sdbusplus::SdBusMock sdbusMock;
+    sdbusplus::bus::bus bus;
     std::unique_ptr<FileHandlerInterface> mockFileWriter;
     std::unique_ptr<ExternalStorerFileInterface> exStorer;
     MockFileWriter* mockFileWriterPtr;
@@ -147,12 +154,30 @@ TEST_F(ExternalStorerFileTest, LogEntryTest)
         "@odata.type": "#LogEntry.v1_13_0.LogEntry"
       }
     )";
+
     nlohmann::json logEntryOut;
     EXPECT_CALL(*mockFileWriterPtr, createFile(_, _))
         .WillOnce(DoAll(SaveArg<1>(&logEntryOut), Return(true)));
+
+    constexpr const char* dbusPath =
+        "/xyz/openbmc_project/external_storer/bios_bmc_smm_error_logger/CPER/entry0";
+    constexpr const char* dbusInterface = "xyz.openbmc_project.Common.FilePath";
+
+    EXPECT_CALL(sdbusMock, sd_bus_add_object_vtable(nullptr, _, StrEq(dbusPath),
+                                                    StrEq(dbusInterface), _, _))
+        .WillOnce(Return(0));
+    EXPECT_CALL(sdbusMock, sd_bus_emit_object_added(nullptr, StrEq(dbusPath)))
+        .WillOnce(Return(0));
+    EXPECT_CALL(sdbusMock,
+                sd_bus_emit_properties_changed_strv(nullptr, StrEq(dbusPath),
+                                                    StrEq(dbusInterface), _))
+        .WillOnce(Return(0));
+
     EXPECT_THAT(exStorer->publishJson(jsonLogEntry), true);
     EXPECT_NE(logEntryOut["Id"], nullptr);
     EXPECT_EQ(logEntryOut["@odata.id"], nullptr);
+    EXPECT_CALL(sdbusMock, sd_bus_emit_object_removed(nullptr, StrEq(dbusPath)))
+        .WillOnce(Return(0));
 }
 
 TEST_F(ExternalStorerFileTest, OtherSchemaNoOdataIdTest)
