@@ -34,6 +34,52 @@
       "parentUuid": "d0732bc9_4bf54ec3",
       "revId": "52affbfb4dd04f31ae9d0a05d39af20993f72ff2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed69f4ea_e3ec2b03",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-16T23:20:02Z",
+      "side": 1,
+      "message": "do we need to check whether the relativeOffset \u003c queueSize too?",
+      "range": {
+        "startLine": 128,
+        "startChar": 63,
+        "endLine": 128,
+        "endChar": 77
+      },
+      "revId": "52affbfb4dd04f31ae9d0a05d39af20993f72ff2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "642ba10f_4adf2d70",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-16T23:20:02Z",
+      "side": 1,
+      "message": "you have fixed this! I left a suggestion in the CL that this was added. Basically my suggestion is to limit this conversion inside read/write functions dedicated to each struct if possible and use native endianness everywhere else. Otherwise has to remember to do this every time.",
+      "range": {
+        "startLine": 198,
+        "startChar": 38,
+        "endLine": 198,
+        "endChar": 54
+      },
+      "revId": "52affbfb4dd04f31ae9d0a05d39af20993f72ff2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
