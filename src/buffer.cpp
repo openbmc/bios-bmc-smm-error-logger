@@ -211,9 +211,12 @@ EntryPair BufferImpl::readEntry(size_t relativeOffset)
 
     // Calculate the checksum
     uint8_t* entryHeaderPtr = reinterpret_cast<uint8_t*>(&entryHeader);
-    uint8_t checksum = std::accumulate(
-        entryHeaderPtr, entryHeaderPtr + sizeof(struct QueueEntryHeader), 0);
-    checksum = std::accumulate(std::begin(entry), std::end(entry), checksum);
+    uint8_t checksum =
+        std::accumulate(entryHeaderPtr,
+                        entryHeaderPtr + sizeof(struct QueueEntryHeader), 0,
+                        std::bit_xor<void>()) ^
+        std::accumulate(entry.begin(), entry.end(), 0, std::bit_xor<void>());
+
     if (checksum != 0)
     {
         throw std::runtime_error(fmt::format(
