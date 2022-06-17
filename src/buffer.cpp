@@ -211,9 +211,11 @@ EntryPair BufferImpl::readEntry(size_t relativeOffset)
 
     // Calculate the checksum
     uint8_t* entryHeaderPtr = reinterpret_cast<uint8_t*>(&entryHeader);
-    uint8_t checksum = std::accumulate(
-        entryHeaderPtr, entryHeaderPtr + sizeof(struct QueueEntryHeader), 0);
-    checksum = std::accumulate(std::begin(entry), std::end(entry), checksum);
+    uint8_t checksum =
+        calculateChecksum(std::span<uint8_t>(
+            entryHeaderPtr, entryHeaderPtr + sizeof(struct QueueEntryHeader))) ^
+        calculateChecksum(entry);
+
     if (checksum != 0)
     {
         throw std::runtime_error(fmt::format(
@@ -221,6 +223,16 @@ EntryPair BufferImpl::readEntry(size_t relativeOffset)
     }
 
     return {entryHeader, entry};
+}
+
+uint8_t BufferImpl::calculateChecksum(std::span<uint8_t> entry)
+{
+    uint8_t checksum = 0;
+    for (uint8_t byte : entry)
+    {
+        checksum ^= byte;
+    }
+    return checksum;
 }
 
 } // namespace bios_bmc_smm_error_logger
