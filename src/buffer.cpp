@@ -78,7 +78,7 @@ void BufferImpl::readBufferHeader()
 {
     size_t headerSize = sizeof(struct CircularBufferHeader);
     std::vector<uint8_t> bytesRead =
-        dataInterface->read(/* offset */ 0, headerSize);
+        dataInterface->read(/*offset=*/0, headerSize);
 
     if (bytesRead.size() != headerSize)
     {
@@ -166,6 +166,12 @@ std::vector<uint8_t> BufferImpl::wraparoundRead(const uint32_t relativeOffset,
                         bytesRead.size(), numBytesToReadTillQueueEnd));
     }
     size_t updatedReadPtr = relativeOffset + numBytesToReadTillQueueEnd;
+    if (updatedReadPtr == queueSize)
+    {
+        // If we read all the way up to the end of the queue, we need to
+        // manually wrap the updateReadPtr around to 0
+        updatedReadPtr = 0;
+    }
 
     // If there are any more bytes to be read beyond the buffer, wrap around and
     // read from the beginning of the buffer (offset by the queueOffset)
@@ -224,6 +230,73 @@ EntryPair BufferImpl::readEntry(size_t relativeOffset)
     }
 
     return {entryHeader, entry};
+}
+
+std::vector<EntryPair> BufferImpl::readErrorLogs()
+{
+    // Reading the buffer header will update the cachedBufferHeader
+    readBufferHeader();
+
+    const size_t queueSize =
+        boost::endian::little_to_native(cachedBufferHeader.queueSize);
+    size_t currentBiosWritePtr =
+        boost::endian::little_to_native(cachedBufferHeader.biosWritePtr);
+    if (currentBiosWritePtr > queueSize)
+    {
+        throw std::runtime_error(fmt::format(
+            "[readErrorLogs] currentBiosWritePtr was '{}' which was bigger "
+            "than queueSize '{}'",
+            currentBiosWritePtr, queueSize));
+    }
+    size_t currentReadPtr =
+        boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr);
+    if (currentReadPtr > queueSize)
+    {
+        throw std::runtime_error(fmt::format(
+            "[readErrorLogs] currentReadPtr was '{}' which was bigger "
+            "than queueSize '{}'",
+            currentReadPtr, queueSize));
+    }
+
+    size_t bytesToRead;
+    if (currentBiosWritePtr == currentReadPtr)
+    {
+        // No new payload was detected, return an empty vector gracefully
+        return {};
+    }
+
+    if (currentBiosWritePtr > currentReadPtr)
+    {
+        // Simply subtract in this case
+        bytesToRead = currentBiosWritePtr - currentReadPtr;
+    }
+    else
+    {
+        // Calculate the bytes to the "end" (QueueSize - ReadPtr) +
+        // bytes to read from the "beginning" (0 +  WritePtr)
+        bytesToRead = (queueSize - currentReadPtr) + currentBiosWritePtr;
+    }
+
+    size_t byteRead = 0;
+    std::vector<EntryPair> entryPairs;
+    while (byteRead < bytesToRead)
+    {
+        EntryPair entryPair = readEntry(currentReadPtr);
+        byteRead += sizeof(struct QueueEntryHeader) + entryPair.second.size();
+        entryPairs.push_back(entryPair);
+
+        // Note: readEntry() will update cachedBufferHeader.bmcReadPtr
+        currentReadPtr =
+            boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr);
+    }
+    if (currentBiosWritePtr != currentReadPtr)
+    {
+        throw std::runtime_error(fmt::format(
+            "[readErrorLogs] biosWritePtr '{}' and bmcReaddPtr '{}' "
+            "are not identical after reading through all the logs",
+            currentBiosWritePtr, currentReadPtr));
+    }
+    return entryPairs;
 }
 
 } // namespace bios_bmc_smm_error_logger
