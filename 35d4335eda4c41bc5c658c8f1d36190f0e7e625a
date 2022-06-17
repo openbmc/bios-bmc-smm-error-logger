@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7cbb94e9_fd669d2f",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-17T06:58:45Z",
+      "side": 1,
+      "message": "size_t for pointer? the name doesn\u0027t look right. This is just the offset, right?",
+      "range": {
+        "startLine": 168,
+        "startChar": 11,
+        "endLine": 168,
+        "endChar": 25
+      },
+      "revId": "35d4335eda4c41bc5c658c8f1d36190f0e7e625a",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
