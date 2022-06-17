@@ -655,7 +655,7 @@ TEST_F(BufferReadErrorLogsTest, NoWraparoundPass)
     EXPECT_NO_THROW(entryPairs = bufferImpl->readErrorLogs());
 
     // Check that we only read one entryPair and that the content is correct
-    EXPECT_EQ(entryPairs.size(), 1);
+    EXPECT_EQ(entryPairs.size(), 1U);
     EXPECT_EQ(entryPairs[0].first, testEntryHeader);
     EXPECT_THAT(entryPairs[0].second, ElementsAreArray(testEntryVector));
 }
