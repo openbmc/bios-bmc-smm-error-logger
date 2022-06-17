@@ -165,6 +165,11 @@ class BufferImpl : public BufferInterface
      *  @return relative offset for read and write pointers
      */
     size_t getQueueOffset();
+    /** @brief Calculate the checksum by XOR each bytes in the span
+     *  @param[in] entry     - Span to calculate the checksum on
+     *  @return calculated checksum
+     */
+    uint8_t calculateChecksum(std::span<uint8_t> entry);
 
     std::unique_ptr<DataInterface> dataInterface;
     struct CircularBufferHeader cachedBufferHeader = {};
