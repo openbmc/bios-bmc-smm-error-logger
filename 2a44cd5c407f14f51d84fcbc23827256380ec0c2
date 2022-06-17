@@ -94,6 +94,30 @@
       },
       "revId": "2a44cd5c407f14f51d84fcbc23827256380ec0c2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41d99488_4e16eeae",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-17T16:24:38Z",
+      "side": 1,
+      "message": "Oh I see, currentReadPtr is updated as part of wraparoundRead() and should be the currentReadPtr + number of bytes read.\n\nImagine the simple case of readPtr and writePtr starts at 0 then writePtr is incremented by 1 (as 1 byte is written), we expect readPtr to read 1 byte and increment to 1 (it\u0027s supposed to be \"ahead\" by 1).\n\nTake the more complex case of 10 byte queue {0, ... , 9}. The readPtr is at 9 and writePtr is at 0, which means we \"SHOULD\" read by 1 byte.\n\n`bytesToRead \u003d (queueSize - currentReadPtr) + currentBiosWritePtr + 1;`\n\nbytesToRead \u003d (10 - 9) + 0 + 1 \u003d 2 (Oops, it looks like my proposed solution had an off by 1 bug, taking out the +1 gets us the 1)",
+      "parentUuid": "6348d039_46d64b64",
+      "range": {
+        "startLine": 260,
+        "startChar": 0,
+        "endLine": 263,
+        "endChar": 74
+      },
+      "revId": "2a44cd5c407f14f51d84fcbc23827256380ec0c2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
