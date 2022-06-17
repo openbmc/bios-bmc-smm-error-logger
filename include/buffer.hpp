@@ -21,6 +21,13 @@ using boost::endian::little_uint64_t;
 // EntryPair.second = Error entry in vector of bytes
 using EntryPair = std::pair<struct QueueEntryHeader, std::vector<uint8_t>>;
 
+enum class BmcFlags : uint32_t
+{
+    ueSwitch = 1,
+    overflow = 1 << 1,
+    ready = 1 << 2,
+};
+
 struct CircularBufferHeader
 {
     little_uint32_t bmcInterfaceVersion;        // Offset 0x0
@@ -110,6 +117,12 @@ class BufferInterface
     virtual void updateReadPtr(const uint32_t newReadPtr) = 0;
 
     /**
+     * Write to the bufferHeader and update the BMC flags
+     * @param[in] newBmcFlags - new flag to update to
+     */
+    virtual void updateBmcFlags(const enum BmcFlags newBmcFlags) = 0;
+
+    /**
      * Wrapper for the dataInterface->read, performs wraparound read
      *
      * @param[in] relativeOffset - offset relative the "Error Log
@@ -162,6 +175,7 @@ class BufferImpl : public BufferInterface
     void readBufferHeader() override;
     struct CircularBufferHeader getCachedBufferHeader() const override;
     void updateReadPtr(const uint32_t newReadPtr) override;
+    void updateBmcFlags(const enum BmcFlags newBmcFlag) override;
     std::vector<uint8_t> wraparoundRead(const uint32_t relativeOffset,
                                         const uint32_t length) override;
     struct QueueEntryHeader readEntryHeader(size_t relativeOffset) override;

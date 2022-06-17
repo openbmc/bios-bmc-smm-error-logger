@@ -119,6 +119,29 @@ void BufferImpl::updateReadPtr(const uint32_t newReadPtr)
     cachedBufferHeader.bmcReadPtr = truncatedReadPtr;
 }
 
+void BufferImpl::updateBmcFlags(const enum BmcFlags newBmcFlag)
+{
+    constexpr uint8_t bmcFlagsPtrOffset =
+        offsetof(struct CircularBufferHeader, bmcFlags);
+
+    little_uint32_t littleNewBmcFlag =
+        boost::endian::native_to_little(static_cast<uint32_t>(newBmcFlag));
+    uint8_t* littleNewBmcFlagPtr =
+        reinterpret_cast<uint8_t*>(&littleNewBmcFlag);
+
+    size_t writtenSize = dataInterface->write(
+        bmcFlagsPtrOffset, std::span<const uint8_t>{
+                               littleNewBmcFlagPtr,
+                               littleNewBmcFlagPtr + sizeof(little_uint32_t)});
+    if (writtenSize != sizeof(little_uint32_t))
+    {
+        throw std::runtime_error(fmt::format(
+            "[updateBmcFlags] Wrote '{}' bytes, instead of expected '{}'",
+            writtenSize, sizeof(little_uint32_t)));
+    }
+    cachedBufferHeader.bmcFlags = littleNewBmcFlag;
+}
+
 size_t BufferImpl::getQueueOffset()
 {
     return sizeof(struct CircularBufferHeader) +

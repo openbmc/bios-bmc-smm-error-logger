@@ -203,6 +203,44 @@ TEST_F(BufferTest, BufferUpdateReadPtrPass)
                                              ElementsAreArray(expectedReadPtr)))
         .WillOnce(Return(expectedWriteSize));
     EXPECT_NO_THROW(bufferImpl->updateReadPtr(testNewReadPtr));
+
+    auto cachedHeader = bufferImpl->getCachedBufferHeader();
+    EXPECT_EQ(boost::endian::little_to_native(cachedHeader.bmcReadPtr), 0x1234);
+}
+
+TEST_F(BufferTest, BufferUpdateBmcFlagsFail)
+{
+    // Return write size that is not 4 which is sizeof(little_uint32_t)
+    constexpr size_t wrongWriteSize = 1;
+    EXPECT_CALL(*dataInterfaceMockPtr, write(_, _))
+        .WillOnce(Return(wrongWriteSize));
+    EXPECT_THROW(
+        try {
+            bufferImpl->updateBmcFlags(BmcFlags::ready);
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(
+                e.what(),
+                "[updateBmcFlags] Wrote '1' bytes, instead of expected '4'");
+            throw;
+        },
+        std::runtime_error);
+}
+
+TEST_F(BufferTest, BufferUpdateBmcFlagsPass)
+{
+    constexpr size_t expectedWriteSize = 4;
+    constexpr uint8_t expectedBmcReadPtrOffset = 0x1c;
+    const std::vector<uint8_t> expectedNewBmcFlagsVector{0x04, 0x0, 0x0, 0x00};
+
+    EXPECT_CALL(*dataInterfaceMockPtr,
+                write(expectedBmcReadPtrOffset,
+                      ElementsAreArray(expectedNewBmcFlagsVector)))
+        .WillOnce(Return(expectedWriteSize));
+    EXPECT_NO_THROW(bufferImpl->updateBmcFlags(BmcFlags::ready));
+
+    auto cachedHeader = bufferImpl->getCachedBufferHeader();
+    EXPECT_EQ(boost::endian::little_to_native(cachedHeader.bmcFlags),
+              static_cast<uint32_t>(BmcFlags::ready));
 }
 
 class BufferWraparoundReadTest : public BufferTest
