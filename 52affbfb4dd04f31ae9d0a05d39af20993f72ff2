@@ -61,6 +61,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "9243de85_b47cd2f1",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-17T03:02:12Z",
+      "side": 1,
+      "message": "That is inherently checked by the lower level data interface (out of bound read) so I decided not to test it again - I could add it though",
+      "parentUuid": "ed69f4ea_e3ec2b03",
+      "range": {
+        "startLine": 128,
+        "startChar": 63,
+        "endLine": 128,
+        "endChar": 77
+      },
+      "revId": "52affbfb4dd04f31ae9d0a05d39af20993f72ff2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "642ba10f_4adf2d70",
         "filename": "src/buffer.cpp",
         "patchSetId": 1
