@@ -136,6 +136,14 @@ class BufferInterface
      * * @return entry header and entry pair read from buffer
      */
     virtual EntryPair readEntry(size_t relativeOffset) = 0;
+
+    /**
+     * Read the buffer - this API should be used instead of individual functions
+     * above
+     *
+     * @return vector of EntryPair which consists of entry header and entry
+     */
+    virtual std::vector<EntryPair> readErrorLogs() = 0;
 };
 
 /**
@@ -158,6 +166,7 @@ class BufferImpl : public BufferInterface
                                         const uint32_t length) override;
     struct QueueEntryHeader readEntryHeader(size_t relativeOffset) override;
     EntryPair readEntry(size_t relativeOffset) override;
+    std::vector<EntryPair> readErrorLogs() override;
 
   private:
     /** @brief The Error log queue starts after the UE region, which is where
