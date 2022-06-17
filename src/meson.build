@@ -35,8 +35,9 @@ bios_bmc_smm_error_logger_dep = declare_dependency(
 executable(
   'bios-bmc-smm-error-logger',
   'main.cpp',
+  conf_h,
   implicit_include_directories: false,
-  dependencies: bios_bmc_smm_error_logger_dep,
+  dependencies: [bios_bmc_smm_error_logger_dep, rde_dep],
   install: true,
   install_dir: get_option('bindir')
 )
