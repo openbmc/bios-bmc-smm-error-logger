@@ -427,9 +427,10 @@ class BufferEntryTest : public BufferWraparoundReadTest
     static constexpr size_t entryHeaderSize = sizeof(struct QueueEntryHeader);
     static constexpr uint16_t testSequenceId = 0;
     static constexpr uint16_t testEntrySize = 0x20;
-    // Calculated checksum for the header (0x100 - 0 - 0x20 - 0x01) & 0xff
-    static constexpr uint8_t testChecksum = 0xdf;
     static constexpr uint8_t testRdeCommandType = 0x01;
+    // Calculated checksum for the header
+    static constexpr uint8_t testChecksum =
+        (testSequenceId ^ testEntrySize ^ testRdeCommandType);
     size_t testOffset = 0x20;
 
     struct QueueEntryHeader testEntryHeader
@@ -453,10 +454,9 @@ TEST_F(BufferEntryTest, ReadEntryHeaderPass)
 TEST_F(BufferEntryTest, ReadEntryChecksumFail)
 {
     InSequence s;
-    // We expect this will bump checksum up by "testEntrySize" = 0x20
-    std::vector<uint8_t> testEntryVector(testEntrySize, 1);
+    std::vector<uint8_t> testEntryVector(testEntrySize);
     // Offset the checksum by 1
-    testEntryHeader.checksum -= (0x20 - 1);
+    testEntryHeader.checksum += 1;
     uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
     std::vector<uint8_t> testEntryHeaderVector(
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
@@ -466,8 +466,9 @@ TEST_F(BufferEntryTest, ReadEntryChecksumFail)
         try {
             bufferImpl->readEntry(testOffset);
         } catch (const std::runtime_error& e) {
+            // Calculation: testChecksum (0x21) XOR (0x22) = 3
             EXPECT_STREQ(e.what(),
-                         "[readEntry] Checksum was '1', expected '0'");
+                         "[readEntry] Checksum was '3', expected '0'");
             throw;
         },
         std::runtime_error);
@@ -476,10 +477,9 @@ TEST_F(BufferEntryTest, ReadEntryChecksumFail)
 TEST_F(BufferEntryTest, ReadEntryPass)
 {
     InSequence s;
-    // We expect this will bump checksum up by "testEntrySize" = 0xff * 0x20 =
-    // 0x1fe0 -> 0x1fe0 & 0xff = 0xe0.
+    // We expect this will bump checksum up by "testEntrySize" = 0xff ^ 0xff ...
+    // (20 times) = 0 therefore leave the checksum as is
     std::vector<uint8_t> testEntryVector(testEntrySize, 0xff);
-    testEntryHeader.checksum -= (0xe0);
     uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
     std::vector<uint8_t> testEntryHeaderVector(
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
