@@ -22,6 +22,30 @@
       },
       "revId": "2a44cd5c407f14f51d84fcbc23827256380ec0c2",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20f03976_e52b135f",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-17T15:14:57Z",
+      "side": 1,
+      "message": "what\u0027s the relationship between WritePtr and ReadPtr.\n\nWhy do you need to read if the WritePtr is greater than the ReadPtr or maybe the other way around is wrong.\n\nIf ReadPrt \u003e WritePrt.\n\nWouldn\u0027t\n```\n    while (byteRead \u003c bytesToRead)\n    {\n        EntryPair entryPair \u003d readEntry(currentReadPtr);\n        byteRead +\u003d sizeof(struct QueueEntryHeader) + entryPair.second.size();\n        entryPairs.push_back(entryPair);\n\n        // Note: readEntry() will update cachedBufferHeader.bmcReadPtr\n        currentReadPtr \u003d\n            boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr);\n    }\n```\n\nset ReadPrt to be even greater?",
+      "parentUuid": "8c9a809b_d6d2ca1e",
+      "range": {
+        "startLine": 260,
+        "startChar": 0,
+        "endLine": 263,
+        "endChar": 74
+      },
+      "revId": "2a44cd5c407f14f51d84fcbc23827256380ec0c2",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
