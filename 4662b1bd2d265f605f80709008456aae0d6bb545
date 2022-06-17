@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea5ab9bf_b8ede135",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-17T20:33:52Z",
+      "side": 1,
+      "message": "There were only cosmetic changescompared to patchset 8 when it was +2ed",
+      "revId": "4662b1bd2d265f605f80709008456aae0d6bb545",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
