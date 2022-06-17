@@ -234,5 +234,71 @@ uint8_t BufferImpl::calculateChecksum(std::span<uint8_t> entry)
     }
     return checksum;
 }
+std::vector<EntryPair> BufferImpl::readErrorLogs()
+{
+    // Reading the buffer header will update the cachedBufferHeader
+    readBufferHeader();
+
+    const size_t queueSize =
+        boost::endian::little_to_native(cachedBufferHeader.queueSize);
+    size_t currentBiosWritePtr =
+        boost::endian::little_to_native(cachedBufferHeader.biosWritePtr);
+    if (currentBiosWritePtr > queueSize)
+    {
+        throw std::runtime_error(fmt::format(
+            "[readErrorLogs] currentBiosWritePtr was '{}' which was bigger "
+            "than queueSize '{}'",
+            currentBiosWritePtr, queueSize));
+    }
+    size_t currentReadPtr =
+        boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr);
+    if (currentReadPtr > queueSize)
+    {
+        throw std::runtime_error(fmt::format(
+            "[readErrorLogs] currentReadPtr was '{}' which was bigger "
+            "than queueSize '{}'",
+            currentReadPtr, queueSize));
+    }
+
+    // |WritePtr - ReadPtr| gives us how many bytes to read, for example
+    // (WritePtr - ReadPtr) is negative, we can see:
+    // (queueSize - WritePtr) + (ReadPtr - queueSize) = ReadPtr - WritePtr
+    uint16_t bytesToRead;
+    if (currentBiosWritePtr == currentReadPtr)
+    {
+        // No new payload was detected, return an empty vector gracefully
+        return {};
+    }
+
+    if (currentBiosWritePtr > currentReadPtr)
+    {
+        bytesToRead = currentBiosWritePtr - currentReadPtr;
+    }
+    else
+    {
+        bytesToRead = currentReadPtr - currentBiosWritePtr;
+    }
+
+    size_t byteRead = 0;
+    std::vector<EntryPair> entryPairs;
+    while (byteRead < bytesToRead)
+    {
+        EntryPair entryPair = readEntry(currentReadPtr);
+        byteRead += sizeof(struct QueueEntryHeader) + entryPair.second.size();
+        entryPairs.push_back(entryPair);
+
+        // Note: readEntry() will update cachedBufferHeader.bmcReadPtr
+        currentReadPtr =
+            boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr);
+    }
+    if (currentBiosWritePtr != currentReadPtr)
+    {
+        throw std::runtime_error(fmt::format(
+            "[readErrorLogs] biosWritePtr '{}' and bmcReaddPtr '{}' "
+            "are not identical after reading through all the logs",
+            currentBiosWritePtr, currentReadPtr));
+    }
+    return entryPairs;
+}
 
 } // namespace bios_bmc_smm_error_logger

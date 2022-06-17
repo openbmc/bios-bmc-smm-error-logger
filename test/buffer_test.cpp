@@ -210,6 +210,15 @@ class BufferWraparoundReadTest : public BufferTest
   protected:
     BufferWraparoundReadTest()
     {
+        initializeFuncMock(/* testReadPtr */ 0, /* testWritePtr */ 0);
+    }
+    void initializeFuncMock(uint16_t testReadPtr, uint16_t testWritePtr)
+    {
+        testInitializationHeader.bmcReadPtr =
+            boost::endian::native_to_little(testReadPtr);
+        testInitializationHeader.biosWritePtr =
+            boost::endian::native_to_little(testWritePtr);
+
         // Initialize the memory and the cachedBufferHeader
         InSequence s;
         EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
@@ -499,6 +508,17 @@ TEST_F(BufferEntryTest, ReadEntryPass)
     EXPECT_EQ(boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
               testEntrySize - 1);
 }
+
+class BufferReadErrorLogsTest : public BufferEntryTest
+{
+  protected:
+    BufferReadErrorLogsTest()
+    {
+        // Default the test with a single entry read
+        initializeFuncMock(/* testReadPtr */ 0,
+                           /* testWritePtr */ testEntrySize + entryHeaderSize);
+    }
+};
 
 } // namespace
 } // namespace bios_bmc_smm_error_logger
