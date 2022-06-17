@@ -210,6 +210,10 @@ class BufferWraparoundReadTest : public BufferTest
   protected:
     BufferWraparoundReadTest()
     {
+        initializeFuncMock();
+    }
+    void initializeFuncMock()
+    {
         // Initialize the memory and the cachedBufferHeader
         InSequence s;
         EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
@@ -221,11 +225,7 @@ class BufferWraparoundReadTest : public BufferTest
                     write(0, ElementsAreArray(emptyArray)))
             .WillOnce(Return(testProposedBufferSize));
 
-        uint8_t* testInitializationHeaderPtr =
-            reinterpret_cast<uint8_t*>(&testInitializationHeader);
-        EXPECT_CALL(*dataInterfaceMockPtr,
-                    write(0, ElementsAreArray(testInitializationHeaderPtr,
-                                              bufferHeaderSize)))
+        EXPECT_CALL(*dataInterfaceMockPtr, write(0, _))
             .WillOnce(Return(bufferHeaderSize));
         EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
                                                testQueueSize, testUeRegionSize,
@@ -234,6 +234,9 @@ class BufferWraparoundReadTest : public BufferTest
     static constexpr size_t expectedWriteSize = 2;
     static constexpr uint8_t expectedBmcReadPtrOffset = 0x20;
     static constexpr size_t expectedqueueOffset = 0x30 + testUeRegionSize;
+
+    uint8_t* testInitializationHeaderPtr =
+        reinterpret_cast<uint8_t*>(&testInitializationHeader);
 };
 
 TEST_F(BufferWraparoundReadTest, ParamsTooBigFail)
@@ -383,6 +386,35 @@ TEST_F(BufferWraparoundReadTest, WrapAroundReadPasses)
               testBytesLeft);
 }
 
+TEST_F(BufferWraparoundReadTest, WrapAroundCornerCasePass)
+{
+    InSequence s;
+    size_t testBytesLeft = 0;
+    size_t testLength = 4;
+    size_t testOffset = testQueueSize - (testLength - testBytesLeft);
+
+    // Read to the very end of the queue
+    std::vector<std::uint8_t> testBytes{4, 3, 2, 1};
+    EXPECT_CALL(*dataInterfaceMockPtr,
+                read(testOffset + expectedqueueOffset, testLength))
+        .WillOnce(Return(testBytes));
+
+    // Call to updateReadPtr is triggered, since we read to the very end of the
+    // buffer, update the readPtr up around to 0
+    const std::vector<uint8_t> expectedReadPtr{0x0, 0x0};
+    EXPECT_CALL(*dataInterfaceMockPtr, write(expectedBmcReadPtrOffset,
+                                             ElementsAreArray(expectedReadPtr)))
+        .WillOnce(Return(expectedWriteSize));
+
+    EXPECT_THAT(bufferImpl->wraparoundRead(testOffset, testLength),
+                ElementsAreArray(testBytes));
+    struct CircularBufferHeader cachedBufferHeader =
+        bufferImpl->getCachedBufferHeader();
+    // The bmcReadPtr should have been updated to reflect the wraparound
+    EXPECT_EQ(boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
+              0);
+}
+
 class BufferEntryTest : public BufferWraparoundReadTest
 {
   protected:
@@ -498,6 +530,167 @@ TEST_F(BufferEntryTest, ReadEntryPass)
     // The bmcReadPtr should have been updated to reflect the wraparound
     EXPECT_EQ(boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
               testEntrySize - 1);
+}
+
+class BufferReadErrorLogsTest : public BufferEntryTest
+{
+  protected:
+    BufferReadErrorLogsTest() = default;
+
+    uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
+    size_t entryAndHeaderSize = entryHeaderSize + testEntrySize;
+};
+
+TEST_F(BufferReadErrorLogsTest, PtrsTooBigFail)
+{
+    InSequence s;
+    // Set the biosWritePtr too big
+    testInitializationHeader.biosWritePtr =
+        boost::endian::native_to_little((testQueueSize + 1));
+    initializeFuncMock();
+
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
+                                              testInitializationHeaderPtr +
+                                                  bufferHeaderSize)));
+    EXPECT_THROW(
+        try {
+            bufferImpl->readErrorLogs();
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(
+                e.what(),
+                "[readErrorLogs] currentBiosWritePtr was '257' which was bigger than queueSize '256'");
+            throw;
+        },
+        std::runtime_error);
+
+    // Reset the biosWritePtr and set the bmcReadPtr too big
+    testInitializationHeader.biosWritePtr = 0;
+    initializeFuncMock();
+    testInitializationHeader.bmcReadPtr =
+        boost::endian::native_to_little((testQueueSize + 1));
+    initializeFuncMock();
+
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
+                                              testInitializationHeaderPtr +
+                                                  bufferHeaderSize)));
+    EXPECT_THROW(
+        try {
+            bufferImpl->readErrorLogs();
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(
+                e.what(),
+                "[readErrorLogs] currentReadPtr was '257' which was bigger than queueSize '256'");
+            throw;
+        },
+        std::runtime_error);
+}
+
+TEST_F(BufferReadErrorLogsTest, IdenticalPtrsPass)
+{
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
+                                              testInitializationHeaderPtr +
+                                                  bufferHeaderSize)));
+    EXPECT_NO_THROW(bufferImpl->readErrorLogs());
+}
+
+TEST_F(BufferReadErrorLogsTest, NoWraparoundPass)
+{
+    InSequence s;
+    // Set the biosWritePtr to 1 entryHeader + entry size
+    testInitializationHeader.biosWritePtr =
+        boost::endian::native_to_little((entryAndHeaderSize));
+    initializeFuncMock();
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
+                                              testInitializationHeaderPtr +
+                                                  bufferHeaderSize)));
+    std::vector<uint8_t> testEntryHeaderVector(
+        testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
+    std::vector<uint8_t> testEntryVector(testEntrySize);
+    wraparoundReadMock(/* offset */ 0, testEntryHeaderVector);
+    wraparoundReadMock(/* offset */ 0 + entryHeaderSize, testEntryVector);
+
+    std::vector<EntryPair> entryPairs;
+    EXPECT_NO_THROW(entryPairs = bufferImpl->readErrorLogs());
+
+    // Check that we only read one entryPair and that the content is correct
+    EXPECT_EQ(entryPairs.size(), 1);
+    EXPECT_EQ(entryPairs[0].first, testEntryHeader);
+    EXPECT_THAT(entryPairs[0].second, ElementsAreArray(testEntryVector));
+}
+
+TEST_F(BufferReadErrorLogsTest, WraparoundMultiplEntryPass)
+{
+    InSequence s;
+    // Set the bmcReadPtr to 1 entryHeader + entry size from the "end" exactly
+    uint32_t entryAndHeaderSizeAwayFromEnd = testQueueSize - entryAndHeaderSize;
+    testInitializationHeader.bmcReadPtr =
+        boost::endian::native_to_little(entryAndHeaderSizeAwayFromEnd);
+    // Set the biosWritePtr to 1 entryHeader + entry size from the "beginning"
+    testInitializationHeader.biosWritePtr = entryAndHeaderSize;
+    initializeFuncMock();
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
+                                              testInitializationHeaderPtr +
+                                                  bufferHeaderSize)));
+
+    std::vector<uint8_t> testEntryHeaderVector(
+        testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
+    std::vector<uint8_t> testEntryVector(testEntrySize);
+    wraparoundReadMock(/* offset */ entryAndHeaderSizeAwayFromEnd,
+                       testEntryHeaderVector);
+    wraparoundReadMock(/* offset */ entryAndHeaderSizeAwayFromEnd +
+                           entryHeaderSize,
+                       testEntryVector);
+    wraparoundReadMock(/* offset */ 0 + entryAndHeaderSize,
+                       testEntryHeaderVector);
+    wraparoundReadMock(/* offset */ 0 + entryAndHeaderSize + entryHeaderSize,
+                       testEntryVector);
+
+    std::vector<EntryPair> entryPairs;
+    EXPECT_NO_THROW(entryPairs = bufferImpl->readErrorLogs());
+
+    // Check that we only read one entryPair and that the content is correct
+    EXPECT_EQ(entryPairs.size(), 2);
+    EXPECT_EQ(entryPairs[0].first, testEntryHeader);
+    EXPECT_EQ(entryPairs[1].first, testEntryHeader);
+    EXPECT_THAT(entryPairs[0].second, ElementsAreArray(testEntryVector));
+    EXPECT_THAT(entryPairs[1].second, ElementsAreArray(testEntryVector));
+}
+
+TEST_F(BufferReadErrorLogsTest, WraparoundMismatchingPtrsFail)
+{
+    InSequence s;
+    testInitializationHeader.bmcReadPtr = boost::endian::native_to_little(0);
+    // Make the biosWritePtr intentially 1 smaller than expected
+    testInitializationHeader.biosWritePtr =
+        boost::endian::native_to_little(entryAndHeaderSize - 1);
+    initializeFuncMock();
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
+                                              testInitializationHeaderPtr +
+                                                  bufferHeaderSize)));
+
+    std::vector<uint8_t> testEntryHeaderVector(
+        testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
+    std::vector<uint8_t> testEntryVector(testEntrySize);
+    wraparoundReadMock(/* offset */ 0, testEntryHeaderVector);
+    wraparoundReadMock(/* offset */ 0 + entryHeaderSize, testEntryVector);
+
+    EXPECT_THROW(
+        try {
+            bufferImpl->readErrorLogs();
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(
+                e.what(),
+                "[readErrorLogs] biosWritePtr '37' and bmcReaddPtr '38' "
+                "are not identical after reading through all the logs");
+            throw;
+        },
+        std::runtime_error);
 }
 
 } // namespace
