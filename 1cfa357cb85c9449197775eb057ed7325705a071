@@ -71,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54205e4b_fcd562d4",
+        "filename": "src/main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-22T21:26:06Z",
+      "side": 1,
+      "message": "Yes, thanks!",
+      "parentUuid": "e5bc570d_739ba3d5",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 73
+      },
+      "revId": "1cfa357cb85c9449197775eb057ed7325705a071",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "52ca6af8_09b611b0",
@@ -94,6 +118,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1adab340_87aeb965",
+        "filename": "src/main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-22T21:26:06Z",
+      "side": 1,
+      "message": "Good one!",
+      "parentUuid": "52ca6af8_09b611b0",
+      "range": {
+        "startLine": 53,
+        "startChar": 9,
+        "endLine": 53,
+        "endChar": 24
+      },
+      "revId": "1cfa357cb85c9449197775eb057ed7325705a071",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7d361179_37824437",
@@ -107,6 +155,30 @@
       "writtenOn": "2022-06-21T03:56:54Z",
       "side": 1,
       "message": "I SWEAR this didn\u0027t work and was the reason I had to switch to bind_front.\n\nWith bind_front, maybe I won\u0027t have the weird error I got where I couldn\u0027t pass 2 extra smart pointers (which is why I had to create that Pair object), will try doing that.",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 76
+      },
+      "revId": "1cfa357cb85c9449197775eb057ed7325705a071",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "526cf7bc_870f4324",
+        "filename": "src/main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-22T21:26:06Z",
+      "side": 1,
+      "message": "Yup! bind_front is magic and it works without having to pass this ugly pair hack",
+      "parentUuid": "7d361179_37824437",
       "range": {
         "startLine": 74,
         "startChar": 0,
