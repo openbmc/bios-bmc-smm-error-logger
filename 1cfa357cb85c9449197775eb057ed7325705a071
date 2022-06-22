@@ -95,6 +95,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3288ed8e_01567bb4",
+        "filename": "src/main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-22T21:27:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5bc570d_739ba3d5",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 73
+      },
+      "revId": "1cfa357cb85c9449197775eb057ed7325705a071",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "52ca6af8_09b611b0",
@@ -142,6 +166,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "808b9fcb_4f6e78ad",
+        "filename": "src/main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-22T21:27:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52ca6af8_09b611b0",
+      "range": {
+        "startLine": 53,
+        "startChar": 9,
+        "endLine": 53,
+        "endChar": 24
+      },
+      "revId": "1cfa357cb85c9449197775eb057ed7325705a071",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7d361179_37824437",
@@ -178,6 +226,30 @@
       "writtenOn": "2022-06-22T21:26:06Z",
       "side": 1,
       "message": "Yup! bind_front is magic and it works without having to pass this ugly pair hack",
+      "parentUuid": "7d361179_37824437",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 76
+      },
+      "revId": "1cfa357cb85c9449197775eb057ed7325705a071",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2d69f98_73bf329f",
+        "filename": "src/main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2022-06-22T21:27:28Z",
+      "side": 1,
+      "message": "oops",
       "parentUuid": "7d361179_37824437",
       "range": {
         "startLine": 74,
