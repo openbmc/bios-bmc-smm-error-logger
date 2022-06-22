@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "37e918aa_c48d34a3",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-22T16:59:41Z",
+      "side": 1,
+      "message": "This has been fixed.",
+      "parentUuid": "3bbf609f_64f82665",
+      "range": {
+        "startLine": 123,
+        "startChar": 32,
+        "endLine": 123,
+        "endChar": 63
+      },
+      "revId": "f1f07da156258858f1032da2229bd9d56f4215d8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "679abc39_248f4c54",
         "filename": "src/buffer.cpp",
         "patchSetId": 2
