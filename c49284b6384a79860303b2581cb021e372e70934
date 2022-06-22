@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c12927b1_ae52da3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-22T23:02:26Z",
+      "side": 1,
+      "message": "h",
+      "revId": "c49284b6384a79860303b2581cb021e372e70934",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bc76f9d1_59c36ca4",
@@ -14,6 +31,30 @@
       "writtenOn": "2022-06-22T22:08:36Z",
       "side": 1,
       "message": "is this right?",
+      "range": {
+        "startLine": 124,
+        "startChar": 4,
+        "endLine": 124,
+        "endChar": 13
+      },
+      "revId": "c49284b6384a79860303b2581cb021e372e70934",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f594f98_871cb316",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-22T23:02:26Z",
+      "side": 1,
+      "message": "Yeah, I think this is right, as it\u0027s a constant and is possible to get it at compile time. I can change it to const if you prefer",
+      "parentUuid": "bc76f9d1_59c36ca4",
       "range": {
         "startLine": 124,
         "startChar": 4,
