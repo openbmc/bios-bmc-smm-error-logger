@@ -48,6 +48,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8655510f_fb2fe2e2",
+        "filename": "include/dbus/file_notifier.hpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-29T18:07:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6f80d2ab_d10a2e6e",
+      "range": {
+        "startLine": 56,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 67
+      },
+      "revId": "389bea519349f97060048edf5b4242da03d1fa33",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9b732bc_a3721c3f",
@@ -61,6 +85,24 @@
       "writtenOn": "2022-06-29T17:20:01Z",
       "side": 1,
       "message": "new line at end of file.",
+      "revId": "389bea519349f97060048edf5b4242da03d1fa33",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "faccd8ce_a12ccda6",
+        "filename": "src/rde/notifier_dbus_handler.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-06-29T18:07:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9b732bc_a3721c3f",
       "revId": "389bea519349f97060048edf5b4242da03d1fa33",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
