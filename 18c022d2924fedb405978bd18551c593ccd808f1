@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c635a95b_3a1fc044",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-29T20:41:30Z",
+      "side": 1,
+      "message": "nit: Perhaps fmt::format may be better here as well for better readability? Or should we perhaps use std::filesystem::path (which has the appropriate + operation or /\u003d operation as well. That can be done in a later CL.",
+      "range": {
+        "startLine": 119,
+        "startChar": 4,
+        "endLine": 121,
+        "endChar": 59
+      },
+      "revId": "18c022d2924fedb405978bd18551c593ccd808f1",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "611a8af3_84967a9f",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-29T20:41:30Z",
+      "side": 1,
+      "message": "We should at one point, transition to using exceptions instead",
+      "range": {
+        "startLine": 131,
+        "startChar": 8,
+        "endLine": 133,
+        "endChar": 21
+      },
+      "revId": "18c022d2924fedb405978bd18551c593ccd808f1",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0195bbd9_315289bf",
+        "filename": "test/external_storer_file_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-29T20:41:30Z",
+      "side": 1,
+      "message": "Oh, why does interface removed get called?",
+      "range": {
+        "startLine": 186,
+        "startChar": 27,
+        "endLine": 186,
+        "endChar": 62
+      },
+      "revId": "18c022d2924fedb405978bd18551c593ccd808f1",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
