@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc9b3b89_2bf6a14c",
+        "filename": "src/rde/notifier_dbus_handler.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-06-29T19:36:38Z",
+      "side": 1,
+      "message": "Hmm, I\u0027m not actually sure if it\u0027s better to initialize values in the initalizer list / constructor vs just at definition of the class. I remember John moved it to be in the class definition instead for example: https://gerrit.openbmc.org/c/openbmc/estoraged/+/54831",
+      "range": {
+        "startLine": 9,
+        "startChar": 63,
+        "endLine": 9,
+        "endChar": 75
+      },
+      "revId": "1571e71dc76ea90bce2180e44fa63b36303a8fdb",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
