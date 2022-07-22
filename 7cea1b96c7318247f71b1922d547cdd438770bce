@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2884cda0_bb315255",
+        "filename": "include/dbus/file_notifier.hpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000153
+      },
+      "writtenOn": "2022-07-22T20:53:22Z",
+      "side": 1,
+      "message": "?  Properties changed is a dbus convention, and more than just fault monitor might be looking at this.  I suspect this needs added back.",
+      "range": {
+        "startLine": 35,
+        "startChar": 74,
+        "endLine": 37,
+        "endChar": 0
+      },
+      "revId": "7cea1b96c7318247f71b1922d547cdd438770bce",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cc8e053b_7af1b800",
         "filename": "include/dbus/file_notifier.hpp",
         "patchSetId": 10
