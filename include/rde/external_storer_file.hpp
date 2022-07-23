@@ -83,13 +83,13 @@ class ExternalStorerFileInterface : public ExternalStorerInterface
      * will take the ownership of this object.
      */
     ExternalStorerFileInterface(
-        sdbusplus::bus::bus& bus, std::string_view rootPath,
+        sdbusplus::bus_t& bus, std::string_view rootPath,
         std::unique_ptr<FileHandlerInterface> fileHandler);
 
     bool publishJson(std::string_view jsonStr) override;
 
   private:
-    sdbusplus::bus::bus& bus;
+    sdbusplus::bus_t& bus;
     std::string rootPath;
     std::unique_ptr<FileHandlerInterface> fileHandler;
     std::string logServiceId;

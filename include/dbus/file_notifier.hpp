@@ -26,7 +26,7 @@ class CperFileNotifier : public FileNotifierInterface
      * @param filePath - full path of the CPER log JSON file.
      * @param entry - index of the DBus file path object.
      */
-    CperFileNotifier(sdbusplus::bus::bus& bus, const std::string& filePath,
+    CperFileNotifier(sdbusplus::bus_t& bus, const std::string& filePath,
                      uint64_t entry) :
         FileNotifierInterface(bus, generatePath(entry).c_str(),
                               action::emit_no_signals),
@@ -46,7 +46,7 @@ class CperFileNotifier : public FileNotifierInterface
      */
     uint64_t entry;
 
-    sdbusplus::bus::bus& bus;
+    sdbusplus::bus_t& bus;
 
     /**
      * @brief Generate a path for the CperFileNotifier DBus object.

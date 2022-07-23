@@ -44,7 +44,7 @@ bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
 }
 
 ExternalStorerFileInterface::ExternalStorerFileInterface(
-    sdbusplus::bus::bus& bus, std::string_view rootPath,
+    sdbusplus::bus_t& bus, std::string_view rootPath,
     std::unique_ptr<FileHandlerInterface> fileHandler) :
     bus(bus),
     rootPath(rootPath), fileHandler(std::move(fileHandler)), logServiceId(""),

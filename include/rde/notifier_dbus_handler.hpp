@@ -21,7 +21,7 @@ class CperFileNotifierHandler
      *
      * @param bus - bus to attache to.
      */
-    explicit CperFileNotifierHandler(sdbusplus::bus::bus& bus);
+    explicit CperFileNotifierHandler(sdbusplus::bus_t& bus);
 
     /**
      * @brief Create a DBus object with the provided filePath value.
@@ -31,8 +31,8 @@ class CperFileNotifierHandler
     void createEntry(const std::string& filePath);
 
   private:
-    sdbusplus::bus::bus& bus;
-    sdbusplus::server::manager::manager objManager;
+    sdbusplus::bus_t& bus;
+    sdbusplus::server::manager_t objManager;
 
     /**
      * @brief A vector to keep track of DBus FilePath objects.

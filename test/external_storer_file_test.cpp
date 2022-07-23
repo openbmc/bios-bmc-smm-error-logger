@@ -53,7 +53,7 @@ class ExternalStorerFileTest : public ::testing::Test
 
   protected:
     sdbusplus::SdBusMock sdbusMock;
-    sdbusplus::bus::bus bus;
+    sdbusplus::bus_t bus;
     std::unique_ptr<FileHandlerInterface> mockFileWriter;
     std::unique_ptr<ExternalStorerFileInterface> exStorer;
     MockFileWriter* mockFileWriterPtr;

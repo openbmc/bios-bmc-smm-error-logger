@@ -5,7 +5,7 @@ namespace bios_bmc_smm_error_logger
 namespace rde
 {
 
-CperFileNotifierHandler::CperFileNotifierHandler(sdbusplus::bus::bus& bus) :
+CperFileNotifierHandler::CperFileNotifierHandler(sdbusplus::bus_t& bus) :
     bus(bus), objManager(bus, CperFileNotifier::cperBasePath)
 {}
 
