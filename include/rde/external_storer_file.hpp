@@ -76,20 +76,28 @@ class ExternalStorerFileInterface : public ExternalStorerInterface
     /**
      * @brief Constructor for the ExternalStorerFileInterface.
      *
-     * @param[in] bus - bus to attach to.
+     * @param[in] conn - sdbusplus asio connection.
      * @param[in] rootPath - root path for creating redfish folders.
      * Eg: "/run/bmcweb"
      * @param[in] fileHandler - an ExternalStorerFileWriter object. This class
      * will take the ownership of this object.
      */
     ExternalStorerFileInterface(
+<<<<<<< HEAD
         sdbusplus::bus_t& bus, std::string_view rootPath,
+=======
+        const std::shared_ptr<sdbusplus::asio::connection>& conn,
+        std::string_view rootPath,
+>>>>>>> 73ac4e2 (Modify DBus object used for notifying FaultMonitor)
         std::unique_ptr<FileHandlerInterface> fileHandler);
 
     bool publishJson(std::string_view jsonStr) override;
 
   private:
+<<<<<<< HEAD
     sdbusplus::bus_t& bus;
+=======
+>>>>>>> 73ac4e2 (Modify DBus object used for notifying FaultMonitor)
     std::string rootPath;
     std::unique_ptr<FileHandlerInterface> fileHandler;
     std::string logServiceId;
