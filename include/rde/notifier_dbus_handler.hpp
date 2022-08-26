@@ -2,6 +2,8 @@
 
 #include "dbus/file_notifier.hpp"
 
+#include <sdbusplus/asio/object_server.hpp>
+
 #include <memory>
 #include <vector>
 
@@ -19,9 +21,10 @@ class CperFileNotifierHandler
     /**
      * @brief Constructor for the CperFileNotifierHandler class.
      *
-     * @param bus - bus to attache to.
+     * @param conn - sdbusplus asio connection.
      */
-    explicit CperFileNotifierHandler(sdbusplus::bus::bus& bus);
+    explicit CperFileNotifierHandler(
+        const std::shared_ptr<sdbusplus::asio::connection>& conn);
 
     /**
      * @brief Create a DBus object with the provided filePath value.
@@ -31,8 +34,8 @@ class CperFileNotifierHandler
     void createEntry(const std::string& filePath);
 
   private:
-    sdbusplus::bus::bus& bus;
     sdbusplus::server::manager::manager objManager;
+    sdbusplus::asio::object_server objServer;
 
     /**
      * @brief A vector to keep track of DBus FilePath objects.
