@@ -91,13 +91,12 @@ int main()
     std::shared_ptr<sdbusplus::asio::connection> conn =
         std::make_shared<sdbusplus::asio::connection>(io);
     conn->request_name("xyz.openbmc_project.bios_bmc_smm_error_logger");
-    sdbusplus::bus_t& bus = static_cast<sdbusplus::bus_t&>(*conn);
 
     std::unique_ptr<rde::FileHandlerInterface> fileIface =
         std::make_unique<rde::ExternalStorerFileWriter>();
     std::unique_ptr<rde::ExternalStorerInterface> exFileIface =
         std::make_unique<rde::ExternalStorerFileInterface>(
-            bus, "/run/bmcweb", std::move(fileIface));
+            conn, "/run/bmcweb", std::move(fileIface));
     std::shared_ptr<rde::RdeCommandHandler> rdeCommandHandler =
         std::make_unique<rde::RdeCommandHandler>(std::move(exFileIface));
 

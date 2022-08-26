@@ -46,10 +46,11 @@ bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
 }
 
 ExternalStorerFileInterface::ExternalStorerFileInterface(
-    sdbusplus::bus_t& bus, std::string_view rootPath,
+    const std::shared_ptr<sdbusplus::asio::connection>& conn,
+    std::string_view rootPath,
     std::unique_ptr<FileHandlerInterface> fileHandler) :
     rootPath(rootPath), fileHandler(std::move(fileHandler)), logServiceId(""),
-    cperNotifier(std::make_unique<CperFileNotifierHandler>(bus))
+    cperNotifier(std::make_unique<CperFileNotifierHandler>(conn))
 {}
 
 bool ExternalStorerFileInterface::publishJson(std::string_view jsonStr)
