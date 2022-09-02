@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fe1f234_190868ec",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-09-02T21:11:43Z",
+      "side": 1,
+      "message": "We can use the BIOS version to tell - luckily the old BIOS did not get deployed so we\u0027d like to get this in before that.\n\nI\u0027ll be updating the Design doc and hopefully create a README for this repo as well",
+      "parentUuid": "5370a5e7_3c716138",
+      "range": {
+        "startLine": 37,
+        "startChar": 11,
+        "endLine": 37,
+        "endChar": 29
+      },
+      "revId": "872d7d349064a7e8705b84a4c38cf5a2296cc20d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b366d711_7f260aeb",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0e34d96_1585c81e",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-09-02T21:11:43Z",
+      "side": 1,
+      "message": "The size is the same as we just ate into the reserved / padding section",
+      "parentUuid": "b366d711_7f260aeb",
+      "range": {
+        "startLine": 61,
+        "startChar": 46,
+        "endLine": 61,
+        "endChar": 50
+      },
+      "revId": "872d7d349064a7e8705b84a4c38cf5a2296cc20d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6342aa8b_b93a89f5",
@@ -60,6 +108,30 @@
       "writtenOn": "2022-09-02T19:48:52Z",
       "side": 1,
       "message": "Should we use sizeof(truncatedReadPtr)? Otherwise we might forget to update this everywhere.",
+      "range": {
+        "startLine": 112,
+        "startChar": 59,
+        "endLine": 112,
+        "endChar": 74
+      },
+      "revId": "872d7d349064a7e8705b84a4c38cf5a2296cc20d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1bffd1ed_6bb8c473",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-09-02T21:11:43Z",
+      "side": 1,
+      "message": "Good point, will do",
+      "parentUuid": "6342aa8b_b93a89f5",
       "range": {
         "startLine": 112,
         "startChar": 59,
