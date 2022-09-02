@@ -101,20 +101,20 @@ void BufferImpl::updateReadPtr(const uint32_t newReadPtr)
     constexpr uint8_t bmcReadPtrOffset =
         offsetof(struct CircularBufferHeader, bmcReadPtr);
 
-    little_uint16_t truncatedReadPtr =
-        boost::endian::native_to_little(newReadPtr & 0xffff);
+    little_uint24_t truncatedReadPtr =
+        boost::endian::native_to_little(newReadPtr & 0xffffff);
     uint8_t* truncatedReadPtrPtr =
         reinterpret_cast<uint8_t*>(&truncatedReadPtr);
 
     size_t writtenSize = dataInterface->write(
         bmcReadPtrOffset, std::span<const uint8_t>{
                               truncatedReadPtrPtr,
-                              truncatedReadPtrPtr + sizeof(little_uint16_t)});
-    if (writtenSize != sizeof(little_uint16_t))
+                              truncatedReadPtrPtr + sizeof(truncatedReadPtr)});
+    if (writtenSize != sizeof(truncatedReadPtr))
     {
         throw std::runtime_error(fmt::format(
             "[updateReadPtr] Wrote '{}' bytes, instead of expected '{}'",
-            writtenSize, sizeof(little_uint16_t)));
+            writtenSize, sizeof(truncatedReadPtr)));
     }
     cachedBufferHeader.bmcReadPtr = truncatedReadPtr;
 }
