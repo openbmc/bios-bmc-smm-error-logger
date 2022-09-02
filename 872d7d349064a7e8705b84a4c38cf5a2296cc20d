@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5370a5e7_3c716138",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-09-02T19:48:52Z",
+      "side": 1,
+      "message": "Now that the struct is different, this will not work with the older BIOS right? Is there a way to know that if the BIOS is old and has the initial version of the struct?",
+      "range": {
+        "startLine": 37,
+        "startChar": 11,
+        "endLine": 37,
+        "endChar": 29
+      },
+      "revId": "872d7d349064a7e8705b84a4c38cf5a2296cc20d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b366d711_7f260aeb",
+        "filename": "include/buffer.hpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-09-02T19:48:52Z",
+      "side": 1,
+      "message": "You will have to change the size?",
+      "range": {
+        "startLine": 61,
+        "startChar": 46,
+        "endLine": 61,
+        "endChar": 50
+      },
+      "revId": "872d7d349064a7e8705b84a4c38cf5a2296cc20d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6342aa8b_b93a89f5",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2022-09-02T19:48:52Z",
+      "side": 1,
+      "message": "Should we use sizeof(truncatedReadPtr)? Otherwise we might forget to update this everywhere.",
+      "range": {
+        "startLine": 112,
+        "startChar": 59,
+        "endLine": 112,
+        "endChar": 74
+      },
+      "revId": "872d7d349064a7e8705b84a4c38cf5a2296cc20d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
