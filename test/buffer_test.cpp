@@ -44,7 +44,7 @@ class BufferTest : public ::testing::Test
     // CircularBufferHeader size is 0x30, ensure the test region is bigger
     static constexpr size_t testRegionSize = 0x200;
     static constexpr uint32_t testBmcInterfaceVersion = 123;
-    static constexpr uint16_t testQueueSize = 0x100;
+    static constexpr uint32_t testQueueSize = 0x100;
     static constexpr uint16_t testUeRegionSize = 0x50;
     static constexpr std::array<uint32_t, 4> testMagicNumber = {
         0x12345678, 0x22345678, 0x32345678, 0x42345678};
@@ -185,7 +185,7 @@ TEST_F(BufferTest, BufferUpdateReadPtrFail)
         } catch (const std::runtime_error& e) {
             EXPECT_STREQ(
                 e.what(),
-                "[updateReadPtr] Wrote '1' bytes, instead of expected '2'");
+                "[updateReadPtr] Wrote '1' bytes, instead of expected '3'");
             throw;
         },
         std::runtime_error);
@@ -193,11 +193,11 @@ TEST_F(BufferTest, BufferUpdateReadPtrFail)
 
 TEST_F(BufferTest, BufferUpdateReadPtrPass)
 {
-    constexpr size_t expectedWriteSize = 2;
-    constexpr uint8_t expectedBmcReadPtrOffset = 0x20;
-    // Check that we truncate the highest 16bits
+    constexpr size_t expectedWriteSize = 3;
+    constexpr uint8_t expectedBmcReadPtrOffset = 0x21;
+    // Check that we truncate the highest 24bits
     const uint32_t testNewReadPtr = 0x99881234;
-    const std::vector<uint8_t> expectedReadPtr{0x34, 0x12};
+    const std::vector<uint8_t> expectedReadPtr{0x34, 0x12, 0x88};
 
     EXPECT_CALL(*dataInterfaceMockPtr, write(expectedBmcReadPtrOffset,
                                              ElementsAreArray(expectedReadPtr)))
@@ -205,7 +205,8 @@ TEST_F(BufferTest, BufferUpdateReadPtrPass)
     EXPECT_NO_THROW(bufferImpl->updateReadPtr(testNewReadPtr));
 
     auto cachedHeader = bufferImpl->getCachedBufferHeader();
-    EXPECT_EQ(boost::endian::little_to_native(cachedHeader.bmcReadPtr), 0x1234);
+    EXPECT_EQ(boost::endian::little_to_native(cachedHeader.bmcReadPtr),
+              0x881234);
 }
 
 TEST_F(BufferTest, BufferUpdateBmcFlagsFail)
@@ -229,7 +230,7 @@ TEST_F(BufferTest, BufferUpdateBmcFlagsFail)
 TEST_F(BufferTest, BufferUpdateBmcFlagsPass)
 {
     constexpr size_t expectedWriteSize = 4;
-    constexpr uint8_t expectedBmcReadPtrOffset = 0x1c;
+    constexpr uint8_t expectedBmcReadPtrOffset = 0x1d;
     const std::vector<uint8_t> expectedNewBmcFlagsVector{0x04, 0x0, 0x0, 0x00};
 
     EXPECT_CALL(*dataInterfaceMockPtr,
@@ -270,8 +271,8 @@ class BufferWraparoundReadTest : public BufferTest
                                                testQueueSize, testUeRegionSize,
                                                testMagicNumber));
     }
-    static constexpr size_t expectedWriteSize = 2;
-    static constexpr uint8_t expectedBmcReadPtrOffset = 0x20;
+    static constexpr size_t expectedWriteSize = 3;
+    static constexpr uint8_t expectedBmcReadPtrOffset = 0x21;
     static constexpr size_t expectedqueueOffset = 0x30 + testUeRegionSize;
 
     uint8_t* testInitializationHeaderPtr =
@@ -344,7 +345,7 @@ TEST_F(BufferWraparoundReadTest, NoWrapAroundReadPass)
 
     // Call to updateReadPtr is triggered
     const std::vector<uint8_t> expectedReadPtr{
-        static_cast<uint8_t>(testOffset + testLength), 0x0};
+        static_cast<uint8_t>(testOffset + testLength), 0x0, 0x0};
     EXPECT_CALL(*dataInterfaceMockPtr, write(expectedBmcReadPtrOffset,
                                              ElementsAreArray(expectedReadPtr)))
         .WillOnce(Return(expectedWriteSize));
@@ -409,7 +410,7 @@ TEST_F(BufferWraparoundReadTest, WrapAroundReadPasses)
 
     // Call to updateReadPtr is triggered
     const std::vector<uint8_t> expectedReadPtr{
-        static_cast<uint8_t>(testBytesLeft), 0x0};
+        static_cast<uint8_t>(testBytesLeft), 0x0, 0x0};
     EXPECT_CALL(*dataInterfaceMockPtr, write(expectedBmcReadPtrOffset,
                                              ElementsAreArray(expectedReadPtr)))
         .WillOnce(Return(expectedWriteSize));
@@ -440,7 +441,7 @@ TEST_F(BufferWraparoundReadTest, WrapAroundCornerCasePass)
 
     // Call to updateReadPtr is triggered, since we read to the very end of the
     // buffer, update the readPtr up around to 0
-    const std::vector<uint8_t> expectedReadPtr{0x0, 0x0};
+    const std::vector<uint8_t> expectedReadPtr{0x0, 0x0, 0x0};
     EXPECT_CALL(*dataInterfaceMockPtr, write(expectedBmcReadPtrOffset,
                                              ElementsAreArray(expectedReadPtr)))
         .WillOnce(Return(expectedWriteSize));
