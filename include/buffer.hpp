@@ -33,14 +33,14 @@ struct CircularBufferHeader
     little_uint32_t bmcInterfaceVersion;        // Offset 0x0
     little_uint32_t biosInterfaceVersion;       // Offset 0x4
     std::array<little_uint32_t, 4> magicNumber; // Offset 0x8
-    little_uint16_t queueSize;                  // Offset 0x18
-    little_uint16_t ueRegionSize;               // Offset 0x1a
-    little_uint32_t bmcFlags;                   // Offset 0x1c
-    little_uint16_t bmcReadPtr;                 // Offset 0x20
-    std::array<uint8_t, 6> reserved1;           // Offset 0x22
+    little_uint24_t queueSize;                  // Offset 0x18
+    little_uint16_t ueRegionSize;               // Offset 0x1b
+    little_uint32_t bmcFlags;                   // Offset 0x1d
+    little_uint24_t bmcReadPtr;                 // Offset 0x21
+    std::array<uint8_t, 4> reserved1;           // Offset 0x24
     little_uint32_t biosFlags;                  // Offset 0x28
-    little_uint16_t biosWritePtr;               // Offset 0x2c
-    std::array<uint8_t, 2> reserved2;           // Offset 0x2e
+    little_uint24_t biosWritePtr;               // Offset 0x2c
+    uint8_t reserved2;                          // Offset 0x2f
     // UE reserved region:                         Offset 0x30
     // Error log queue:       Offset 0x30 + UE reserved region
 
