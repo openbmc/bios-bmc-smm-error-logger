@@ -503,7 +503,7 @@ class BufferEntryTest : public BufferWraparoundReadTest
     // Calculated checksum for the header
     static constexpr uint8_t testChecksum =
         (testSequenceId ^ testEntrySize ^ testRdeCommandType);
-    size_t testOffset = 0x20;
+    size_t testOffset = 0x0;
 
     struct QueueEntryHeader testEntryHeader
     {};
@@ -515,7 +515,7 @@ TEST_F(BufferEntryTest, ReadEntryHeaderPass)
     std::vector<uint8_t> testEntryHeaderVector(
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
     wraparoundReadMock(testOffset, testEntryHeaderVector);
-    EXPECT_EQ(bufferImpl->readEntryHeader(testOffset), testEntryHeader);
+    EXPECT_EQ(bufferImpl->readEntryHeader(), testEntryHeader);
     // Check the bmcReadPtr
     struct CircularBufferHeader cachedBufferHeader =
         bufferImpl->getCachedBufferHeader();
@@ -535,9 +535,7 @@ TEST_F(BufferEntryTest, ReadEntryChecksumFail)
     wraparoundReadMock(testOffset, testEntryHeaderVector);
     wraparoundReadMock(testOffset + entryHeaderSize, testEntryVector);
     EXPECT_THROW(
-        try {
-            bufferImpl->readEntry(testOffset);
-        } catch (const std::runtime_error& e) {
+        try { bufferImpl->readEntry(); } catch (const std::runtime_error& e) {
             // Calculation: testChecksum (0x21) XOR (0x22) = 3
             EXPECT_STREQ(e.what(),
                          "[readEntry] Checksum was '3', expected '0'");
@@ -546,7 +544,7 @@ TEST_F(BufferEntryTest, ReadEntryChecksumFail)
         std::runtime_error);
 }
 
-TEST_F(BufferEntryTest, ReadEntryPass)
+TEST_F(BufferEntryTest, ReadEntryPassWraparound)
 {
     InSequence s;
     // We expect this will bump checksum up by "testEntrySize" = 0xff ^ 0xff ...
@@ -555,18 +553,40 @@ TEST_F(BufferEntryTest, ReadEntryPass)
     uint8_t* testEntryHeaderPtr = reinterpret_cast<uint8_t*>(&testEntryHeader);
     std::vector<uint8_t> testEntryHeaderVector(
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
-    // Set testOffset so that we can test the wraparound here as well on our
-    // second read for the entry (by 1 byte)
-    testOffset = testQueueSize - entryHeaderSize - 1;
+    // Set testOffset so that we can test the wraparound here at the header and
+    // update the readPtr
+    testOffset = testQueueSize - 1;
+    EXPECT_CALL(*dataInterfaceMockPtr, write(expectedBmcReadPtrOffset, _))
+        .WillOnce(Return(expectedWriteSize));
+    EXPECT_NO_THROW(bufferImpl->updateReadPtr(testOffset));
+
     wraparoundReadMock(testOffset, testEntryHeaderVector);
     wraparoundReadMock(testOffset + entryHeaderSize, testEntryVector);
 
     EntryPair testedEntryPair;
-    EXPECT_NO_THROW(testedEntryPair = bufferImpl->readEntry(testOffset));
+    EXPECT_NO_THROW(testedEntryPair = bufferImpl->readEntry());
     EXPECT_EQ(testedEntryPair.first, testEntryHeader);
     EXPECT_THAT(testedEntryPair.second, ElementsAreArray(testEntryVector));
     struct CircularBufferHeader cachedBufferHeader =
         bufferImpl->getCachedBufferHeader();
+    // The bmcReadPtr should have been updated to reflect the wraparound
+    EXPECT_EQ(boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
+              entryHeaderSize + testEntrySize - 1);
+
+    // Set testOffset so that we can test the wraparound here at the header and
+    // update the readPtr
+    testOffset = testQueueSize - entryHeaderSize - 1;
+    EXPECT_CALL(*dataInterfaceMockPtr, write(expectedBmcReadPtrOffset, _))
+        .WillOnce(Return(expectedWriteSize));
+    EXPECT_NO_THROW(bufferImpl->updateReadPtr(testOffset));
+
+    wraparoundReadMock(testOffset, testEntryHeaderVector);
+    wraparoundReadMock(testOffset + entryHeaderSize, testEntryVector);
+
+    EXPECT_NO_THROW(testedEntryPair = bufferImpl->readEntry());
+    EXPECT_EQ(testedEntryPair.first, testEntryHeader);
+    EXPECT_THAT(testedEntryPair.second, ElementsAreArray(testEntryVector));
+    cachedBufferHeader = bufferImpl->getCachedBufferHeader();
     // The bmcReadPtr should have been updated to reflect the wraparound
     EXPECT_EQ(boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
               testEntrySize - 1);
