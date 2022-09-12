@@ -134,22 +134,18 @@ class BufferInterface
     virtual std::vector<uint8_t> wraparoundRead(const uint32_t relativeOffset,
                                                 const uint32_t length) = 0;
     /**
-     * Read the entry header from shared buffer
+     * Read the entry header from shared buffer from the read pointer
      *
-     * @param[in] relativeOffset - offset relative the "Error Log
-     *  Queue region" = (sizeof(CircularBufferHeader) + UE reserved region)
      * @return the entry header
      */
-    virtual struct QueueEntryHeader readEntryHeader(size_t relativeOffset) = 0;
+    virtual struct QueueEntryHeader readEntryHeader() = 0;
 
     /**
-     * Read the queue entry from the error log queue
+     * Read the queue entry from the error log queue from the read pointer
      *
-     * @param[in] relativeOffset - offset relative the "Error Log
-     *  Queue region" = (sizeof(CircularBufferHeader) + UE reserved region)
      * * @return entry header and entry pair read from buffer
      */
-    virtual EntryPair readEntry(size_t relativeOffset) = 0;
+    virtual EntryPair readEntry() = 0;
 
     /**
      * Read the buffer - this API should be used instead of individual functions
@@ -179,8 +175,8 @@ class BufferImpl : public BufferInterface
     void updateBmcFlags(const uint32_t newBmcFlag) override;
     std::vector<uint8_t> wraparoundRead(const uint32_t relativeOffset,
                                         const uint32_t length) override;
-    struct QueueEntryHeader readEntryHeader(size_t relativeOffset) override;
-    EntryPair readEntry(size_t relativeOffset) override;
+    struct QueueEntryHeader readEntryHeader() override;
+    EntryPair readEntry() override;
     std::vector<EntryPair> readErrorLogs() override;
 
   private:
