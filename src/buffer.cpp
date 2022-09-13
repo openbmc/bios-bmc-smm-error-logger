@@ -27,20 +27,18 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
                             const std::array<uint32_t, 4>& magicNumber)
 {
     const size_t memoryRegionSize = dataInterface->getMemoryRegionSize();
-    const size_t proposedBufferSize =
-        sizeof(struct CircularBufferHeader) + ueRegionSize + queueSize;
-    if (proposedBufferSize > memoryRegionSize)
+    if (queueSize > memoryRegionSize)
     {
         throw std::runtime_error(fmt::format(
-            "[initialize] Proposed region size '{}' is bigger than the "
+            "[initialize] Proposed queue size '{}' is bigger than the "
             "BMC's allocated MMIO region of '{}'",
-            proposedBufferSize, memoryRegionSize));
+            queueSize, memoryRegionSize));
     }
 
     // Initialize the whole buffer with 0x00
-    const std::vector<uint8_t> emptyVector(proposedBufferSize, 0);
+    const std::vector<uint8_t> emptyVector(queueSize, 0);
     size_t byteWritten = dataInterface->write(0, emptyVector);
-    if (byteWritten != proposedBufferSize)
+    if (byteWritten != queueSize)
     {
         throw std::runtime_error(
             fmt::format("[initialize] Only erased '{}'", byteWritten));
@@ -151,31 +149,30 @@ size_t BufferImpl::getQueueOffset()
 std::vector<uint8_t> BufferImpl::wraparoundRead(const uint32_t relativeOffset,
                                                 const uint32_t length)
 {
-    const size_t queueSize =
-        boost::endian::little_to_native(cachedBufferHeader.queueSize);
+    const size_t maxOffset = getMaxOffset();
 
-    if (relativeOffset > queueSize)
+    if (relativeOffset > maxOffset)
     {
         throw std::runtime_error(
             fmt::format("[wraparoundRead] relativeOffset '{}' was bigger "
-                        "than queueSize '{}'",
-                        relativeOffset, queueSize));
+                        "than maxOffset '{}'",
+                        relativeOffset, maxOffset));
     }
-    if (length > queueSize)
+    if (length > maxOffset)
     {
         throw std::runtime_error(fmt::format(
-            "[wraparoundRead] length '{}' was bigger than queueSize '{}'",
-            length, queueSize));
+            "[wraparoundRead] length '{}' was bigger than maxOffset '{}'",
+            length, maxOffset));
     }
 
     // Do a calculation to see if the read will wraparound
     const size_t queueOffset = getQueueOffset();
-    const size_t queueSizeToQueueEnd = queueSize - relativeOffset;
+    const size_t writableSpace = maxOffset - relativeOffset;
     size_t numWraparoundBytesToRead = 0;
-    if (length > queueSizeToQueueEnd)
+    if (length > writableSpace)
     {
         // This means we will wrap, count the bytes that are left to read
-        numWraparoundBytesToRead = length - queueSizeToQueueEnd;
+        numWraparoundBytesToRead = length - writableSpace;
     }
     const size_t numBytesToReadTillQueueEnd = length - numWraparoundBytesToRead;
 
@@ -189,7 +186,7 @@ std::vector<uint8_t> BufferImpl::wraparoundRead(const uint32_t relativeOffset,
                         bytesRead.size(), numBytesToReadTillQueueEnd));
     }
     size_t updatedReadPtr = relativeOffset + numBytesToReadTillQueueEnd;
-    if (updatedReadPtr == queueSize)
+    if (updatedReadPtr == maxOffset)
     {
         // If we read all the way up to the end of the queue, we need to
         // manually wrap the updateReadPtr around to 0
@@ -263,25 +260,24 @@ std::vector<EntryPair> BufferImpl::readErrorLogs()
     // Reading the buffer header will update the cachedBufferHeader
     readBufferHeader();
 
-    const size_t queueSize =
-        boost::endian::little_to_native(cachedBufferHeader.queueSize);
+    const size_t maxOffset = getMaxOffset();
     size_t currentBiosWritePtr =
         boost::endian::little_to_native(cachedBufferHeader.biosWritePtr);
-    if (currentBiosWritePtr > queueSize)
+    if (currentBiosWritePtr > maxOffset)
     {
         throw std::runtime_error(fmt::format(
             "[readErrorLogs] currentBiosWritePtr was '{}' which was bigger "
-            "than queueSize '{}'",
-            currentBiosWritePtr, queueSize));
+            "than maxOffset '{}'",
+            currentBiosWritePtr, maxOffset));
     }
     size_t currentReadPtr =
         boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr);
-    if (currentReadPtr > queueSize)
+    if (currentReadPtr > maxOffset)
     {
         throw std::runtime_error(fmt::format(
             "[readErrorLogs] currentReadPtr was '{}' which was bigger "
-            "than queueSize '{}'",
-            currentReadPtr, queueSize));
+            "than maxOffset '{}'",
+            currentReadPtr, maxOffset));
     }
 
     size_t bytesToRead;
@@ -298,9 +294,9 @@ std::vector<EntryPair> BufferImpl::readErrorLogs()
     }
     else
     {
-        // Calculate the bytes to the "end" (QueueSize - ReadPtr) +
+        // Calculate the bytes to the "end" (maxOffset - ReadPtr) +
         // bytes to read from the "beginning" (0 +  WritePtr)
-        bytesToRead = (queueSize - currentReadPtr) + currentBiosWritePtr;
+        bytesToRead = (maxOffset - currentReadPtr) + currentBiosWritePtr;
     }
 
     size_t byteRead = 0;
@@ -323,6 +319,16 @@ std::vector<EntryPair> BufferImpl::readErrorLogs()
             currentBiosWritePtr, currentReadPtr));
     }
     return entryPairs;
+}
+
+size_t BufferImpl::getMaxOffset()
+{
+    size_t queueSize =
+        boost::endian::little_to_native(cachedBufferHeader.queueSize);
+    size_t ueRegionSize =
+        boost::endian::little_to_native(cachedBufferHeader.ueRegionSize);
+
+    return queueSize - ueRegionSize - sizeof(struct CircularBufferHeader);
 }
 
 } // namespace bios_bmc_smm_error_logger

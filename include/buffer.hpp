@@ -154,6 +154,13 @@ class BufferInterface
      * @return vector of EntryPair which consists of entry header and entry
      */
     virtual std::vector<EntryPair> readErrorLogs() = 0;
+
+    /**
+     * Get max offset for the queue
+     *
+     * * @return Queue size - UE region size - Queue header size
+     */
+    virtual size_t getMaxOffset() = 0;
 };
 
 /**
@@ -178,6 +185,7 @@ class BufferImpl : public BufferInterface
     struct QueueEntryHeader readEntryHeader() override;
     EntryPair readEntry() override;
     std::vector<EntryPair> readErrorLogs() override;
+    size_t getMaxOffset() override;
 
   private:
     /** @brief The Error log queue starts after the UE region, which is where
