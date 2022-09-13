@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0956fda5_1a4ee944",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2022-09-13T05:42:25Z",
+      "side": 1,
+      "message": "Updated the design doc definition for clarification https://gerrit.openbmc.org/c/openbmc/docs/+/57104",
+      "revId": "3def3c8eede08d82e709333445bc543ef4861bcd",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
