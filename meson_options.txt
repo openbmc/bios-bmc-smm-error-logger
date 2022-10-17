@@ -1,6 +1,6 @@
 option('tests', type: 'feature', description: 'Build tests')
 
-# Tinmer constant
+# Timer constant
 option('read-interval-ms', type: 'integer', value: 10, description: 'Read loop interval in millisecond (ms)')
 
 # Memory constants
