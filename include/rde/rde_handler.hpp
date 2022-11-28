@@ -58,6 +58,41 @@ enum class RdeDecodeStatus
 };
 
 /**
+ * @brief RDEOperationInit response header.
+ *
+ * BIOS uses this header to send the BEJ encoded data.
+ */
+struct RdeOperationInitReqHeader
+{
+    uint32_t resourceID;
+    uint16_t operationID;
+    uint8_t operationType;
+
+    // OperationFlags bits
+    uint8_t locatorValid : 1;
+    uint8_t containsRequestPayload : 1;
+    uint8_t containsCustomRequestParameters : 1;
+
+    uint8_t reserved : 5;
+    uint32_t sendDataTransferHandle;
+    uint8_t operationLocatorLength;
+    uint32_t requestPayloadLength;
+} __attribute__((__packed__));
+
+/**
+ * @brief RDEMultipartReceive response header.
+ *
+ * BIOS uses this header to send the BEJ dictionary data.
+ */
+struct MultipartReceiveResHeader
+{
+    uint8_t completionCode;
+    uint8_t transferFlag;
+    uint32_t nextDataTransferHandle;
+    uint32_t dataLengthBytes;
+} __attribute__((__packed__));
+
+/**
  * @brief Handles RDE messages from the BIOS - BMC circular buffer and updates
  * ExternalStorer.
  */
