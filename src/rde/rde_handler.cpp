@@ -58,7 +58,8 @@ RdeDecodeStatus
         return RdeDecodeStatus::RdeOk;
     }
 
-    if (header->operationType != rdeOpInitOperationUpdate)
+    if (header->operationType !=
+        static_cast<uint8_t>(RdeOperationInitType::rdeOpInitOperationUpdate))
     {
         fmt::print(stderr, "Operation not supported\n");
         return RdeDecodeStatus::RdeUnsupportedOperation;
@@ -135,16 +136,19 @@ RdeDecodeStatus
 
     switch (header->transferFlag)
     {
-        case rdeMRecFlagStart:
+        case static_cast<uint8_t>(
+            RdeMultiReceiveTransferFlag::rdeMRecFlagStart):
             handleFlagStart(header, data, resourceId);
             break;
-        case rdeMRecFlagMiddle:
+        case static_cast<uint8_t>(
+            RdeMultiReceiveTransferFlag::rdeMRecFlagMiddle):
             ret = handleFlagMiddle(header, data, resourceId);
             break;
-        case rdeMRecFlagEnd:
+        case static_cast<uint8_t>(RdeMultiReceiveTransferFlag::rdeMRecFlagEnd):
             ret = handleFlagEnd(rdeCommand, header, data, resourceId);
             break;
-        case rdeMRecFlagStartAndEnd:
+        case static_cast<uint8_t>(
+            RdeMultiReceiveTransferFlag::rdeMRecFlagStartAndEnd):
             ret = handleFlagStartAndEnd(rdeCommand, header, data, resourceId);
             break;
         default:
