@@ -57,6 +57,25 @@ enum class RdeDecodeStatus
     RdeStopFlagReceived,
 };
 
+enum class RdeOperationInitType : uint8_t
+{
+    RdeOpInitOperationHead = 0,
+    RdeOpInitOperationRead = 1,
+    RdeOpInitOperationCreate = 2,
+    RdeOpInitOperationDelete = 3,
+    RdeOpInitOperationUpdate = 4,
+    RdeOpInitOperationReplace = 5,
+    RdeOpInitOperationAction = 6,
+};
+
+enum class RdeMultiReceiveTransferFlag : uint8_t
+{
+    RdeMRecFlagStart = 0,
+    RdeMRecFlagMiddle = 1,
+    RdeMRecFlagEnd = 2,
+    RdeMRecFlagStartAndEnd = 3,
+};
+
 /**
  * @brief RDEOperationInit response header.
  *
