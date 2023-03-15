@@ -29,8 +29,7 @@ class CperFileNotifier : public FileNotifierInterface
     CperFileNotifier(sdbusplus::bus_t& bus, const std::string& filePath,
                      uint64_t entry) :
         FileNotifierInterface(bus, generatePath(entry).c_str(),
-                              action::emit_no_signals),
-        entry(entry), bus(bus)
+                              action::emit_no_signals)
     {
         // We only need the interface added signal for the fault monitor. So
         // stop emitting properties changed signal.
@@ -41,13 +40,6 @@ class CperFileNotifier : public FileNotifierInterface
         "/xyz/openbmc_project/external_storer/bios_bmc_smm_error_logger/CPER";
 
   private:
-    /**
-     * @brief DBus index of the entry.
-     */
-    uint64_t entry;
-
-    sdbusplus::bus_t& bus;
-
     /**
      * @brief Generate a path for the CperFileNotifier DBus object.
      *
