@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7f531cd_a5d28f30",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2023-03-15T17:26:19Z",
+      "side": 1,
+      "message": "Thanks for fixing this - looks like we need to fix clang-tidy",
+      "revId": "4ec17d0bcefccec0d44ff53af7b80f6756cbdd61",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
