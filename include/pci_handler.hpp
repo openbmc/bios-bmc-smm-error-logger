@@ -29,7 +29,6 @@ class PciDataHandler : public DataInterface
     uint32_t getMemoryRegionSize() override;
 
   private:
-    uint32_t regionAddress;
     uint32_t regionSize;
 
     std::unique_ptr<stdplus::fd::Fd> fd;
