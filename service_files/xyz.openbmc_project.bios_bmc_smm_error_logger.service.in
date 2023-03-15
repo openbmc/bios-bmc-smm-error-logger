@@ -4,6 +4,8 @@ Description=BIOS BMC SMM Error Logger
 [Service]
 Type=simple
 ExecStart=@BINDIR@/bios-bmc-smm-error-logger
+Restart=always
+RestartSec=1
 
 [Install]
 WantedBy=multi-user.target
