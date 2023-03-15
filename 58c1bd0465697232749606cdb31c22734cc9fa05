@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cf3c299_fc4bbcd6",
+        "filename": "service_files/xyz.openbmc_project.bios_bmc_smm_error_logger.service.in",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2023-03-15T16:52:51Z",
+      "side": 1,
+      "message": "do we not want to always restart?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 18
+      },
+      "revId": "58c1bd0465697232749606cdb31c22734cc9fa05",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
