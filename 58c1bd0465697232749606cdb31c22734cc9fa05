@@ -46,6 +46,30 @@
       },
       "revId": "58c1bd0465697232749606cdb31c22734cc9fa05",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88743528_a0dd9c1d",
+        "filename": "service_files/xyz.openbmc_project.bios_bmc_smm_error_logger.service.in",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001584
+      },
+      "writtenOn": "2023-03-15T18:13:58Z",
+      "side": 1,
+      "message": "I replaced it to go ahead with what was proposed in Jan.\n\nhttps://gerrit.openbmc.org/c/openbmc/bios-bmc-smm-error-logger/+/60039",
+      "parentUuid": "bba324e3_ea420175",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 18
+      },
+      "revId": "58c1bd0465697232749606cdb31c22734cc9fa05",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
