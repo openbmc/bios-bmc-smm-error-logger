@@ -16,6 +16,46 @@
       "message": "You can reference what I was trying to do 2 months ago and forgot to fix presubmit: https://gerrit.openbmc.org/c/openbmc/bios-bmc-smm-error-logger/+/60039\n\nWe\u0027ll have to fix presubmit in a preceding CL before we can submit this",
       "revId": "3e3ab70aba744ef9f1d8b88e93616c6f8b72f754",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e91729a1_46c09bd5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2023-03-15T18:15:57Z",
+      "side": 1,
+      "message": "We\u0027ll need to rebase after your presubmit fix goes in",
+      "revId": "3e3ab70aba744ef9f1d8b88e93616c6f8b72f754",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "caaea5ea_852ba9ae",
+        "filename": "service_files/xyz.openbmc_project.bios_bmc_smm_error_logger.service.in",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2023-03-15T18:15:57Z",
+      "side": 1,
+      "message": "Let\u0027s also have RestartSec\u003d5 so that we don\u0027t burst restart",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 18
+      },
+      "revId": "3e3ab70aba744ef9f1d8b88e93616c6f8b72f754",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
