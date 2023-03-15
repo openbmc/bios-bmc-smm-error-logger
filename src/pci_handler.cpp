@@ -17,7 +17,6 @@ namespace bios_bmc_smm_error_logger
 
 PciDataHandler::PciDataHandler(uint32_t regionAddress, size_t regionSize,
                                std::unique_ptr<stdplus::fd::Fd> fd) :
-    regionAddress(regionAddress),
     regionSize(regionSize), fd(std::move(fd)),
     mmap(stdplus::fd::MMap(
         *this->fd, regionSize, stdplus::fd::ProtFlags{PROT_READ | PROT_WRITE},

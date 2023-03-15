@@ -89,7 +89,6 @@ class ExternalStorerFileInterface : public ExternalStorerInterface
     bool publishJson(std::string_view jsonStr) override;
 
   private:
-    sdbusplus::bus_t& bus;
     std::string rootPath;
     std::unique_ptr<FileHandlerInterface> fileHandler;
     std::string logServiceId;
