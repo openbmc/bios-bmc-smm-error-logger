@@ -56,6 +56,30 @@
       },
       "revId": "3e3ab70aba744ef9f1d8b88e93616c6f8b72f754",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc95ea3e_97d70a8c",
+        "filename": "service_files/xyz.openbmc_project.bios_bmc_smm_error_logger.service.in",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001584
+      },
+      "writtenOn": "2023-03-15T18:17:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "caaea5ea_852ba9ae",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 18
+      },
+      "revId": "3e3ab70aba744ef9f1d8b88e93616c6f8b72f754",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
