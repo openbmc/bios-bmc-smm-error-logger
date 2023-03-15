@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b867e428_0b410f5c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2023-03-15T17:02:30Z",
+      "side": 1,
+      "message": "You can reference what I was trying to do 2 months ago and forgot to fix presubmit: https://gerrit.openbmc.org/c/openbmc/bios-bmc-smm-error-logger/+/60039\n\nWe\u0027ll have to fix presubmit in a preceding CL before we can submit this",
+      "revId": "3e3ab70aba744ef9f1d8b88e93616c6f8b72f754",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
