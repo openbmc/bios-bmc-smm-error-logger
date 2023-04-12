@@ -6,4 +6,4 @@ configure_file(
   output: 'xyz.openbmc_project.bios_bmc_smm_error_logger.service',
   configuration: conf_data,
   install: true,
-  install_dir: systemd.get_variable(pkgconfig: 'systemdsystemunitdir'))
+  install_dir: systemd.get_variable('systemdsystemunitdir'))
