@@ -7,8 +7,7 @@ namespace bios_bmc_smm_error_logger
 namespace rde
 {
 
-DictionaryManager::DictionaryManager() : validDictionaryCount(0)
-{}
+DictionaryManager::DictionaryManager() : validDictionaryCount(0) {}
 
 void DictionaryManager::startDictionaryEntry(
     uint32_t resourceId, const std::span<const uint8_t> data)
@@ -17,8 +16,8 @@ void DictionaryManager::startDictionaryEntry(
     auto itemIt = dictionaries.find(resourceId);
     if (itemIt == dictionaries.end())
     {
-        dictionaries[resourceId] =
-            std::make_unique<DictionaryEntry>(false, data);
+        dictionaries[resourceId] = std::make_unique<DictionaryEntry>(false,
+                                                                     data);
         return;
     }
 

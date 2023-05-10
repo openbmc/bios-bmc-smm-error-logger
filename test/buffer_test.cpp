@@ -268,8 +268,8 @@ class BufferWraparoundReadTest : public BufferTest
     static constexpr uint8_t expectedBmcReadPtrOffset = 0x21;
     static constexpr size_t expectedqueueOffset = 0x30 + testUeRegionSize;
 
-    static constexpr size_t testMaxOffset =
-        testQueueSize - testUeRegionSize - sizeof(struct CircularBufferHeader);
+    static constexpr size_t testMaxOffset = testQueueSize - testUeRegionSize -
+                                            sizeof(struct CircularBufferHeader);
     uint8_t* testInitializationHeaderPtr =
         reinterpret_cast<uint8_t*>(&testInitializationHeader);
 };
