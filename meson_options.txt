@@ -1,4 +1,4 @@
-option('tests', type: 'feature', description: 'Build tests')
+option('tests', type: 'feature', value: 'enabled', description: 'Build tests')
 
 # Timer constant
 option('read-interval-ms', type: 'integer', value: 10, description: 'Read loop interval in millisecond (ms)')
