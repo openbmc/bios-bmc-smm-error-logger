@@ -1,6 +1,3 @@
-### Meson ###
-# subproject directories
-/subprojects/*
-
-# build directory
-build*/*
+build*/
+subprojects/*
+!subprojects/*.wrap
