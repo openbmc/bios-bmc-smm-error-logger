@@ -161,6 +161,12 @@ class BufferInterface
      * * @return Queue size - UE region size - Queue header size
      */
     virtual size_t getMaxOffset() = 0;
+
+    /** @brief The Error log queue starts after the UE region, which is where
+     * the read and write pointers are offset from relatively
+     *  @return relative offset for read and write pointers
+     */
+    virtual size_t getQueueOffset() = 0;
 };
 
 /**
@@ -186,13 +192,9 @@ class BufferImpl : public BufferInterface
     EntryPair readEntry() override;
     std::vector<EntryPair> readErrorLogs() override;
     size_t getMaxOffset() override;
+    size_t getQueueOffset() override;
 
   private:
-    /** @brief The Error log queue starts after the UE region, which is where
-     * the read and write pointers are offset from relatively
-     *  @return relative offset for read and write pointers
-     */
-    size_t getQueueOffset();
     /** @brief Calculate the checksum by XOR each bytes in the span
      *  @param[in] entry     - Span to calculate the checksum on
      *  @return calculated checksum
