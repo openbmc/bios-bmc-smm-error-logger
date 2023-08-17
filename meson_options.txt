@@ -10,8 +10,8 @@ option('memory-region-offset', type: 'integer', value: 4035215360, description: 
 
 # Circular Buffer header constants
 option('bmc-interface-version', type: 'integer', value: 0, description: 'BMC interface version to easily see compatibility')
-option('queue-region-size', type: 'integer', value: 0, description: 'Normal error queue region size')
-option('ue-region-size', type: 'integer', value: 0, description: 'Uncorrectable error region size')
+option('queue-region-size', type: 'integer', value: 512, description: 'Normal error queue region size')
+option('ue-region-size', type: 'integer', value: 80, description: 'Uncorrectable error region size')
 # Magic Number Array Constants
 option('magic-number-byte1', type: 'integer', value: 1, description: 'Magic Number array[0] for validity, consists of 4 * uint32_t')
 option('magic-number-byte2', type: 'integer', value: 2, description: 'Magic Number array[1] for validity, consists of 4 * uint32_t')
