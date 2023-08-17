@@ -276,7 +276,65 @@ class BufferWraparoundReadTest : public BufferTest
 
 TEST_F(BufferWraparoundReadTest, GetMaxOffsetTest)
 {
+    InSequence s;
     EXPECT_EQ(bufferImpl->getMaxOffset(), testMaxOffset);
+
+    // Fail with different queueSize
+    EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
+                                           testQueueSize - 1, testUeRegionSize,
+                                           testMagicNumber));
+    EXPECT_THROW(
+        try {
+            bufferImpl->getMaxOffset();
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(e.what(),
+                         "[getMaxOffset] runtime queueSize '511' did not match "
+                         "compile-time queueSize '512'. This indicates that the"
+                         " buffer was corrupted");
+            throw;
+        },
+        std::runtime_error);
+
+    // Fail with different ueRegionSize
+    EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
+                                           testQueueSize, testUeRegionSize + 1,
+                                           testMagicNumber));
+    EXPECT_THROW(
+        try {
+            bufferImpl->getMaxOffset();
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(
+                e.what(),
+                "[getMaxOffset] runtime ueRegionSize '80' did not match "
+                "compile-time ueRegionSize '81'. This indicates that the"
+                " buffer was corrupted");
+            throw;
+        },
+        std::runtime_error);
+}
+
+TEST_F(BufferWraparoundReadTest, getQueueOffsetTest)
+{
+    InSequence s;
+    EXPECT_EQ(bufferImpl->getQueueOffset(),
+              bufferHeaderSize + testUeRegionSize);
+
+    // Fail with different ueRegionSize
+    EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
+                                           testQueueSize, testUeRegionSize - 1,
+                                           testMagicNumber));
+    EXPECT_THROW(
+        try {
+            bufferImpl->getQueueOffset();
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(
+                e.what(),
+                "[getQueueOffset] runtime ueRegionSize '80' did not match "
+                "compile-time ueRegionSize '79'. This indicates that the"
+                " buffer was corrupted");
+            throw;
+        },
+        std::runtime_error);
 }
 
 TEST_F(BufferWraparoundReadTest, ParamsTooBigFail)
