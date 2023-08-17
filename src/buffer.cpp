@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include "buffer.hpp"
 
 #include "pci_handler.hpp"
@@ -138,12 +140,6 @@ void BufferImpl::updateBmcFlags(const uint32_t newBmcFlag)
             writtenSize, sizeof(little_uint32_t)));
     }
     cachedBufferHeader.bmcFlags = littleNewBmcFlag;
-}
-
-size_t BufferImpl::getQueueOffset()
-{
-    return sizeof(struct CircularBufferHeader) +
-           boost::endian::little_to_native(cachedBufferHeader.ueRegionSize);
 }
 
 std::vector<uint8_t> BufferImpl::wraparoundRead(const uint32_t relativeOffset,
@@ -328,7 +324,37 @@ size_t BufferImpl::getMaxOffset()
     size_t ueRegionSize =
         boost::endian::little_to_native(cachedBufferHeader.ueRegionSize);
 
+    if (queueSize != QUEUE_REGION_SIZE)
+    {
+        throw std::runtime_error(fmt::format(
+            "[{}] runtime queueSize '{}' did not match compile-time queueSize "
+            " '{}'. This indicates that the buffer was corrupted",
+            __FUNCTION__, queueSize, QUEUE_REGION_SIZE));
+    }
+    if (ueRegionSize != UE_REGION_SIZE)
+    {
+        throw std::runtime_error(fmt::format(
+            "[{}] runtime ueRegionSize '{}' did not match compile-time "
+            "ueRegionSize '{}'. This indicates that the buffer was corrupted",
+            __FUNCTION__, ueRegionSize, UE_REGION_SIZE));
+    }
+
     return queueSize - ueRegionSize - sizeof(struct CircularBufferHeader);
+}
+
+size_t BufferImpl::getQueueOffset()
+{
+    size_t ueRegionSize =
+        boost::endian::little_to_native(cachedBufferHeader.ueRegionSize);
+
+    if (ueRegionSize != UE_REGION_SIZE)
+    {
+        throw std::runtime_error(fmt::format(
+            "[{}] runtime ueRegionSize '{}' did not match compile-time "
+            "ueRegionSize '{}'. This indicates that the buffer was corrupted",
+            __FUNCTION__, ueRegionSize, UE_REGION_SIZE));
+    }
+    return sizeof(struct CircularBufferHeader) + ueRegionSize;
 }
 
 } // namespace bios_bmc_smm_error_logger

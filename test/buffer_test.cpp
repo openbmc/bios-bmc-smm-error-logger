@@ -240,6 +240,89 @@ TEST_F(BufferTest, BufferUpdateBmcFlagsPass)
               static_cast<uint32_t>(BmcFlags::ready));
 }
 
+TEST_F(BufferTest, GetMaxOffsetQueueSizeFail)
+{
+    InSequence s;
+    EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
+        .WillOnce(Return(testRegionSize));
+    const std::vector<uint8_t> emptyArray(testQueueSize, 0);
+    EXPECT_CALL(*dataInterfaceMockPtr, write(0, ElementsAreArray(emptyArray)))
+        .WillOnce(Return(testQueueSize));
+
+    EXPECT_CALL(*dataInterfaceMockPtr, write(0, _))
+        .WillOnce(Return(bufferHeaderSize));
+    EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
+                                           testQueueSize - 1, testUeRegionSize,
+                                           testMagicNumber));
+    EXPECT_THROW(
+        try {
+            bufferImpl->getMaxOffset();
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(e.what(),
+                         "[getMaxOffset] runtime queueSize '511' did not match "
+                         "compile-time queueSize '512'. This indicates that the"
+                         " buffer was corrupted");
+            throw;
+        },
+        std::runtime_error);
+}
+
+TEST_F(BufferTest, GetMaxOffsetUeRegionSizeFail)
+{
+    InSequence s;
+    EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
+        .WillOnce(Return(testRegionSize));
+    const std::vector<uint8_t> emptyArray(testQueueSize, 0);
+    EXPECT_CALL(*dataInterfaceMockPtr, write(0, ElementsAreArray(emptyArray)))
+        .WillOnce(Return(testQueueSize));
+
+    EXPECT_CALL(*dataInterfaceMockPtr, write(0, _))
+        .WillOnce(Return(bufferHeaderSize));
+    EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
+                                           testQueueSize, testUeRegionSize + 1,
+                                           testMagicNumber));
+    EXPECT_THROW(
+        try {
+            bufferImpl->getMaxOffset();
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(
+                e.what(),
+                "[getMaxOffset] runtime ueRegionSize '81' did not match "
+                "compile-time ueRegionSize '80'. This indicates that the"
+                " buffer was corrupted");
+            throw;
+        },
+        std::runtime_error);
+}
+
+TEST_F(BufferTest, GetOffsetUeRegionSizeFail)
+{
+    InSequence s;
+    EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
+        .WillOnce(Return(testRegionSize));
+    const std::vector<uint8_t> emptyArray(testQueueSize, 0);
+    EXPECT_CALL(*dataInterfaceMockPtr, write(0, ElementsAreArray(emptyArray)))
+        .WillOnce(Return(testQueueSize));
+
+    EXPECT_CALL(*dataInterfaceMockPtr, write(0, _))
+        .WillOnce(Return(bufferHeaderSize));
+    EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
+                                           testQueueSize, testUeRegionSize - 1,
+                                           testMagicNumber));
+    EXPECT_THROW(
+        try {
+            bufferImpl->getQueueOffset();
+        } catch (const std::runtime_error& e) {
+            EXPECT_STREQ(
+                e.what(),
+                "[getQueueOffset] runtime ueRegionSize '79' did not match "
+                "compile-time ueRegionSize '80'. This indicates that the"
+                " buffer was corrupted");
+            throw;
+        },
+        std::runtime_error);
+}
+
 class BufferWraparoundReadTest : public BufferTest
 {
   protected:
@@ -274,9 +357,15 @@ class BufferWraparoundReadTest : public BufferTest
         reinterpret_cast<uint8_t*>(&testInitializationHeader);
 };
 
-TEST_F(BufferWraparoundReadTest, GetMaxOffsetTest)
+TEST_F(BufferWraparoundReadTest, GetMaxOffsetPassTest)
 {
     EXPECT_EQ(bufferImpl->getMaxOffset(), testMaxOffset);
+}
+
+TEST_F(BufferWraparoundReadTest, GetQueueOffsetPassTest)
+{
+    EXPECT_EQ(bufferImpl->getQueueOffset(),
+              bufferHeaderSize + testUeRegionSize);
 }
 
 TEST_F(BufferWraparoundReadTest, ParamsTooBigFail)
