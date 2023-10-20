@@ -56,8 +56,8 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
     std::transform(magicNumber.begin(), magicNumber.end(),
                    initializationHeader.magicNumber.begin(),
                    [](uint32_t number) -> little_uint32_t {
-                       return boost::endian::native_to_little(number);
-                   });
+        return boost::endian::native_to_little(number);
+    });
 
     uint8_t* initializationHeaderPtr =
         reinterpret_cast<uint8_t*>(&initializationHeader);

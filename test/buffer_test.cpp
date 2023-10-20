@@ -36,8 +36,8 @@ class BufferTest : public ::testing::Test
         std::transform(testMagicNumber.begin(), testMagicNumber.end(),
                        testInitializationHeader.magicNumber.begin(),
                        [](uint32_t number) -> little_uint32_t {
-                           return boost::endian::native_to_little(number);
-                       });
+            return boost::endian::native_to_little(number);
+        });
     }
     ~BufferTest() override = default;
 

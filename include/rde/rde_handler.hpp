@@ -88,11 +88,11 @@ struct RdeOperationInitReqHeader
     uint8_t operationType;
 
     // OperationFlags bits
-    uint8_t locatorValid : 1;
-    uint8_t containsRequestPayload : 1;
-    uint8_t containsCustomRequestParameters : 1;
+    uint8_t locatorValid:1;
+    uint8_t containsRequestPayload:1;
+    uint8_t containsCustomRequestParameters:1;
 
-    uint8_t reserved : 5;
+    uint8_t reserved:5;
     uint32_t sendDataTransferHandle;
     uint8_t operationLocatorLength;
     uint32_t requestPayloadLength;
