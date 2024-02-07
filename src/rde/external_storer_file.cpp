@@ -40,6 +40,7 @@ bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
     std::ofstream output(path);
     output << jsonPdr;
     output.close();
+    fmt::print(stderr, "Created: {}\n", path.string());
     return true;
 }
 
