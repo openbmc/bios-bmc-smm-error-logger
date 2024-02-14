@@ -1,13 +1,14 @@
 #include "pci_handler.hpp"
 
 #include <fcntl.h>
-#include <fmt/format.h>
 
 #include <stdplus/fd/managed.hpp>
 #include <stdplus/fd/mmap.hpp>
+#include <stdplus/print.hpp>
 
 #include <cstdint>
 #include <cstring>
+#include <format>
 #include <memory>
 #include <span>
 #include <vector>
@@ -29,10 +30,10 @@ std::vector<uint8_t> PciDataHandler::read(const uint32_t offset,
 {
     if (offset > regionSize || length == 0)
     {
-        fmt::print(stderr,
-                   "[read] Offset [{}] was bigger than regionSize [{}] "
-                   "OR length [{}] was equal to 0\n",
-                   offset, regionSize, length);
+        stdplus::print(stderr,
+                       "[read] Offset [{}] was bigger than regionSize [{}] "
+                       "OR length [{}] was equal to 0\n",
+                       offset, regionSize, length);
         return {};
     }
 
@@ -51,10 +52,10 @@ uint32_t PciDataHandler::write(const uint32_t offset,
     const size_t length = bytes.size();
     if (offset > regionSize || length == 0)
     {
-        fmt::print(stderr,
-                   "[write] Offset [{}] was bigger than regionSize [{}] "
-                   "OR length [{}] was equal to 0\n",
-                   offset, regionSize, length);
+        stdplus::print(stderr,
+                       "[write] Offset [{}] was bigger than regionSize [{}] "
+                       "OR length [{}] was equal to 0\n",
+                       offset, regionSize, length);
         return 0;
     }
 

@@ -1,6 +1,8 @@
 #include "rde/rde_dictionary_manager.hpp"
 
-#include <fmt/format.h>
+#include <stdplus/print.hpp>
+
+#include <format>
 
 namespace bios_bmc_smm_error_logger
 {
@@ -36,7 +38,7 @@ bool DictionaryManager::markDataComplete(uint32_t resourceId)
     auto itemIt = dictionaries.find(resourceId);
     if (itemIt == dictionaries.end())
     {
-        fmt::print(stderr, "Resource ID {} not found.\n", resourceId);
+        stdplus::print(stderr, "Resource ID {} not found.\n", resourceId);
         return false;
     }
     validateDictionaryEntry(*itemIt->second);
@@ -49,7 +51,7 @@ bool DictionaryManager::addDictionaryData(uint32_t resourceId,
     auto itemIt = dictionaries.find(resourceId);
     if (itemIt == dictionaries.end())
     {
-        fmt::print(stderr, "Resource ID {} not found.\n", resourceId);
+        stdplus::print(stderr, "Resource ID {} not found.\n", resourceId);
         return false;
     }
     // Since we are modifying an existing entry, invalidate the existing entry.
@@ -65,15 +67,15 @@ std::optional<std::span<const uint8_t>>
     auto itemIt = dictionaries.find(resourceId);
     if (itemIt == dictionaries.end())
     {
-        fmt::print(stderr, "Resource ID {} not found.\n", resourceId);
+        stdplus::print(stderr, "Resource ID {} not found.\n", resourceId);
         return std::nullopt;
     }
 
     if (!itemIt->second->valid)
     {
-        fmt::print(stderr,
-                   "Requested an incomplete dictionary. Resource ID {}\n",
-                   resourceId);
+        stdplus::print(stderr,
+                       "Requested an incomplete dictionary. Resource ID {}\n",
+                       resourceId);
         return std::nullopt;
     }
     return itemIt->second->data;

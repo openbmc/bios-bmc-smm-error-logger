@@ -1,10 +1,9 @@
 #pragma once
 
-#include <fmt/format.h>
-
 #include <sdbusplus/server.hpp>
 #include <xyz/openbmc_project/Common/FilePath/server.hpp>
 
+#include <format>
 #include <string>
 
 namespace bios_bmc_smm_error_logger
@@ -47,7 +46,7 @@ class CperFileNotifier : public FileNotifierInterface
      */
     std::string generatePath(uint64_t entry)
     {
-        return fmt::format("{}/entry{}", cperBasePath, entry);
+        return std::format("{}/entry{}", cperBasePath, entry);
     }
 };
 

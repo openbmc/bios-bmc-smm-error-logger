@@ -1,10 +1,11 @@
 rde_pre = declare_dependency(
   include_directories: [rde_inc],
   dependencies: [
-    dependency('nlohmann_json', include_type: 'system'),
     dependency('libbej'),
+    dependency('nlohmann_json', include_type: 'system'),
     dependency('phosphor-dbus-interfaces'),
     dependency('sdbusplus'),
+    dependency('stdplus'),
   ]
 )
 

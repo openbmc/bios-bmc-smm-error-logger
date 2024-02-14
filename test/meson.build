@@ -4,7 +4,6 @@ if not gtest.found() or not gmock.found()
   gtest_opt = import('cmake').subproject_options()
   gtest_opt.append_compile_args('c++', ['-DCMAKE_CXX_FLAGS=-Wno-pedantic'])
   gtest_proj = cmake.subproject('googletest', options: gtest_opt, required: false)
-  fmt_depj.dependency('fmt')
 
   if gtest_proj.found()
     gtest = declare_dependency(

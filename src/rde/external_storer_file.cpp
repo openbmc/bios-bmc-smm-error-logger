@@ -1,10 +1,10 @@
 #include "rde/external_storer_file.hpp"
 
-#include <fmt/format.h>
-
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
+#include <stdplus/print.hpp>
 
+#include <format>
 #include <fstream>
 #include <string_view>
 
@@ -20,7 +20,8 @@ bool ExternalStorerFileWriter::createFolder(const std::string& folderPath) const
     {
         if (!std::filesystem::create_directories(path))
         {
-            fmt::print(stderr, "Failed to create a folder at {}\n", folderPath);
+            stdplus::print(stderr, "Failed to create a folder at {}\n",
+                           folderPath);
             return false;
         }
     }
@@ -40,7 +41,7 @@ bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
     std::ofstream output(path);
     output << jsonPdr;
     output.close();
-    fmt::print(stderr, "Created: {}\n", path.string());
+    stdplus::print(stderr, "Created: {}\n", path.string());
     return true;
 }
 
@@ -61,7 +62,7 @@ bool ExternalStorerFileInterface::publishJson(std::string_view jsonStr)
     }
     catch (nlohmann::json::parse_error& e)
     {
-        fmt::print(stderr, "JSON parse error: \n{}\n", e.what());
+        stdplus::print(stderr, "JSON parse error: \n{}\n", e.what());
         return false;
     }
 
@@ -69,8 +70,8 @@ bool ExternalStorerFileInterface::publishJson(std::string_view jsonStr)
     // output.
     if (!jsonDecoded.contains("@odata.type"))
     {
-        fmt::print(stderr, "@odata.type field doesn't exist in:\n {}\n",
-                   jsonDecoded.dump(4));
+        stdplus::print(stderr, "@odata.type field doesn't exist in:\n {}\n",
+                       jsonDecoded.dump(4));
         return false;
     }
 
@@ -112,13 +113,14 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
     // https://github.com/openbmc/bios-bmc-smm-error-logger/issues/1.
     if (logServiceId.empty())
     {
-        fmt::print(stderr, "First need a LogService PDR with a new UUID.\n");
+        stdplus::print(stderr,
+                       "First need a LogService PDR with a new UUID.\n");
         return false;
     }
 
     std::string id = boost::uuids::to_string(randomGen());
     std::string fullPath =
-        fmt::format("{}/redfish/v1/Systems/system/LogServices/{}/Entries/{}",
+        std::format("{}/redfish/v1/Systems/system/LogServices/{}/Entries/{}",
                     rootPath, logServiceId, id);
 
     // Populate the "Id" with the UUID we generated.
@@ -129,8 +131,9 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
 
     if (!fileHandler->createFile(fullPath, logEntry))
     {
-        fmt::print(stderr, "Failed to create a file for log entry path: {}\n",
-                   fullPath);
+        stdplus::print(stderr,
+                       "Failed to create a file for log entry path: {}\n",
+                       fullPath);
         return false;
     }
 
@@ -143,15 +146,15 @@ bool ExternalStorerFileInterface::processLogService(
 {
     if (!logService.contains("@odata.id"))
     {
-        fmt::print(stderr, "@odata.id field doesn't exist in:\n {}\n",
-                   logService.dump(4));
+        stdplus::print(stderr, "@odata.id field doesn't exist in:\n {}\n",
+                       logService.dump(4));
         return false;
     }
 
     if (!logService.contains("Id"))
     {
-        fmt::print(stderr, "Id field doesn't exist in:\n {}\n",
-                   logService.dump(4));
+        stdplus::print(stderr, "Id field doesn't exist in:\n {}\n",
+                       logService.dump(4));
         return false;
     }
 
@@ -159,8 +162,9 @@ bool ExternalStorerFileInterface::processLogService(
 
     if (!createFile(logService["@odata.id"].get<std::string>(), logService))
     {
-        fmt::print(stderr, "Failed to create LogService index file for:\n{}\n",
-                   logService.dump(4));
+        stdplus::print(stderr,
+                       "Failed to create LogService index file for:\n{}\n",
+                       logService.dump(4));
         return false;
     }
     // ExternalStorer needs a .../Entries/index.json file with no data.
@@ -174,8 +178,8 @@ bool ExternalStorerFileInterface::processOtherTypes(
 {
     if (!jsonPdr.contains("@odata.id"))
     {
-        fmt::print(stderr, "@odata.id field doesn't exist in:\n {}\n",
-                   jsonPdr.dump(4));
+        stdplus::print(stderr, "@odata.id field doesn't exist in:\n {}\n",
+                       jsonPdr.dump(4));
         return false;
     }
     return createFile(jsonPdr["@odata.id"].get<std::string>(), jsonPdr);

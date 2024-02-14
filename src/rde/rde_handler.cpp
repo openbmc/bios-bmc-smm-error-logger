@@ -1,7 +1,8 @@
 #include "rde/rde_handler.hpp"
 
-#include <fmt/format.h>
+#include <stdplus/print.hpp>
 
+#include <format>
 #include <iostream>
 
 namespace bios_bmc_smm_error_logger
@@ -38,7 +39,7 @@ RdeDecodeStatus
         return operationInitRequest(rdeCommand);
     }
 
-    fmt::print(stderr, "Invalid command type\n");
+    stdplus::print(stderr, "Invalid command type\n");
     return RdeDecodeStatus::RdeInvalidCommand;
 }
 
@@ -61,29 +62,30 @@ RdeDecodeStatus
     if (header->operationType !=
         static_cast<uint8_t>(RdeOperationInitType::RdeOpInitOperationUpdate))
     {
-        fmt::print(stderr, "Operation not supported\n");
+        stdplus::print(stderr, "Operation not supported\n");
         return RdeDecodeStatus::RdeUnsupportedOperation;
     }
 
     // OperationInit payload overflows are not suported.
     if (header->sendDataTransferHandle != 0)
     {
-        fmt::print(stderr, "Payload should fit in within the request\n");
+        stdplus::print(stderr, "Payload should fit in within the request\n");
         return RdeDecodeStatus::RdePayloadOverflow;
     }
 
     auto schemaDictOrErr = dictionaryManager.getDictionary(header->resourceID);
     if (!schemaDictOrErr)
     {
-        fmt::print(stderr, "Schema Dictionary not found for resourceId: {}\n",
-                   header->resourceID);
+        stdplus::print(stderr,
+                       "Schema Dictionary not found for resourceId: {}\n",
+                       header->resourceID);
         return RdeDecodeStatus::RdeNoDictionary;
     }
 
     auto annotationDictOrErr = dictionaryManager.getAnnotationDictionary();
     if (!annotationDictOrErr)
     {
-        fmt::print(stderr, "Annotation dictionary not found\n");
+        stdplus::print(stderr, "Annotation dictionary not found\n");
         return RdeDecodeStatus::RdeNoDictionary;
     }
 
@@ -105,14 +107,14 @@ RdeDecodeStatus
                                                header->requestPayloadLength)) !=
         0)
     {
-        fmt::print(stderr, "BEJ decoding failed.\n");
+        stdplus::print(stderr, "BEJ decoding failed.\n");
         return RdeDecodeStatus::RdeBejDecodingError;
     }
 
     // Post the output.
     if (!exStorer->publishJson(decoder.getOutput()))
     {
-        fmt::print(stderr, "Failed to write to ExternalStorer.\n");
+        stdplus::print(stderr, "Failed to write to ExternalStorer.\n");
         return RdeDecodeStatus::RdeExternalStorerError;
     }
     return RdeDecodeStatus::RdeOk;
@@ -152,8 +154,8 @@ RdeDecodeStatus
             ret = handleFlagStartAndEnd(rdeCommand, header, data, resourceId);
             break;
         default:
-            fmt::print(stderr, "Invalid transfer flag: {}\n",
-                       header->transferFlag);
+            stdplus::print(stderr, "Invalid transfer flag: {}\n",
+                           header->transferFlag);
             ret = RdeDecodeStatus::RdeInvalidCommand;
     }
 
@@ -203,8 +205,8 @@ RdeDecodeStatus
 
     if (finalChecksum() != checksum)
     {
-        fmt::print(stderr, "Checksum failed. Ex: {} Calculated: {}\n", checksum,
-                   finalChecksum());
+        stdplus::print(stderr, "Checksum failed. Ex: {} Calculated: {}\n",
+                       checksum, finalChecksum());
         dictionaryManager.invalidateDictionaries();
         return RdeDecodeStatus::RdeInvalidChecksum;
     }
@@ -231,7 +233,7 @@ RdeDecodeStatus
 {
     if (flagState != RdeDictTransferFlagState::RdeStateStartRecvd)
     {
-        fmt::print(
+        stdplus::print(
             stderr,
             "Invalid dictionary packet order. Need start before middle.\n");
         return RdeDecodeStatus::RdeInvalidPktOrder;
@@ -251,9 +253,9 @@ RdeDecodeStatus
         // dictionary.
         if (!dictionaryManager.addDictionaryData(resourceId, dataS))
         {
-            fmt::print(stderr,
-                       "Failed to add dictionary data: ResourceId: {}\n",
-                       resourceId);
+            stdplus::print(stderr,
+                           "Failed to add dictionary data: ResourceId: {}\n",
+                           resourceId);
             return RdeDecodeStatus::RdeDictionaryError;
         }
     }
@@ -269,7 +271,7 @@ RdeDecodeStatus
 {
     if (flagState != RdeDictTransferFlagState::RdeStateStartRecvd)
     {
-        fmt::print(
+        stdplus::print(
             stderr,
             "Invalid dictionary packet order. Need start before middle.\n");
         return RdeDecodeStatus::RdeInvalidPktOrder;
@@ -288,9 +290,9 @@ RdeDecodeStatus
     {
         if (!dictionaryManager.addDictionaryData(resourceId, dataS))
         {
-            fmt::print(stderr,
-                       "Failed to add dictionary data: ResourceId: {}\n",
-                       resourceId);
+            stdplus::print(stderr,
+                           "Failed to add dictionary data: ResourceId: {}\n",
+                           resourceId);
             return RdeDecodeStatus::RdeDictionaryError;
         }
     }

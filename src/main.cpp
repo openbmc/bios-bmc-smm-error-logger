@@ -6,17 +6,17 @@
 #include "rde/external_storer_interface.hpp"
 #include "rde/rde_handler.hpp"
 
-#include <fmt/format.h>
-
 #include <boost/asio.hpp>
 #include <boost/endian/conversion.hpp>
 #include <sdbusplus/asio/object_server.hpp>
 #include <stdplus/fd/create.hpp>
 #include <stdplus/fd/impl.hpp>
 #include <stdplus/fd/managed.hpp>
+#include <stdplus/print.hpp>
 
 #include <chrono>
 #include <filesystem>
+#include <format>
 #include <fstream>
 #include <functional>
 #include <memory>
@@ -43,13 +43,13 @@ void readLoop(boost::asio::steady_timer* t,
 {
     if (error)
     {
-        fmt::print(stderr, "Async wait failed {}\n", error.message());
+        stdplus::print(stderr, "Async wait failed {}\n", error.message());
         return;
     }
     std::vector<EntryPair> entryPairs = bufferInterface->readErrorLogs();
     for (const auto& [entryHeader, entry] : entryPairs)
     {
-        fmt::print(stderr, "Read an entry of '{}' bytes\n", entry.size());
+        stdplus::print(stderr, "Read an entry of '{}' bytes\n", entry.size());
 
         rde::RdeDecodeStatus rdeDecodeStatus =
             rdeCommandHandler->decodeRdeCommand(
