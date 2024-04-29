@@ -143,15 +143,13 @@ TEST_F(BufferTest, BufferHeaderReadFail)
     std::vector<std::uint8_t> testBytesRead{};
     EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
         .WillOnce(Return(testBytesRead));
-    EXPECT_THROW(
-        try {
-            bufferImpl->readBufferHeader();
-        } catch (const std::runtime_error& e) {
-            EXPECT_STREQ(e.what(),
-                         "Buffer header read only read '0', expected '48'");
-            throw;
-        },
-        std::runtime_error);
+    EXPECT_THROW(try { bufferImpl->readBufferHeader(); } catch (
+                     const std::runtime_error& e) {
+        EXPECT_STREQ(e.what(),
+                     "Buffer header read only read '0', expected '48'");
+        throw;
+    },
+                 std::runtime_error);
 }
 
 TEST_F(BufferTest, BufferHeaderReadPass)
@@ -174,16 +172,14 @@ TEST_F(BufferTest, BufferUpdateReadPtrFail)
     constexpr size_t wrongWriteSize = 1;
     EXPECT_CALL(*dataInterfaceMockPtr, write(_, _))
         .WillOnce(Return(wrongWriteSize));
-    EXPECT_THROW(
-        try {
-            bufferImpl->updateReadPtr(0);
-        } catch (const std::runtime_error& e) {
-            EXPECT_STREQ(
-                e.what(),
-                "[updateReadPtr] Wrote '1' bytes, instead of expected '3'");
-            throw;
-        },
-        std::runtime_error);
+    EXPECT_THROW(try { bufferImpl->updateReadPtr(0); } catch (
+                     const std::runtime_error& e) {
+        EXPECT_STREQ(
+            e.what(),
+            "[updateReadPtr] Wrote '1' bytes, instead of expected '3'");
+        throw;
+    },
+                 std::runtime_error);
 }
 
 TEST_F(BufferTest, BufferUpdateReadPtrPass)
@@ -255,17 +251,15 @@ TEST_F(BufferTest, GetMaxOffsetQueueSizeFail)
     EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
                                            wrongQueueSize, testUeRegionSize,
                                            testMagicNumber));
-    EXPECT_THROW(
-        try {
-            bufferImpl->getMaxOffset();
-        } catch (const std::runtime_error& e) {
-            EXPECT_STREQ(e.what(),
-                         "[getMaxOffset] runtime queueSize '511' did not match "
-                         "compile-time queueSize '512'. This indicates that the"
-                         " buffer was corrupted");
-            throw;
-        },
-        std::runtime_error);
+    EXPECT_THROW(try { bufferImpl->getMaxOffset(); } catch (
+                     const std::runtime_error& e) {
+        EXPECT_STREQ(e.what(),
+                     "[getMaxOffset] runtime queueSize '511' did not match "
+                     "compile-time queueSize '512'. This indicates that the"
+                     " buffer was corrupted");
+        throw;
+    },
+                 std::runtime_error);
 }
 
 TEST_F(BufferTest, GetMaxOffsetUeRegionSizeFail)
@@ -282,18 +276,15 @@ TEST_F(BufferTest, GetMaxOffsetUeRegionSizeFail)
     EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
                                            testQueueSize, testUeRegionSize + 1,
                                            testMagicNumber));
-    EXPECT_THROW(
-        try {
-            bufferImpl->getMaxOffset();
-        } catch (const std::runtime_error& e) {
-            EXPECT_STREQ(
-                e.what(),
-                "[getMaxOffset] runtime ueRegionSize '81' did not match "
-                "compile-time ueRegionSize '80'. This indicates that the"
-                " buffer was corrupted");
-            throw;
-        },
-        std::runtime_error);
+    EXPECT_THROW(try { bufferImpl->getMaxOffset(); } catch (
+                     const std::runtime_error& e) {
+        EXPECT_STREQ(e.what(),
+                     "[getMaxOffset] runtime ueRegionSize '81' did not match "
+                     "compile-time ueRegionSize '80'. This indicates that the"
+                     " buffer was corrupted");
+        throw;
+    },
+                 std::runtime_error);
 }
 
 TEST_F(BufferTest, GetOffsetUeRegionSizeFail)
@@ -310,18 +301,15 @@ TEST_F(BufferTest, GetOffsetUeRegionSizeFail)
     EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
                                            testQueueSize, testUeRegionSize - 1,
                                            testMagicNumber));
-    EXPECT_THROW(
-        try {
-            bufferImpl->getQueueOffset();
-        } catch (const std::runtime_error& e) {
-            EXPECT_STREQ(
-                e.what(),
-                "[getQueueOffset] runtime ueRegionSize '79' did not match "
-                "compile-time ueRegionSize '80'. This indicates that the"
-                " buffer was corrupted");
-            throw;
-        },
-        std::runtime_error);
+    EXPECT_THROW(try { bufferImpl->getQueueOffset(); } catch (
+                     const std::runtime_error& e) {
+        EXPECT_STREQ(e.what(),
+                     "[getQueueOffset] runtime ueRegionSize '79' did not match "
+                     "compile-time ueRegionSize '80'. This indicates that the"
+                     " buffer was corrupted");
+        throw;
+    },
+                 std::runtime_error);
 }
 
 class BufferWraparoundReadTest : public BufferTest
@@ -623,14 +611,13 @@ TEST_F(BufferEntryTest, ReadEntryChecksumFail)
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
     wraparoundReadMock(testOffset, testEntryHeaderVector);
     wraparoundReadMock(testOffset + entryHeaderSize, testEntryVector);
-    EXPECT_THROW(
-        try { bufferImpl->readEntry(); } catch (const std::runtime_error& e) {
-            // Calculation: testChecksum (0x21) XOR (0x22) = 3
-            EXPECT_STREQ(e.what(),
-                         "[readEntry] Checksum was '3', expected '0'");
-            throw;
-        },
-        std::runtime_error);
+    EXPECT_THROW(try { bufferImpl->readEntry(); } catch (
+                     const std::runtime_error& e) {
+        // Calculation: testChecksum (0x21) XOR (0x22) = 3
+        EXPECT_STREQ(e.what(), "[readEntry] Checksum was '3', expected '0'");
+        throw;
+    },
+                 std::runtime_error);
 }
 
 TEST_F(BufferEntryTest, ReadEntryPassWraparound)
@@ -702,16 +689,13 @@ TEST_F(BufferReadErrorLogsTest, PtrsTooBigFail)
         .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
                                               testInitializationHeaderPtr +
                                                   bufferHeaderSize)));
-    EXPECT_THROW(
-        try {
-            bufferImpl->readErrorLogs();
-        } catch (const std::runtime_error& e) {
-            EXPECT_STREQ(e.what(),
-                         "[readErrorLogs] currentBiosWritePtr was '385' "
-                         "which was bigger than maxOffset '384'");
-            throw;
-        },
-        std::runtime_error);
+    EXPECT_THROW(try { bufferImpl->readErrorLogs(); } catch (
+                     const std::runtime_error& e) {
+        EXPECT_STREQ(e.what(), "[readErrorLogs] currentBiosWritePtr was '385' "
+                               "which was bigger than maxOffset '384'");
+        throw;
+    },
+                 std::runtime_error);
 
     // Reset the biosWritePtr and set the bmcReadPtr too big
     testInitializationHeader.biosWritePtr = 0;
@@ -724,15 +708,13 @@ TEST_F(BufferReadErrorLogsTest, PtrsTooBigFail)
         .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
                                               testInitializationHeaderPtr +
                                                   bufferHeaderSize)));
-    EXPECT_THROW(
-        try {
-            bufferImpl->readErrorLogs();
-        } catch (const std::runtime_error& e) {
-            EXPECT_STREQ(e.what(), "[readErrorLogs] currentReadPtr was '385' "
-                                   "which was bigger than maxOffset '384'");
-            throw;
-        },
-        std::runtime_error);
+    EXPECT_THROW(try { bufferImpl->readErrorLogs(); } catch (
+                     const std::runtime_error& e) {
+        EXPECT_STREQ(e.what(), "[readErrorLogs] currentReadPtr was '385' "
+                               "which was bigger than maxOffset '384'");
+        throw;
+    },
+                 std::runtime_error);
 }
 
 TEST_F(BufferReadErrorLogsTest, IdenticalPtrsPass)
@@ -829,17 +811,14 @@ TEST_F(BufferReadErrorLogsTest, WraparoundMismatchingPtrsFail)
     wraparoundReadMock(/*relativeOffset=*/0, testEntryHeaderVector);
     wraparoundReadMock(/*relativeOffset=*/0 + entryHeaderSize, testEntryVector);
 
-    EXPECT_THROW(
-        try {
-            bufferImpl->readErrorLogs();
-        } catch (const std::runtime_error& e) {
-            EXPECT_STREQ(
-                e.what(),
-                "[readErrorLogs] biosWritePtr '37' and bmcReaddPtr '38' "
-                "are not identical after reading through all the logs");
-            throw;
-        },
-        std::runtime_error);
+    EXPECT_THROW(try { bufferImpl->readErrorLogs(); } catch (
+                     const std::runtime_error& e) {
+        EXPECT_STREQ(e.what(),
+                     "[readErrorLogs] biosWritePtr '37' and bmcReaddPtr '38' "
+                     "are not identical after reading through all the logs");
+        throw;
+    },
+                 std::runtime_error);
 }
 
 } // namespace
