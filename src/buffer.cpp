@@ -21,7 +21,7 @@ namespace bios_bmc_smm_error_logger
 {
 
 BufferImpl::BufferImpl(std::unique_ptr<DataInterface> dataInterface) :
-    dataInterface(std::move(dataInterface)){};
+    dataInterface(std::move(dataInterface)) {};
 
 void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
                             uint16_t ueRegionSize,
@@ -55,16 +55,16 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
     std::transform(magicNumber.begin(), magicNumber.end(),
                    initializationHeader.magicNumber.begin(),
                    [](uint32_t number) -> little_uint32_t {
-        return boost::endian::native_to_little(number);
-    });
+                       return boost::endian::native_to_little(number);
+                   });
 
     uint8_t* initializationHeaderPtr =
         reinterpret_cast<uint8_t*>(&initializationHeader);
     size_t initializationHeaderSize = sizeof(initializationHeader);
     byteWritten = dataInterface->write(
-        0, std::span<const uint8_t>(initializationHeaderPtr,
-                                    initializationHeaderPtr +
-                                        initializationHeaderSize));
+        0, std::span<const uint8_t>(
+               initializationHeaderPtr,
+               initializationHeaderPtr + initializationHeaderSize));
     if (byteWritten != initializationHeaderSize)
     {
         throw std::runtime_error(std::format(
@@ -76,8 +76,8 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
 void BufferImpl::readBufferHeader()
 {
     size_t headerSize = sizeof(struct CircularBufferHeader);
-    std::vector<uint8_t> bytesRead = dataInterface->read(/*offset=*/0,
-                                                         headerSize);
+    std::vector<uint8_t> bytesRead =
+        dataInterface->read(/*offset=*/0, headerSize);
 
     if (bytesRead.size() != headerSize)
     {
@@ -97,8 +97,8 @@ struct CircularBufferHeader BufferImpl::getCachedBufferHeader() const
 
 void BufferImpl::updateReadPtr(const uint32_t newReadPtr)
 {
-    constexpr uint8_t bmcReadPtrOffset = offsetof(struct CircularBufferHeader,
-                                                  bmcReadPtr);
+    constexpr uint8_t bmcReadPtrOffset =
+        offsetof(struct CircularBufferHeader, bmcReadPtr);
 
     little_uint24_t truncatedReadPtr =
         boost::endian::native_to_little(newReadPtr & 0xffffff);
@@ -120,8 +120,8 @@ void BufferImpl::updateReadPtr(const uint32_t newReadPtr)
 
 void BufferImpl::updateBmcFlags(const uint32_t newBmcFlag)
 {
-    constexpr uint8_t bmcFlagsPtrOffset = offsetof(struct CircularBufferHeader,
-                                                   bmcFlags);
+    constexpr uint8_t bmcFlagsPtrOffset =
+        offsetof(struct CircularBufferHeader, bmcFlags);
 
     little_uint32_t littleNewBmcFlag =
         boost::endian::native_to_little(newBmcFlag);

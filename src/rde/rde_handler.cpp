@@ -26,9 +26,8 @@ RdeCommandHandler::RdeCommandHandler(
     calcCrcTable();
 }
 
-RdeDecodeStatus
-    RdeCommandHandler::decodeRdeCommand(std::span<const uint8_t> rdeCommand,
-                                        RdeCommandType type)
+RdeDecodeStatus RdeCommandHandler::decodeRdeCommand(
+    std::span<const uint8_t> rdeCommand, RdeCommandType type)
 {
     if (type == RdeCommandType::RdeMultiPartReceiveResponse)
     {
@@ -98,9 +97,9 @@ RdeDecodeStatus
 
     // Soon after header, we have bejLocator field. Then we have the encoded
     // data.
-    const uint8_t* encodedPldmBlock = rdeCommand.data() +
-                                      sizeof(RdeOperationInitReqHeader) +
-                                      header->operationLocatorLength;
+    const uint8_t* encodedPldmBlock =
+        rdeCommand.data() + sizeof(RdeOperationInitReqHeader) +
+        header->operationLocatorLength;
 
     // Decoded the data.
     if (decoder.decode(dictionaries, std::span(encodedPldmBlock,
@@ -197,9 +196,9 @@ RdeDecodeStatus
     const MultipartReceiveResHeader* header =
         reinterpret_cast<const MultipartReceiveResHeader*>(
             multiReceiveRespCmd.data());
-    const uint8_t* checksumPtr = multiReceiveRespCmd.data() +
-                                 sizeof(MultipartReceiveResHeader) +
-                                 header->dataLengthBytes;
+    const uint8_t* checksumPtr =
+        multiReceiveRespCmd.data() + sizeof(MultipartReceiveResHeader) +
+        header->dataLengthBytes;
     uint32_t checksum = checksumPtr[0] | (checksumPtr[1] << 8) |
                         (checksumPtr[2] << 16) | (checksumPtr[3] << 24);
 
@@ -226,10 +225,9 @@ void RdeCommandHandler::handleFlagStart(const MultipartReceiveResHeader* header,
     flagState = RdeDictTransferFlagState::RdeStateStartRecvd;
 }
 
-RdeDecodeStatus
-    RdeCommandHandler::handleFlagMiddle(const MultipartReceiveResHeader* header,
-                                        const uint8_t* data,
-                                        uint32_t resourceId)
+RdeDecodeStatus RdeCommandHandler::handleFlagMiddle(
+    const MultipartReceiveResHeader* header, const uint8_t* data,
+    uint32_t resourceId)
 {
     if (flagState != RdeDictTransferFlagState::RdeStateStartRecvd)
     {
@@ -264,10 +262,10 @@ RdeDecodeStatus
     return RdeDecodeStatus::RdeOk;
 }
 
-RdeDecodeStatus
-    RdeCommandHandler::handleFlagEnd(std::span<const uint8_t> rdeCommand,
-                                     const MultipartReceiveResHeader* header,
-                                     const uint8_t* data, uint32_t resourceId)
+RdeDecodeStatus RdeCommandHandler::handleFlagEnd(
+    std::span<const uint8_t> rdeCommand,
+    const MultipartReceiveResHeader* header, const uint8_t* data,
+    uint32_t resourceId)
 {
     if (flagState != RdeDictTransferFlagState::RdeStateStartRecvd)
     {

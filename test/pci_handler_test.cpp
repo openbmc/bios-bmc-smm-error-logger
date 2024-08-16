@@ -25,9 +25,9 @@ class PciHandlerTest : public ::testing::Test
 {
   protected:
     PciHandlerTest() :
-        testMapped({std::byte(0), std::byte(11), std::byte(22), std::byte(33),
-                    std::byte(44), std::byte(55), std::byte(66),
-                    std::byte(77)}),
+        testMapped(
+            {std::byte(0), std::byte(11), std::byte(22), std::byte(33),
+             std::byte(44), std::byte(55), std::byte(66), std::byte(77)}),
         fdMock(std::make_unique<stdplus::fd::FdMock>()), fdMockPtr(fdMock.get())
     {
         // Verify that the constructor is called as expected

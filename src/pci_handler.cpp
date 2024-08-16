@@ -18,8 +18,7 @@ namespace bios_bmc_smm_error_logger
 
 PciDataHandler::PciDataHandler(uint32_t regionAddress, size_t regionSize,
                                std::unique_ptr<stdplus::fd::Fd> fd) :
-    regionSize(regionSize),
-    fd(std::move(fd)),
+    regionSize(regionSize), fd(std::move(fd)),
     mmap(stdplus::fd::MMap(
         *this->fd, regionSize, stdplus::fd::ProtFlags{PROT_READ | PROT_WRITE},
         stdplus::fd::MMapFlags{stdplus::fd::MMapAccess::Shared}, regionAddress))
@@ -38,8 +37,8 @@ std::vector<uint8_t> PciDataHandler::read(const uint32_t offset,
     }
 
     // Read up to regionSize in case the offset + length overflowed
-    uint32_t finalLength = (offset + length < regionSize) ? length
-                                                          : regionSize - offset;
+    uint32_t finalLength =
+        (offset + length < regionSize) ? length : regionSize - offset;
     std::vector<uint8_t> results(finalLength);
 
     std::memcpy(results.data(), mmap.get().data() + offset, finalLength);
@@ -60,8 +59,8 @@ uint32_t PciDataHandler::write(const uint32_t offset,
     }
 
     // Write up to regionSize in case the offset + length overflowed
-    uint16_t finalLength = (offset + length < regionSize) ? length
-                                                          : regionSize - offset;
+    uint16_t finalLength =
+        (offset + length < regionSize) ? length : regionSize - offset;
     std::memcpy(mmap.get().data() + offset, bytes.data(), finalLength);
     return finalLength;
 }

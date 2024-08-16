@@ -18,8 +18,8 @@ void DictionaryManager::startDictionaryEntry(
     auto itemIt = dictionaries.find(resourceId);
     if (itemIt == dictionaries.end())
     {
-        dictionaries[resourceId] = std::make_unique<DictionaryEntry>(false,
-                                                                     data);
+        dictionaries[resourceId] =
+            std::make_unique<DictionaryEntry>(false, data);
         return;
     }
 

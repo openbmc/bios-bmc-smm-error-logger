@@ -36,8 +36,8 @@ class BufferTest : public ::testing::Test
         std::transform(testMagicNumber.begin(), testMagicNumber.end(),
                        testInitializationHeader.magicNumber.begin(),
                        [](uint32_t number) -> little_uint32_t {
-            return boost::endian::native_to_little(number);
-        });
+                           return boost::endian::native_to_little(number);
+                       });
     }
     ~BufferTest() override = default;
 
@@ -132,9 +132,9 @@ TEST_F(BufferTest, BufferInitializePass)
                 write(0, ElementsAreArray(testInitializationHeaderPtr,
                                           bufferHeaderSize)))
         .WillOnce(Return(bufferHeaderSize));
-    EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
-                                           testQueueSize, testUeRegionSize,
-                                           testMagicNumber));
+    EXPECT_NO_THROW(
+        bufferImpl->initialize(testBmcInterfaceVersion, testQueueSize,
+                               testUeRegionSize, testMagicNumber));
     EXPECT_EQ(bufferImpl->getCachedBufferHeader(), testInitializationHeader);
 }
 
@@ -252,9 +252,9 @@ TEST_F(BufferTest, GetMaxOffsetQueueSizeFail)
 
     EXPECT_CALL(*dataInterfaceMockPtr, write(0, _))
         .WillOnce(Return(bufferHeaderSize));
-    EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
-                                           wrongQueueSize, testUeRegionSize,
-                                           testMagicNumber));
+    EXPECT_NO_THROW(
+        bufferImpl->initialize(testBmcInterfaceVersion, wrongQueueSize,
+                               testUeRegionSize, testMagicNumber));
     EXPECT_THROW(
         try {
             bufferImpl->getMaxOffset();
@@ -279,9 +279,9 @@ TEST_F(BufferTest, GetMaxOffsetUeRegionSizeFail)
 
     EXPECT_CALL(*dataInterfaceMockPtr, write(0, _))
         .WillOnce(Return(bufferHeaderSize));
-    EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
-                                           testQueueSize, testUeRegionSize + 1,
-                                           testMagicNumber));
+    EXPECT_NO_THROW(
+        bufferImpl->initialize(testBmcInterfaceVersion, testQueueSize,
+                               testUeRegionSize + 1, testMagicNumber));
     EXPECT_THROW(
         try {
             bufferImpl->getMaxOffset();
@@ -307,9 +307,9 @@ TEST_F(BufferTest, GetOffsetUeRegionSizeFail)
 
     EXPECT_CALL(*dataInterfaceMockPtr, write(0, _))
         .WillOnce(Return(bufferHeaderSize));
-    EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
-                                           testQueueSize, testUeRegionSize - 1,
-                                           testMagicNumber));
+    EXPECT_NO_THROW(
+        bufferImpl->initialize(testBmcInterfaceVersion, testQueueSize,
+                               testUeRegionSize - 1, testMagicNumber));
     EXPECT_THROW(
         try {
             bufferImpl->getQueueOffset();
@@ -344,16 +344,16 @@ class BufferWraparoundReadTest : public BufferTest
 
         EXPECT_CALL(*dataInterfaceMockPtr, write(0, _))
             .WillOnce(Return(bufferHeaderSize));
-        EXPECT_NO_THROW(bufferImpl->initialize(testBmcInterfaceVersion,
-                                               testQueueSize, testUeRegionSize,
-                                               testMagicNumber));
+        EXPECT_NO_THROW(
+            bufferImpl->initialize(testBmcInterfaceVersion, testQueueSize,
+                                   testUeRegionSize, testMagicNumber));
     }
     static constexpr size_t expectedWriteSize = 3;
     static constexpr uint8_t expectedBmcReadPtrOffset = 0x21;
     static constexpr size_t expectedqueueOffset = 0x30 + testUeRegionSize;
 
-    static constexpr size_t testMaxOffset = testQueueSize - testUeRegionSize -
-                                            sizeof(struct CircularBufferHeader);
+    static constexpr size_t testMaxOffset =
+        testQueueSize - testUeRegionSize - sizeof(struct CircularBufferHeader);
     uint8_t* testInitializationHeaderPtr =
         reinterpret_cast<uint8_t*>(&testInitializationHeader);
 };
@@ -699,9 +699,9 @@ TEST_F(BufferReadErrorLogsTest, PtrsTooBigFail)
     initializeFuncMock();
 
     EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
-        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
-                                              testInitializationHeaderPtr +
-                                                  bufferHeaderSize)));
+        .WillOnce(Return(std::vector<uint8_t>(
+            testInitializationHeaderPtr,
+            testInitializationHeaderPtr + bufferHeaderSize)));
     EXPECT_THROW(
         try {
             bufferImpl->readErrorLogs();
@@ -721,9 +721,9 @@ TEST_F(BufferReadErrorLogsTest, PtrsTooBigFail)
     initializeFuncMock();
 
     EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
-        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
-                                              testInitializationHeaderPtr +
-                                                  bufferHeaderSize)));
+        .WillOnce(Return(std::vector<uint8_t>(
+            testInitializationHeaderPtr,
+            testInitializationHeaderPtr + bufferHeaderSize)));
     EXPECT_THROW(
         try {
             bufferImpl->readErrorLogs();
@@ -738,9 +738,9 @@ TEST_F(BufferReadErrorLogsTest, PtrsTooBigFail)
 TEST_F(BufferReadErrorLogsTest, IdenticalPtrsPass)
 {
     EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
-        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
-                                              testInitializationHeaderPtr +
-                                                  bufferHeaderSize)));
+        .WillOnce(Return(std::vector<uint8_t>(
+            testInitializationHeaderPtr,
+            testInitializationHeaderPtr + bufferHeaderSize)));
     EXPECT_NO_THROW(bufferImpl->readErrorLogs());
 }
 
@@ -752,9 +752,9 @@ TEST_F(BufferReadErrorLogsTest, NoWraparoundPass)
         boost::endian::native_to_little((entryAndHeaderSize));
     initializeFuncMock();
     EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
-        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
-                                              testInitializationHeaderPtr +
-                                                  bufferHeaderSize)));
+        .WillOnce(Return(std::vector<uint8_t>(
+            testInitializationHeaderPtr,
+            testInitializationHeaderPtr + bufferHeaderSize)));
     std::vector<uint8_t> testEntryHeaderVector(
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
     std::vector<uint8_t> testEntryVector(testEntrySize);
@@ -781,9 +781,9 @@ TEST_F(BufferReadErrorLogsTest, WraparoundMultiplEntryPass)
     testInitializationHeader.biosWritePtr = entryAndHeaderSize;
     initializeFuncMock();
     EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
-        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
-                                              testInitializationHeaderPtr +
-                                                  bufferHeaderSize)));
+        .WillOnce(Return(std::vector<uint8_t>(
+            testInitializationHeaderPtr,
+            testInitializationHeaderPtr + bufferHeaderSize)));
 
     std::vector<uint8_t> testEntryHeaderVector(
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
@@ -819,9 +819,9 @@ TEST_F(BufferReadErrorLogsTest, WraparoundMismatchingPtrsFail)
         boost::endian::native_to_little(entryAndHeaderSize - 1);
     initializeFuncMock();
     EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
-        .WillOnce(Return(std::vector<uint8_t>(testInitializationHeaderPtr,
-                                              testInitializationHeaderPtr +
-                                                  bufferHeaderSize)));
+        .WillOnce(Return(std::vector<uint8_t>(
+            testInitializationHeaderPtr,
+            testInitializationHeaderPtr + bufferHeaderSize)));
 
     std::vector<uint8_t> testEntryHeaderVector(
         testEntryHeaderPtr, testEntryHeaderPtr + entryHeaderSize);
