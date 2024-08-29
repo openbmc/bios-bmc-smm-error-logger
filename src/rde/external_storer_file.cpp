@@ -108,13 +108,29 @@ JsonPdrType ExternalStorerFileInterface::getSchemaType(
 
 bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
 {
-    // TODO: Add policies for LogEntry retention.
-    // https://github.com/openbmc/bios-bmc-smm-error-logger/issues/1.
     if (logServiceId.empty())
     {
         stdplus::print(stderr,
                        "First need a LogService PDR with a new UUID.\n");
         return false;
+    }
+
+    // Check to see if we are hitting the limit of filePathQueue, delete oldest
+    // log entry first before processing another entry
+    if (filePathQueue.size() > logEntrySizeLimit)
+    {
+        std::string oldestFilePath = filePathQueue.front();
+        filePathQueue.pop();
+
+        // Attempt to delete the file
+        if (!std::filesystem::remove(oldestFilePath))
+        {
+            stdplus::print(
+                stderr,
+                "Failed to delete the oldest entry path, not processing the next log: {}\n",
+                oldestFilePath);
+            return false;
+        }
     }
 
     std::string id = boost::uuids::to_string(randomGen());
@@ -135,6 +151,9 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
                        fullPath);
         return false;
     }
+
+    // Add to back of the filePathQueue
+    filePathQueue.push(fullPath);
 
     cperNotifier->createEntry(fullPath + "/index.json");
     return true;
