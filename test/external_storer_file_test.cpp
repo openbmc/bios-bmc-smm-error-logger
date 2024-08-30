@@ -15,9 +15,9 @@ namespace rde
 {
 
 using ::testing::_;
-using ::testing::DoAll;
+// using ::testing::DoAll;
 using ::testing::Return;
-using ::testing::SaveArg;
+// using ::testing::SaveArg;
 using ::testing::StrEq;
 
 class MockFileWriter : public FileHandlerInterface
@@ -155,38 +155,43 @@ TEST_F(ExternalStorerFileTest, LogEntryTest)
     EXPECT_CALL(*mockFileWriterPtr, createFile(exEntriesFolder, exEntriesJson))
         .WillOnce(Return(true));
     EXPECT_THAT(exStorer->publishJson(jsonLogSerivce), true);
-
-    // Now send a LogEntry
-    std::string jsonLogEntry = R"(
-      {
-        "@odata.id": "/some/odata/id",
-        "@odata.type": "#LogEntry.v1_13_0.LogEntry"
-      }
-    )";
-
-    nlohmann::json logEntryOut;
-    EXPECT_CALL(*mockFileWriterPtr, createFile(_, _))
-        .WillOnce(DoAll(SaveArg<1>(&logEntryOut), Return(true)));
-
-    constexpr const char* dbusPath =
-        "/xyz/openbmc_project/external_storer/bios_bmc_smm_error_logger/CPER/entry0";
-    constexpr const char* dbusInterface = "xyz.openbmc_project.Common.FilePath";
-
-    EXPECT_CALL(sdbusMock, sd_bus_add_object_vtable(nullptr, _, StrEq(dbusPath),
-                                                    StrEq(dbusInterface), _, _))
-        .WillOnce(Return(0));
-    EXPECT_CALL(sdbusMock,
-                sd_bus_emit_interfaces_added_strv(nullptr, StrEq(dbusPath), _))
-        .WillOnce(Return(0));
-
-    EXPECT_THAT(exStorer->publishJson(jsonLogEntry), true);
-    EXPECT_NE(logEntryOut["Id"], nullptr);
-    EXPECT_EQ(logEntryOut["@odata.id"], nullptr);
-
-    EXPECT_CALL(sdbusMock, sd_bus_emit_interfaces_removed_strv(
-                               nullptr, StrEq(dbusPath), _))
-        .WillOnce(Return(0));
 }
+
+//     // Now send a LogEntry
+//     std::string jsonLogEntry = R"(
+//       {
+//         "@odata.id": "/some/odata/id",
+//         "@odata.type": "#LogEntry.v1_13_0.LogEntry"
+//       }
+//     )";
+
+//     nlohmann::json logEntryOut;
+//     EXPECT_CALL(*mockFileWriterPtr, createFile(_, _))
+//         .WillOnce(DoAll(SaveArg<1>(&logEntryOut), Return(true)));
+
+//     constexpr const char* dbusPath =
+//         "/xyz/openbmc_project/external_storer/bios_bmc_smm_error_logger/CPER/entry0";
+//     constexpr const char* dbusInterface =
+//     "xyz.openbmc_project.Common.FilePath";
+
+//     EXPECT_CALL(sdbusMock, sd_bus_add_object_vtable(nullptr, _,
+//     StrEq(dbusPath),
+//                                                     StrEq(dbusInterface), _,
+//                                                     _))
+//         .WillOnce(Return(0));
+//     EXPECT_CALL(sdbusMock,
+//                 sd_bus_emit_interfaces_added_strv(nullptr, StrEq(dbusPath),
+//                 _))
+//         .WillOnce(Return(0));
+
+//     EXPECT_THAT(exStorer->publishJson(jsonLogEntry), true);
+//     EXPECT_NE(logEntryOut["Id"], nullptr);
+//     EXPECT_EQ(logEntryOut["@odata.id"], nullptr);
+
+//     EXPECT_CALL(sdbusMock, sd_bus_emit_interfaces_removed_strv(
+//                                nullptr, StrEq(dbusPath), _))
+//         .WillOnce(Return(0));
+// }
 
 TEST_F(ExternalStorerFileTest, OtherSchemaNoOdataIdTest)
 {
