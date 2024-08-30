@@ -135,6 +135,7 @@ TEST_F(ExternalStorerFileTest, LogEntryWithoutLogServiceTest)
     EXPECT_THAT(exStorer->publishJson(jsonLogEntry), false);
 }
 
+// has issue
 TEST_F(ExternalStorerFileTest, LogEntryTest)
 {
     // Before sending a LogEntry, first we need to push a LogService.
