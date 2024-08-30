@@ -6,7 +6,7 @@ namespace rde
 {
 
 CperFileNotifierHandler::CperFileNotifierHandler(sdbusplus::bus_t& bus) :
-    bus(bus), objManager(bus, CperFileNotifier::cperBasePath)
+    bus(bus)
 {}
 
 void CperFileNotifierHandler::createEntry(const std::string& filePath)
@@ -14,7 +14,6 @@ void CperFileNotifierHandler::createEntry(const std::string& filePath)
     auto obj = std::make_unique<CperFileNotifier>(bus, filePath, nextEntry);
     // Notify fault log monitor through InterfacesAdded signal.
     obj->emit_added();
-    notifierObjs.push_back(std::move(obj));
     ++nextEntry;
 }
 
