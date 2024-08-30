@@ -37,8 +37,6 @@ class ExternalStorerFileTest : public ::testing::Test
         bus(sdbusplus::get_mocked_new(&sdbusMock)),
         mockFileWriter(std::make_unique<MockFileWriter>())
     {
-        mockFileWriterPtr = dynamic_cast<MockFileWriter*>(mockFileWriter.get());
-
         EXPECT_CALL(
             sdbusMock,
             sd_bus_add_object_manager(
@@ -56,7 +54,6 @@ class ExternalStorerFileTest : public ::testing::Test
     sdbusplus::bus_t bus;
     std::unique_ptr<FileHandlerInterface> mockFileWriter;
     std::unique_ptr<ExternalStorerFileInterface> exStorer;
-    MockFileWriter* mockFileWriterPtr;
     const std::string rootPath = "/some/path";
 };
 
@@ -117,9 +114,11 @@ TEST_F(ExternalStorerFileTest, LogServiceTest)
         "/some/path/redfish/v1/Systems/system/LogServices/6F7-C1A7C/Entries";
     nlohmann::json exEntriesJson = "{}"_json;
     nlohmann::json exServiceJson = nlohmann::json::parse(jsonStr);
-    EXPECT_CALL(*mockFileWriterPtr, createFile(exServiceFolder, exServiceJson))
+    EXPECT_CALL(*exStorer->fileHandler,
+                createFile(exServiceFolder, exServiceJson))
         .WillOnce(Return(true));
-    EXPECT_CALL(*mockFileWriterPtr, createFile(exEntriesFolder, exEntriesJson))
+    EXPECT_CALL(*exStorer->fileHandler,
+                createFile(exEntriesFolder, exEntriesJson))
         .WillOnce(Return(true));
     EXPECT_THAT(exStorer->publishJson(jsonStr), true);
 }
@@ -150,9 +149,11 @@ TEST_F(ExternalStorerFileTest, LogEntryTest)
         "/some/path/redfish/v1/Systems/system/LogServices/6F7-C1A7C/Entries";
     nlohmann::json exEntriesJson = "{}"_json;
     nlohmann::json exServiceJson = nlohmann::json::parse(jsonLogSerivce);
-    EXPECT_CALL(*mockFileWriterPtr, createFile(exServiceFolder, exServiceJson))
+    EXPECT_CALL(*exStorer->fileHandler,
+                createFile(exServiceFolder, exServiceJson))
         .WillOnce(Return(true));
-    EXPECT_CALL(*mockFileWriterPtr, createFile(exEntriesFolder, exEntriesJson))
+    EXPECT_CALL(*exStorer->fileHandler,
+                createFile(exEntriesFolder, exEntriesJson))
         .WillOnce(Return(true));
     EXPECT_THAT(exStorer->publishJson(jsonLogSerivce), true);
 
@@ -165,7 +166,7 @@ TEST_F(ExternalStorerFileTest, LogEntryTest)
     )";
 
     nlohmann::json logEntryOut;
-    EXPECT_CALL(*mockFileWriterPtr, createFile(_, _))
+    EXPECT_CALL(*exStorer->fileHandler, createFile(_, _))
         .WillOnce(DoAll(SaveArg<1>(&logEntryOut), Return(true)));
 
     constexpr const char* dbusPath =
@@ -213,7 +214,7 @@ TEST_F(ExternalStorerFileTest, OtherSchemaTypeTest)
     std::string exFolder =
         "/some/path/redfish/v1/Systems/system/Memory/dimm0/MemoryMetrics";
     nlohmann::json exJson = nlohmann::json::parse(jsonStr);
-    EXPECT_CALL(*mockFileWriterPtr, createFile(exFolder, exJson))
+    EXPECT_CALL(*exStorer->fileHandler, createFile(exFolder, exJson))
         .WillOnce(Return(true));
     EXPECT_THAT(exStorer->publishJson(jsonStr), true);
 }
