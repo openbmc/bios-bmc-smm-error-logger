@@ -1,6 +1,7 @@
 #include "config.h"
 
 #include "buffer.hpp"
+#include "dbus/file_notifier.hpp"
 #include "pci_handler.hpp"
 #include "rde/external_storer_file.hpp"
 #include "rde/external_storer_interface.hpp"
@@ -92,6 +93,8 @@ int main()
         std::make_shared<sdbusplus::asio::connection>(io);
     conn->request_name("xyz.openbmc_project.bios_bmc_smm_error_logger");
     sdbusplus::bus_t& bus = static_cast<sdbusplus::bus_t&>(*conn);
+    sdbusplus::server::manager_t objManager manager(
+        bus, rde::CperFileNotifier::cperBasePath);
 
     std::unique_ptr<rde::FileHandlerInterface> fileIface =
         std::make_unique<rde::ExternalStorerFileWriter>();
