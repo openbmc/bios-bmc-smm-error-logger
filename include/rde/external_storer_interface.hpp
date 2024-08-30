@@ -22,6 +22,13 @@ class ExternalStorerInterface
      * @return true if successful.
      */
     virtual bool publishJson(std::string_view jsonStr) = 0;
+
+    /**
+     * @brief Getter for the FileHandlerInterface
+     *
+     * @return FileHandlerInterface member
+     */
+    virtual FileHandlerInterface* getFileHandler() const = 0
 };
 
 } // namespace rde
