@@ -24,6 +24,11 @@ class CperFileNotifierHandler
     explicit CperFileNotifierHandler(sdbusplus::bus_t& bus);
 
     /**
+     * @brief Destructor for the CperFileNotifierHandler class.
+     */
+    ~CperFileNotifierHandler();
+
+    /**
      * @brief Create a DBus object with the provided filePath value.
      *
      * @param filePath - file path of the CPER log JSON file.
