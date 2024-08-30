@@ -117,6 +117,24 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
         return false;
     }
 
+    // Check to see if we are hitting the limit of filePathQueue, delete oldest
+    // log entry first before processing another entry
+    if (logEntryQueue.size() > MAX_NUM_LOG_ENTRIES)
+    {
+        std::string oldestFilePath = logEntryQueue.front();
+        logEntryQueue.pop();
+
+        // Attempt to delete the file
+        if (!std::filesystem::remove_all(oldestFilePath))
+        {
+            stdplus::print(
+                stderr,
+                "Failed to delete the oldest entry path, not processing the next log: {}\n",
+                oldestFilePath);
+            return false;
+        }
+    }
+
     std::string id = boost::uuids::to_string(randomGen());
     std::string fullPath =
         std::format("{}/redfish/v1/Systems/system/LogServices/{}/Entries/{}",
@@ -134,6 +152,17 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
                        "Failed to create a file for log entry path: {}\n",
                        fullPath);
         return false;
+    }
+
+    // Attempt to push to logEntrySavedQueue first, before pushing to
+    // logEntryQueue that can be popped
+    if (logEntrySavedQueue.size() <= MAX_NUM_SAVED_LOG_ENTRIES)
+    {
+        logEntrySavedQueue.push(fullPath);
+    }
+    else
+    {
+        logEntryQueue.push(fullPath);
     }
 
     cperNotifier->createEntry(fullPath + "/index.json");
