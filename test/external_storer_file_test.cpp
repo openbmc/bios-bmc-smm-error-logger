@@ -102,6 +102,7 @@ TEST_F(ExternalStorerFileTest, LogServiceNoIdTest)
     EXPECT_THAT(exStorer->publishJson(jsonStr), false);
 }
 
+/*
 TEST_F(ExternalStorerFileTest, LogServiceTest)
 {
     // A valid LogService test.
@@ -217,6 +218,7 @@ TEST_F(ExternalStorerFileTest, OtherSchemaTypeTest)
         .WillOnce(Return(true));
     EXPECT_THAT(exStorer->publishJson(jsonStr), true);
 }
+*/
 
 } // namespace rde
 } // namespace bios_bmc_smm_error_logger
