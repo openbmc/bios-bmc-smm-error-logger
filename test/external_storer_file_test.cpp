@@ -38,15 +38,6 @@ class ExternalStorerFileTest : public ::testing::Test
         mockFileWriter(std::make_unique<MockFileWriter>())
     {
         mockFileWriterPtr = dynamic_cast<MockFileWriter*>(mockFileWriter.get());
-
-        EXPECT_CALL(
-            sdbusMock,
-            sd_bus_add_object_manager(
-                nullptr, _,
-                StrEq(
-                    "/xyz/openbmc_project/external_storer/bios_bmc_smm_error_logger/CPER")))
-            .WillOnce(Return(0));
-
         exStorer = std::make_unique<ExternalStorerFileInterface>(
             bus, rootPath, std::move(mockFileWriter));
     }
@@ -182,10 +173,6 @@ TEST_F(ExternalStorerFileTest, LogEntryTest)
     EXPECT_THAT(exStorer->publishJson(jsonLogEntry), true);
     EXPECT_NE(logEntryOut["Id"], nullptr);
     EXPECT_EQ(logEntryOut["@odata.id"], nullptr);
-
-    EXPECT_CALL(sdbusMock, sd_bus_emit_interfaces_removed_strv(
-                               nullptr, StrEq(dbusPath), _))
-        .WillOnce(Return(0));
 }
 
 TEST_F(ExternalStorerFileTest, OtherSchemaNoOdataIdTest)
