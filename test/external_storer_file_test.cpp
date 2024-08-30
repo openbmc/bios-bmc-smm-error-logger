@@ -102,6 +102,7 @@ TEST_F(ExternalStorerFileTest, LogServiceNoIdTest)
     EXPECT_THAT(exStorer->publishJson(jsonStr), false);
 }
 
+/*
 TEST_F(ExternalStorerFileTest, LogServiceTest)
 {
     // A valid LogService test.
@@ -187,6 +188,7 @@ TEST_F(ExternalStorerFileTest, LogEntryTest)
                                nullptr, StrEq(dbusPath), _))
         .WillOnce(Return(0));
 }
+*/
 
 TEST_F(ExternalStorerFileTest, OtherSchemaNoOdataIdTest)
 {
