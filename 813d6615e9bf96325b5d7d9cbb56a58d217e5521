@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de95791d_c32b4782",
+        "filename": "include/rde/notifier_dbus_handler.hpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-08-30T00:24:44Z",
+      "side": 1,
+      "message": "Just a dummy to try to figure out where the presubmit is failing",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 41
+      },
+      "revId": "813d6615e9bf96325b5d7d9cbb56a58d217e5521",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
