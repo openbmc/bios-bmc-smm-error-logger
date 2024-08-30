@@ -7,6 +7,7 @@
 #include <boost/uuid/uuid_generators.hpp>
 
 #include <filesystem>
+#include <queue>
 #include <string>
 
 namespace bios_bmc_smm_error_logger
@@ -94,6 +95,11 @@ class ExternalStorerFileInterface : public ExternalStorerInterface
     std::string logServiceId;
     std::unique_ptr<CperFileNotifierHandler> cperNotifier;
     boost::uuids::random_generator randomGen;
+    std::queue<std::string> logEntrySavedQueue;
+    std::queue<std::string> logEntryQueue;
+    static constexpr uint32_t MAX_NUM_SAVED_LOG_ENTRIES = 20;
+    static constexpr uint32_t MAX_NUM_LOG_ENTRIES =
+        1000 - MAX_NUM_SAVED_LOG_ENTRIES;
 
     /**
      * @brief Get the type of the received PDR.
