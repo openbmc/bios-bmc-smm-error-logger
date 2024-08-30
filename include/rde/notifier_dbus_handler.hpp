@@ -23,6 +23,8 @@ class CperFileNotifierHandler
      */
     explicit CperFileNotifierHandler(sdbusplus::bus_t& bus);
 
+    ~CperFileNotifierHandler() = default;
+
     /**
      * @brief Create a DBus object with the provided filePath value.
      *
