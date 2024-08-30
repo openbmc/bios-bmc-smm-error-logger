@@ -88,6 +88,12 @@ class ExternalStorerFileInterface : public ExternalStorerInterface
 
     bool publishJson(std::string_view jsonStr) override;
 
+    // FileHandlerInterface Getter
+    FileHandlerInterface* getFileHandler() const
+    {
+        return fileHandler.get();
+    }
+
   private:
     std::string rootPath;
     std::unique_ptr<FileHandlerInterface> fileHandler;
