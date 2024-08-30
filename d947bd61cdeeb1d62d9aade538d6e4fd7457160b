@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecbb35ca_ce9964c3",
+        "filename": "include/rde/notifier_dbus_handler.hpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-08-30T00:01:58Z",
+      "side": 1,
+      "message": "It looks like something\u0027s wrong with the destructor for this and it\u0027s been failing for a while for this repo (looking at the past CL, where the presubmit was overwritten)",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 41
+      },
+      "revId": "d947bd61cdeeb1d62d9aade538d6e4fd7457160b",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
