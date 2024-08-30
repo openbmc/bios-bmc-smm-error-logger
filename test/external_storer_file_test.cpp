@@ -36,6 +36,7 @@ class ExternalStorerFileTest : public ::testing::Test
     ExternalStorerFileTest() :
         bus(sdbusplus::get_mocked_new(&sdbusMock)),
         mockFileWriter(std::make_unique<MockFileWriter>())
+
     {
         mockFileWriterPtr = dynamic_cast<MockFileWriter*>(mockFileWriter.get());
 
