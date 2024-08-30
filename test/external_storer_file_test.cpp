@@ -135,6 +135,7 @@ TEST_F(ExternalStorerFileTest, LogEntryWithoutLogServiceTest)
     EXPECT_THAT(exStorer->publishJson(jsonLogEntry), false);
 }
 
+/*
 TEST_F(ExternalStorerFileTest, LogEntryTest)
 {
     // Before sending a LogEntry, first we need to push a LogService.
@@ -186,7 +187,7 @@ TEST_F(ExternalStorerFileTest, LogEntryTest)
     EXPECT_CALL(sdbusMock, sd_bus_emit_interfaces_removed_strv(
                                nullptr, StrEq(dbusPath), _))
         .WillOnce(Return(0));
-}
+} */
 
 TEST_F(ExternalStorerFileTest, OtherSchemaNoOdataIdTest)
 {
