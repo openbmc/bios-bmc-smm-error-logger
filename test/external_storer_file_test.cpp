@@ -53,11 +53,11 @@ class ExternalStorerFileTest : public ::testing::Test
 
   protected:
     sdbusplus::SdBusMock sdbusMock;
-    sdbusplus::bus_t bus;
     std::unique_ptr<FileHandlerInterface> mockFileWriter;
     std::unique_ptr<ExternalStorerFileInterface> exStorer;
     MockFileWriter* mockFileWriterPtr;
     const std::string rootPath = "/some/path";
+    sdbusplus::bus_t bus;
 };
 
 TEST_F(ExternalStorerFileTest, InvalidJsonTest)
@@ -135,6 +135,7 @@ TEST_F(ExternalStorerFileTest, LogEntryWithoutLogServiceTest)
     EXPECT_THAT(exStorer->publishJson(jsonLogEntry), false);
 }
 
+// has issue
 TEST_F(ExternalStorerFileTest, LogEntryTest)
 {
     // Before sending a LogEntry, first we need to push a LogService.
