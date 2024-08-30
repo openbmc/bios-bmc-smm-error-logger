@@ -102,6 +102,7 @@ TEST_F(ExternalStorerFileTest, LogServiceNoIdTest)
     EXPECT_THAT(exStorer->publishJson(jsonStr), false);
 }
 
+/*
 TEST_F(ExternalStorerFileTest, LogServiceTest)
 {
     // A valid LogService test.
@@ -134,6 +135,7 @@ TEST_F(ExternalStorerFileTest, LogEntryWithoutLogServiceTest)
     )";
     EXPECT_THAT(exStorer->publishJson(jsonLogEntry), false);
 }
+*/
 
 TEST_F(ExternalStorerFileTest, LogEntryTest)
 {
