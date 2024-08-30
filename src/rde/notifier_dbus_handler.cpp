@@ -9,6 +9,15 @@ CperFileNotifierHandler::CperFileNotifierHandler(sdbusplus::bus_t& bus) :
     bus(bus), objManager(bus, CperFileNotifier::cperBasePath)
 {}
 
+CperFileNotifier::~CperFileNotifier()
+{
+    // Clean up any objects from the bus explicitly
+    for (auto obj : notifierObjs)
+    {
+        bus.remove_object(obj);
+    }
+}
+
 void CperFileNotifierHandler::createEntry(const std::string& filePath)
 {
     auto obj = std::make_unique<CperFileNotifier>(bus, filePath, nextEntry);
