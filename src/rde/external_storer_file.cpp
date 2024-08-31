@@ -41,7 +41,6 @@ bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
     std::ofstream output(path);
     output << jsonPdr;
     output.close();
-    stdplus::print(stderr, "Created: {}\n", path.string());
     return true;
 }
 
@@ -124,15 +123,9 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
         std::string oldestFilePath = std::move(logEntryQueue.front());
         logEntryQueue.pop();
 
-        stdplus::print(
-            stderr,
-            "Archived exceeds the maximum retainining threshold, removing the oldest log directory: {}\n.",
-            oldestFilePath);
-
         // Attempt to delete the file
         std::error_code ec;
-        std::uintmax_t numOfFileDeleted =
-            std::filesystem::remove_all(oldestFilePath, ec);
+        std::filesystem::remove_all(oldestFilePath, ec);
         if (ec)
         {
             stdplus::print(
@@ -141,8 +134,6 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
                 oldestFilePath);
             return false;
         }
-        stdplus::print(stderr, "Number of files/directories removed: {}",
-                       numOfFileDeleted);
     }
 
     std::string id = boost::uuids::to_string(randomGen());
