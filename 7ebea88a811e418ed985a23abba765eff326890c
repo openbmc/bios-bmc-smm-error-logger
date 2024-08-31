@@ -26,6 +26,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c5b94ddf_1cf1e946",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1002193
+      },
+      "writtenOn": "2024-08-31T00:33:54Z",
+      "side": 1,
+      "message": "\u003c (\u003c\u003d implies we store MAX_NUM_SAVED_LOG_ENTRIES +1)",
+      "range": {
+        "startLine": 159,
+        "startChar": 34,
+        "endLine": 159,
+        "endChar": 37
+      },
+      "revId": "7ebea88a811e418ed985a23abba765eff326890c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d7c088fe_5a62e008",
         "filename": "src/rde/external_storer_file.cpp",
         "patchSetId": 13
