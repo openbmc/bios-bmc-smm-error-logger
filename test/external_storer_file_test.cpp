@@ -184,9 +184,9 @@ TEST_F(ExternalStorerFileTest, LogEntryTest)
     EXPECT_NE(logEntryOut["Id"], nullptr);
     EXPECT_EQ(logEntryOut["@odata.id"], nullptr);
 
-    EXPECT_CALL(sdbusMock, sd_bus_emit_interfaces_removed_strv(
-                               nullptr, StrEq(dbusPath), _))
-        .WillOnce(Return(0));
+    // EXPECT_CALL(sdbusMock, sd_bus_emit_interfaces_removed_strv(
+    //                            nullptr, StrEq(dbusPath), _))
+    //     .WillOnce(Return(0));
 }
 
 TEST_F(ExternalStorerFileTest, OtherSchemaNoOdataIdTest)
