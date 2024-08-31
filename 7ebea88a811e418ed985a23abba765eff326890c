@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0680f9ac_b56bef47",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1001503
+      },
+      "writtenOn": "2024-08-31T00:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36c3d221_fc6599bb",
+      "range": {
+        "startLine": 124,
+        "startChar": 37,
+        "endLine": 124,
+        "endChar": 58
+      },
+      "revId": "7ebea88a811e418ed985a23abba765eff326890c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8bca4de4_2ba4c18b",
@@ -37,6 +61,24 @@
       "writtenOn": "2024-08-31T00:38:32Z",
       "side": 1,
       "message": "you need to use  std::uintmax_t remove_all( const std::filesystem::path\u0026 p, std::error_code\u0026 ec );\n\nthe return value is the number of files and directories deleted -- should be 2 and you should check that.\nYou should not use the throwing version -- if you do , you have to do a try catch",
+      "revId": "7ebea88a811e418ed985a23abba765eff326890c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "186d980d_7e413d1a",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1001503
+      },
+      "writtenOn": "2024-08-31T00:50:47Z",
+      "side": 1,
+      "message": "That\u0027s correct. let me address it in a separate CL. There are multiple file creation code snippets needs to be changed as well including this one",
+      "parentUuid": "8bca4de4_2ba4c18b",
       "revId": "7ebea88a811e418ed985a23abba765eff326890c",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
@@ -64,6 +106,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4fde4d7c_67e88378",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1001503
+      },
+      "writtenOn": "2024-08-31T00:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5b94ddf_1cf1e946",
+      "range": {
+        "startLine": 159,
+        "startChar": 34,
+        "endLine": 159,
+        "endChar": 37
+      },
+      "revId": "7ebea88a811e418ed985a23abba765eff326890c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d7c088fe_5a62e008",
@@ -77,6 +143,30 @@
       "writtenOn": "2024-08-31T00:30:54Z",
       "side": 1,
       "message": "you can move this above the push and use std::move inside push()",
+      "range": {
+        "startLine": 168,
+        "startChar": 2,
+        "endLine": 168,
+        "endChar": 56
+      },
+      "revId": "7ebea88a811e418ed985a23abba765eff326890c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0652e95_e3be57ad",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1001503
+      },
+      "writtenOn": "2024-08-31T00:50:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7c088fe_5a62e008",
       "range": {
         "startLine": 168,
         "startChar": 2,
