@@ -101,6 +101,24 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1dede41e_3dc34ede",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1001503
+      },
+      "writtenOn": "2024-08-31T02:40:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc1039e9_927ad434",
+      "revId": "7ebea88a811e418ed985a23abba765eff326890c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c5b94ddf_1cf1e946",

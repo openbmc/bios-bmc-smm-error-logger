@@ -22,6 +22,30 @@
       },
       "revId": "c48537eaed88d3b1bf7717ec282e5cc52304d79d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87e930bb_fcac5532",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1001503
+      },
+      "writtenOn": "2024-08-31T02:40:46Z",
+      "side": 1,
+      "message": "We have to. stdout log is not recorded by systemd journal only stderr will.",
+      "parentUuid": "d32c322c_b71555a0",
+      "range": {
+        "startLine": 124,
+        "startChar": 8,
+        "endLine": 127,
+        "endChar": 28
+      },
+      "revId": "c48537eaed88d3b1bf7717ec282e5cc52304d79d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
