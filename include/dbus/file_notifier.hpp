@@ -27,8 +27,7 @@ class CperFileNotifier : public FileNotifierInterface
      */
     CperFileNotifier(sdbusplus::bus_t& bus, const std::string& filePath,
                      uint64_t entry) :
-        FileNotifierInterface(bus, generatePath(entry).c_str(),
-                              action::emit_no_signals)
+        FileNotifierInterface(bus, generatePath(entry).c_str())
     {
         // We only need the interface added signal for the fault monitor. So
         // stop emitting properties changed signal.
