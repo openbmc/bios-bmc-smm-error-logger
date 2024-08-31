@@ -26,6 +26,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8bca4de4_2ba4c18b",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1002193
+      },
+      "writtenOn": "2024-08-31T00:38:32Z",
+      "side": 1,
+      "message": "you need to use  std::uintmax_t remove_all( const std::filesystem::path\u0026 p, std::error_code\u0026 ec );\n\nthe return value is the number of files and directories deleted -- should be 2 and you should check that.\nYou should not use the throwing version -- if you do , you have to do a try catch",
+      "revId": "7ebea88a811e418ed985a23abba765eff326890c",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c5b94ddf_1cf1e946",
         "filename": "src/rde/external_storer_file.cpp",
         "patchSetId": 13
