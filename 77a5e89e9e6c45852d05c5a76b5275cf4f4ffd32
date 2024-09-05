@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fbb6655_aad465b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 29
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-09-05T19:49:47Z",
+      "side": 1,
+      "message": "Can\u0027t seem to figure it out (sorry for the spam, but could not observe the same error locally) - the clean fix is to move to asio server https://gerrit.openbmc.org/c/openbmc/bios-bmc-smm-error-logger/+/56785?tab\u003dcomments",
+      "revId": "77a5e89e9e6c45852d05c5a76b5275cf4f4ffd32",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
