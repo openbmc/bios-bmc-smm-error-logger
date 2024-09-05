@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fc8a145_9ab831a3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-09-05T19:44:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b8bedf8_107929bb",
+      "range": {
+        "startLine": 7,
+        "startChar": 38,
+        "endLine": 7,
+        "endChar": 50
+      },
+      "revId": "569693008da31d541ca78f2831b5e045b22d859e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c3dc274f_49da4896",
@@ -37,6 +61,30 @@
       "writtenOn": "2022-11-16T23:47:27Z",
       "side": 1,
       "message": "nit: typo",
+      "range": {
+        "startLine": 13,
+        "startChar": 5,
+        "endLine": 13,
+        "endChar": 11
+      },
+      "revId": "569693008da31d541ca78f2831b5e045b22d859e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9208652_800c9efe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-09-05T19:44:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3dc274f_49da4896",
       "range": {
         "startLine": 13,
         "startChar": 5,
@@ -145,6 +193,30 @@
       "writtenOn": "2022-09-09T18:47:34Z",
       "side": 1,
       "message": "nit: it\u0027s",
+      "range": {
+        "startLine": 31,
+        "startChar": 57,
+        "endLine": 31,
+        "endChar": 60
+      },
+      "revId": "569693008da31d541ca78f2831b5e045b22d859e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2aad2cab_ab52439f",
+        "filename": "include/dbus/file_notifier.hpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-09-05T19:44:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2891c15_4a2b6086",
       "range": {
         "startLine": 31,
         "startChar": 57,
