@@ -16,6 +16,52 @@
       "message": "Updated the CL so that we simply migrate to the asio server instead of changing the log service path to unblock our presubmit",
       "revId": "e97f9268e54762f5f54fe5d3bbde8ba7f2d45aa8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d4acb76_98329fdf",
+        "filename": "include/dbus/file_notifier.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2024-09-05T19:55:58Z",
+      "side": 1,
+      "message": "not used?",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 23
+      },
+      "revId": "e97f9268e54762f5f54fe5d3bbde8ba7f2d45aa8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecb7e75c_d1cca62a",
+        "filename": "include/dbus/file_notifier.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2024-09-05T19:55:58Z",
+      "side": 1,
+      "message": "is this needed? Doesn\u0027t the interface gets remove as the `server` get out of scope (wherever this is constructed)",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 47
+      },
+      "revId": "e97f9268e54762f5f54fe5d3bbde8ba7f2d45aa8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
