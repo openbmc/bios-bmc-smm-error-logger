@@ -242,6 +242,24 @@
       "message": "I assume there\u0027s no longer a convenient way to unit test the D-Bus objects after changing from bus to asio connection?",
       "revId": "569693008da31d541ca78f2831b5e045b22d859e",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb199bd0_615840b2",
+        "filename": "test/external_storer_file_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-09-05T19:47:25Z",
+      "side": 1,
+      "message": "I don\u0027t think so unfortunately :/",
+      "parentUuid": "05007781_1701f333",
+      "revId": "569693008da31d541ca78f2831b5e045b22d859e",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
