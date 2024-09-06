@@ -45,12 +45,27 @@ bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
     return true;
 }
 
+bool ExternalStorerFileWriter::removeAll(const std::string& filePath) const
+{
+    // Attempt to delete the file
+    std::error_code ec;
+    std::filesystem::remove_all(filePath, ec);
+    if (ec)
+    {
+        return false;
+    }
+    stdplus::print(stderr, "Removed: {}\n", filePath);
+    return true;
+}
+
 ExternalStorerFileInterface::ExternalStorerFileInterface(
     const std::shared_ptr<sdbusplus::asio::connection>& conn,
     std::string_view rootPath,
-    std::unique_ptr<FileHandlerInterface> fileHandler) :
+    std::unique_ptr<FileHandlerInterface> fileHandler,
+    uint32_t numSavedLogEntries, uint32_t numLogEntries) :
     rootPath(rootPath), fileHandler(std::move(fileHandler)), logServiceId(""),
-    cperNotifier(std::make_unique<CperFileNotifierHandler>(conn))
+    cperNotifier(std::make_unique<CperFileNotifierHandler>(conn)),
+    maxNumSavedLogEntries(numSavedLogEntries), maxNumLogEntries(numLogEntries)
 {}
 
 bool ExternalStorerFileInterface::publishJson(std::string_view jsonStr)
@@ -118,6 +133,23 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
         return false;
     }
 
+    // Check to see if we are hitting the limit of filePathQueue, delete oldest
+    // log entry first before processing another entry
+    if (logEntryQueue.size() == maxNumLogEntries)
+    {
+        std::string oldestFilePath = std::move(logEntryQueue.front());
+        logEntryQueue.pop();
+
+        if (!fileHandler->removeAll(oldestFilePath))
+        {
+            stdplus::print(
+                stderr,
+                "Failed to delete the oldest entry path, not processing the next log,: {}\n",
+                oldestFilePath);
+            return false;
+        }
+    }
+
     std::string id = boost::uuids::to_string(randomGen());
     std::string fullPath =
         std::format("{}/redfish/v1/Systems/system/LogServices/{}/Entries/{}",
@@ -138,6 +170,18 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
     }
 
     cperNotifier->createEntry(fullPath + "/index.json");
+
+    // Attempt to push to logEntrySavedQueue first, before pushing to
+    // logEntryQueue that can be popped
+    if (logEntrySavedQueue.size() < maxNumSavedLogEntries)
+    {
+        logEntrySavedQueue.push(std::move(fullPath));
+    }
+    else
+    {
+        logEntryQueue.push(std::move(fullPath));
+    }
+
     return true;
 }
 
