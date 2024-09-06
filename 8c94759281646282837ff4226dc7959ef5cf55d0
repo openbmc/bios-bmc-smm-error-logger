@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d60b2e0_f9c4bbc9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 25
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-09-06T07:33:46Z",
+      "side": 1,
+      "message": "This is superseded by https://gerrit.openbmc.org/c/openbmc/bios-bmc-smm-error-logger/+/74368 and chain",
+      "revId": "8c94759281646282837ff4226dc7959ef5cf55d0",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
