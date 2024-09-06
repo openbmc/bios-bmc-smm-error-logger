@@ -16,7 +16,6 @@ void CperFileNotifierHandler::createEntry(const std::string& filePath)
 {
     auto obj =
         std::make_unique<CperFileNotifier>(objServer, filePath, nextEntry);
-    notifierObjs.push_back(std::move(obj));
     ++nextEntry;
 }
 

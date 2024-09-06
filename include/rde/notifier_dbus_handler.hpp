@@ -38,11 +38,6 @@ class CperFileNotifierHandler
     sdbusplus::asio::object_server objServer;
 
     /**
-     * @brief A vector to keep track of DBus FilePath objects.
-     */
-    std::vector<std::unique_ptr<CperFileNotifier>> notifierObjs;
-
-    /**
      * @brief DBus index of the next entry.
      */
     uint64_t nextEntry = 0;
