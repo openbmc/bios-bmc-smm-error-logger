@@ -7,6 +7,7 @@
 #include <boost/uuid/uuid_generators.hpp>
 
 #include <filesystem>
+#include <queue>
 #include <string>
 
 namespace bios_bmc_smm_error_logger
@@ -44,6 +45,14 @@ class FileHandlerInterface
      */
     virtual bool createFile(const std::string& folderPath,
                             const nlohmann::json& jsonPdr) const = 0;
+
+    /**
+     * @brief Call remove_all on the filePath
+     *
+     * @param[in] filePath - path of the file/folder to remove
+     * @return true if successful.
+     */
+    virtual bool removeAll(const std::string& filePath) const = 0;
 };
 
 /**
@@ -55,6 +64,7 @@ class ExternalStorerFileWriter : public FileHandlerInterface
     bool createFolder(const std::string& folderPath) const override;
     bool createFile(const std::string& folderPath,
                     const nlohmann::json& jsonPdr) const override;
+    bool removeAll(const std::string& filePath) const override;
 };
 
 /**
@@ -81,11 +91,16 @@ class ExternalStorerFileInterface : public ExternalStorerInterface
      * Eg: "/run/bmcweb"
      * @param[in] fileHandler - an ExternalStorerFileWriter object. This class
      * will take the ownership of this object.
+     * @param[in] numSavedLogEntries - first N number of log entries to be saved
+     * in the queue (default shall be 20)
+     * @param[in] numLogEntries - number of non-saved log entries in the queue
+     * (default shall be 1000 - 20 = 980)
      */
     ExternalStorerFileInterface(
         const std::shared_ptr<sdbusplus::asio::connection>& conn,
         std::string_view rootPath,
-        std::unique_ptr<FileHandlerInterface> fileHandler);
+        std::unique_ptr<FileHandlerInterface> fileHandler,
+        uint32_t numSavedLogEntries = 20, uint32_t numLogEntries = 980);
 
     bool publishJson(std::string_view jsonStr) override;
 
@@ -95,6 +110,12 @@ class ExternalStorerFileInterface : public ExternalStorerInterface
     std::string logServiceId;
     std::unique_ptr<CperFileNotifierHandler> cperNotifier;
     boost::uuids::random_generator randomGen;
+    std::queue<std::string> logEntrySavedQueue;
+    std::queue<std::string> logEntryQueue;
+    // Default should be 20
+    const uint32_t maxNumSavedLogEntries;
+    // Default should be 1000 - maxNumSavedLogEntries(20) = 980
+    const uint32_t maxNumLogEntries;
 
     /**
      * @brief Get the type of the received PDR.
