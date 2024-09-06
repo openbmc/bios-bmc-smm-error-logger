@@ -158,6 +158,30 @@
       },
       "revId": "e97f9268e54762f5f54fe5d3bbde8ba7f2d45aa8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2dcd3c0c_a46c9275",
+        "filename": "include/dbus/file_notifier.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-09-06T17:19:42Z",
+      "side": 1,
+      "message": "Ahhh that makes sense, thanks for that info! I\u0027ll leave this open to migrate to that later on",
+      "parentUuid": "29045c2c_cc8390db",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 47
+      },
+      "revId": "e97f9268e54762f5f54fe5d3bbde8ba7f2d45aa8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
