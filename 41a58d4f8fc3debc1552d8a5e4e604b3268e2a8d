@@ -22,6 +22,30 @@
       },
       "revId": "41a58d4f8fc3debc1552d8a5e4e604b3268e2a8d",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "edc8ee5b_642e1d81",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-09-06T20:59:29Z",
+      "side": 1,
+      "message": "Yeah, we will keep rotating out the oldest entry",
+      "parentUuid": "2ae44476_7011f0a8",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 179,
+        "endChar": 5
+      },
+      "revId": "41a58d4f8fc3debc1552d8a5e4e604b3268e2a8d",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
