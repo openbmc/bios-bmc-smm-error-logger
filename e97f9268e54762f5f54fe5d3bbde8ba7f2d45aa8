@@ -41,6 +41,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fad96304_b94b02f3",
+        "filename": "include/dbus/file_notifier.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-09-06T04:47:52Z",
+      "side": 1,
+      "message": "Good point",
+      "parentUuid": "8d4acb76_98329fdf",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 23
+      },
+      "revId": "e97f9268e54762f5f54fe5d3bbde8ba7f2d45aa8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ecb7e75c_d1cca62a",
@@ -54,6 +78,30 @@
       "writtenOn": "2024-09-05T19:55:58Z",
       "side": 1,
       "message": "is this needed? Doesn\u0027t the interface gets remove as the `server` get out of scope (wherever this is constructed)",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 47
+      },
+      "revId": "e97f9268e54762f5f54fe5d3bbde8ba7f2d45aa8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f014944_70a41f4b",
+        "filename": "include/dbus/file_notifier.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2024-09-06T04:47:52Z",
+      "side": 1,
+      "message": "Hmmmm, I\u0027m not entirely sure we do - it seems we often do this in other projects but at the same time, the asio example doesn\u0027t seem to do it so perhaps it\u0027s ok? I think there\u0027s no harm in being explicit about destructing it though",
+      "parentUuid": "ecb7e75c_d1cca62a",
       "range": {
         "startLine": 49,
         "startChar": 0,
