@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b46cc6a_3a8630e5",
+        "filename": "include/dbus/file_notifier.hpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2024-09-06T05:12:13Z",
+      "side": 1,
+      "message": "can just be inplace like the others? `\"xyz.openbmc_project.Logging.Entry.Level.Informational\"`",
+      "range": {
+        "startLine": 36,
+        "startChar": 53,
+        "endLine": 36,
+        "endChar": 61
+      },
+      "revId": "87434bf6cd9c034a9cdf55c08c3b9f610e744b73",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}

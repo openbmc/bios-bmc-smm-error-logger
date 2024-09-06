@@ -110,6 +110,30 @@
       },
       "revId": "e97f9268e54762f5f54fe5d3bbde8ba7f2d45aa8",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be0a8c0f_74806615",
+        "filename": "include/dbus/file_notifier.hpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2024-09-06T05:12:13Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "9f014944_70a41f4b",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 47
+      },
+      "revId": "e97f9268e54762f5f54fe5d3bbde8ba7f2d45aa8",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
