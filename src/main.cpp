@@ -49,8 +49,6 @@ void readLoop(boost::asio::steady_timer* t,
     std::vector<EntryPair> entryPairs = bufferInterface->readErrorLogs();
     for (const auto& [entryHeader, entry] : entryPairs)
     {
-        stdplus::print(stderr, "Read an entry of '{}' bytes\n", entry.size());
-
         rde::RdeDecodeStatus rdeDecodeStatus =
             rdeCommandHandler->decodeRdeCommand(
                 entry,
