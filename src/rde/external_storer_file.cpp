@@ -41,7 +41,6 @@ bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
     std::ofstream output(path);
     output << jsonPdr;
     output.close();
-    stdplus::print(stderr, "Created: {}\n", path.string());
     return true;
 }
 
@@ -54,7 +53,6 @@ bool ExternalStorerFileWriter::removeAll(const std::string& filePath) const
     {
         return false;
     }
-    stdplus::print(stderr, "Removed: {}\n", filePath);
     return true;
 }
 
