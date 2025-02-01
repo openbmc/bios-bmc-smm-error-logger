@@ -263,10 +263,10 @@ class RdeCommandHandler
      * @param[in] resourceId - PDR resource ID of the dictionary.
      * @return RdeDecodeStatus
      */
-    RdeDecodeStatus
-        handleFlagStartAndEnd(std::span<const uint8_t> rdeCommand,
-                              const MultipartReceiveResHeader* header,
-                              const uint8_t* data, uint32_t resourceId);
+    RdeDecodeStatus handleFlagStartAndEnd(
+        std::span<const uint8_t> rdeCommand,
+        const MultipartReceiveResHeader* header, const uint8_t* data,
+        uint32_t resourceId);
 };
 
 } // namespace rde

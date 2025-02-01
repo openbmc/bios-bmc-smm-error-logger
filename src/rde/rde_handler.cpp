@@ -47,8 +47,8 @@ uint32_t RdeCommandHandler::getDictionaryCount()
     return dictionaryManager.getDictionaryCount();
 }
 
-RdeDecodeStatus
-    RdeCommandHandler::operationInitRequest(std::span<const uint8_t> rdeCommand)
+RdeDecodeStatus RdeCommandHandler::operationInitRequest(
+    std::span<const uint8_t> rdeCommand)
 {
     const RdeOperationInitReqHeader* header =
         reinterpret_cast<const RdeOperationInitReqHeader*>(rdeCommand.data());
@@ -119,8 +119,8 @@ RdeDecodeStatus
     return RdeDecodeStatus::RdeOk;
 }
 
-RdeDecodeStatus
-    RdeCommandHandler::multiPartReceiveResp(std::span<const uint8_t> rdeCommand)
+RdeDecodeStatus RdeCommandHandler::multiPartReceiveResp(
+    std::span<const uint8_t> rdeCommand)
 {
     const MultipartReceiveResHeader* header =
         reinterpret_cast<const MultipartReceiveResHeader*>(rdeCommand.data());
@@ -190,8 +190,8 @@ uint32_t RdeCommandHandler::finalChecksum()
     return (crc ^ 0xFFFFFFFF);
 }
 
-RdeDecodeStatus
-    RdeCommandHandler::handleCrc(std::span<const uint8_t> multiReceiveRespCmd)
+RdeDecodeStatus RdeCommandHandler::handleCrc(
+    std::span<const uint8_t> multiReceiveRespCmd)
 {
     const MultipartReceiveResHeader* header =
         reinterpret_cast<const MultipartReceiveResHeader*>(
