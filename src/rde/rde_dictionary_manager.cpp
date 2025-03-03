@@ -61,8 +61,8 @@ bool DictionaryManager::addDictionaryData(uint32_t resourceId,
     return true;
 }
 
-std::optional<std::span<const uint8_t>>
-    DictionaryManager::getDictionary(uint32_t resourceId)
+std::optional<std::span<const uint8_t>> DictionaryManager::getDictionary(
+    uint32_t resourceId)
 {
     auto itemIt = dictionaries.find(resourceId);
     if (itemIt == dictionaries.end())
