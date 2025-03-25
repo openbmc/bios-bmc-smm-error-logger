@@ -18,6 +18,7 @@ bool ExternalStorerFileWriter::createFolder(const std::string& folderPath) const
     std::filesystem::path path(folderPath);
     if (!std::filesystem::is_directory(path))
     {
+        stdplus::print(stderr, "no directory at {}, creating.\n", folderPath);
         if (!std::filesystem::create_directories(path))
         {
             stdplus::print(stderr, "Failed to create a folder at {}\n",
@@ -159,6 +160,7 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
     // a client.
     logEntry.erase("@odata.id");
 
+    stdplus::print(stderr, "Creating CPER file under path: {}. \n", fullPath);
     if (!fileHandler->createFile(fullPath, logEntry))
     {
         stdplus::print(stderr,
@@ -224,7 +226,13 @@ bool ExternalStorerFileInterface::processOtherTypes(
                        jsonPdr.dump(4));
         return false;
     }
-    return createFile(jsonPdr["@odata.id"].get<std::string>(), jsonPdr);
+
+    const std::string& path = jsonPdr["@odata.id"].get<std::string>();
+
+    stdplus::print(stderr,
+                   "Creating error counter file under path: {}.  content: {}\n",
+                   path, jsonPdr.dump());
+    return createFile(path, jsonPdr);
 }
 
 bool ExternalStorerFileInterface::createFile(
