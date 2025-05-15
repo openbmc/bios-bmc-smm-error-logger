@@ -2,7 +2,6 @@
 
 #include <fcntl.h>
 
-#include <stdplus/fd/managed.hpp>
 #include <stdplus/fd/mmap.hpp>
 #include <stdplus/print.hpp>
 
@@ -21,7 +20,13 @@ PciDataHandler::PciDataHandler(uint32_t regionAddress, size_t regionSize,
     regionSize(regionSize), fd(std::move(fd)),
     mmap(stdplus::fd::MMap(
         *this->fd, regionSize, stdplus::fd::ProtFlags{PROT_READ | PROT_WRITE},
-        stdplus::fd::MMapFlags{stdplus::fd::MMapAccess::Shared}, regionAddress))
+        stdplus::fd::MMapFlags{stdplus::fd::MMapAccess::Shared}, regionAddress)),
+    data_ptr(reinterpret_cast<uint8_t*>(mmap->get().data()))
+{}
+
+PciDataHandler::PciDataHandler(uint8_t *data_ptr, size_t regionSize) :
+    regionSize(regionSize),
+    data_ptr(data_ptr) 
 {}
 
 std::vector<uint8_t> PciDataHandler::read(const uint32_t offset,
@@ -41,7 +46,7 @@ std::vector<uint8_t> PciDataHandler::read(const uint32_t offset,
         (offset + length < regionSize) ? length : regionSize - offset;
     std::vector<uint8_t> results(finalLength);
 
-    std::memcpy(results.data(), mmap.get().data() + offset, finalLength);
+    std::memcpy(results.data(), data_ptr + offset, finalLength);
     return results;
 }
 
@@ -61,7 +66,7 @@ uint32_t PciDataHandler::write(const uint32_t offset,
     // Write up to regionSize in case the offset + length overflowed
     uint16_t finalLength =
         (offset + length < regionSize) ? length : regionSize - offset;
-    std::memcpy(mmap.get().data() + offset, bytes.data(), finalLength);
+    std::memcpy(data_ptr + offset, bytes.data(), finalLength);
     return finalLength;
 }
 

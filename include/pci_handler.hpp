@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <span>
 #include <vector>
 
@@ -22,6 +23,7 @@ class PciDataHandler : public DataInterface
   public:
     explicit PciDataHandler(uint32_t regionAddress, size_t regionSize,
                             std::unique_ptr<stdplus::fd::Fd> fd);
+    explicit PciDataHandler(uint8_t *data_ptr, size_t regionSize);
 
     std::vector<uint8_t> read(uint32_t offset, uint32_t length) override;
     uint32_t write(const uint32_t offset,
@@ -32,7 +34,8 @@ class PciDataHandler : public DataInterface
     uint32_t regionSize;
 
     std::unique_ptr<stdplus::fd::Fd> fd;
-    stdplus::fd::MMap mmap;
+    std::optional<stdplus::fd::MMap> mmap;
+    uint8_t *data_ptr;
 };
 
 } // namespace bios_bmc_smm_error_logger
