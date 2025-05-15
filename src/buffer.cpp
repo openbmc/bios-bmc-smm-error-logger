@@ -31,9 +31,9 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
     if (queueSize > memoryRegionSize)
     {
         throw std::runtime_error(std::format(
-            "[initialize] Proposed queue size '{}' is bigger than the "
-            "BMC's allocated MMIO region of '{}'",
-            queueSize, memoryRegionSize));
+                                     "[initialize] Proposed queue size '{}' is bigger than the "
+                                     "BMC's allocated MMIO region of '{}'",
+                                     queueSize, memoryRegionSize));
     }
 
     // Initialize the whole buffer with 0x00
@@ -54,21 +54,22 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
         boost::endian::native_to_little(ueRegionSize);
     std::transform(magicNumber.begin(), magicNumber.end(),
                    initializationHeader.magicNumber.begin(),
-                   [](uint32_t number) -> little_uint32_t {
-                       return boost::endian::native_to_little(number);
-                   });
+                   [](uint32_t number) -> little_uint32_t
+    {
+        return boost::endian::native_to_little(number);
+    });
 
     uint8_t* initializationHeaderPtr =
-        reinterpret_cast<uint8_t*>(&initializationHeader);
+        reinterpret_cast<uint8_t*> (&initializationHeader);
     size_t initializationHeaderSize = sizeof(initializationHeader);
     byteWritten = dataInterface->write(
-        0, std::span<const uint8_t>(
-               initializationHeaderPtr,
-               initializationHeaderPtr + initializationHeaderSize));
+                      0, std::span<const uint8_t> (
+                          initializationHeaderPtr,
+                          initializationHeaderPtr + initializationHeaderSize));
     if (byteWritten != initializationHeaderSize)
     {
         throw std::runtime_error(std::format(
-            "[initialize] Only wrote '{}' bytes of the header", byteWritten));
+                                     "[initialize] Only wrote '{}' bytes of the header", byteWritten));
     }
     cachedBufferHeader = initializationHeader;
 }
@@ -87,7 +88,7 @@ void BufferImpl::readBufferHeader()
     }
 
     cachedBufferHeader =
-        *reinterpret_cast<struct CircularBufferHeader*>(bytesRead.data());
+        *reinterpret_cast<struct CircularBufferHeader*> (bytesRead.data());
 };
 
 struct CircularBufferHeader BufferImpl::getCachedBufferHeader() const
@@ -103,17 +104,19 @@ void BufferImpl::updateReadPtr(const uint32_t newReadPtr)
     little_uint24_t truncatedReadPtr =
         boost::endian::native_to_little(newReadPtr & 0xffffff);
     uint8_t* truncatedReadPtrPtr =
-        reinterpret_cast<uint8_t*>(&truncatedReadPtr);
+        reinterpret_cast<uint8_t*> (&truncatedReadPtr);
 
     size_t writtenSize = dataInterface->write(
-        bmcReadPtrOffset, std::span<const uint8_t>{
-                              truncatedReadPtrPtr,
-                              truncatedReadPtrPtr + sizeof(truncatedReadPtr)});
+                             bmcReadPtrOffset, std::span<const uint8_t>
+    {
+        truncatedReadPtrPtr,
+        truncatedReadPtrPtr + sizeof(truncatedReadPtr)
+    });
     if (writtenSize != sizeof(truncatedReadPtr))
     {
         throw std::runtime_error(std::format(
-            "[updateReadPtr] Wrote '{}' bytes, instead of expected '{}'",
-            writtenSize, sizeof(truncatedReadPtr)));
+                                     "[updateReadPtr] Wrote '{}' bytes, instead of expected '{}'",
+                                     writtenSize, sizeof(truncatedReadPtr)));
     }
     cachedBufferHeader.bmcReadPtr = truncatedReadPtr;
 }
@@ -126,23 +129,25 @@ void BufferImpl::updateBmcFlags(const uint32_t newBmcFlag)
     little_uint32_t littleNewBmcFlag =
         boost::endian::native_to_little(newBmcFlag);
     uint8_t* littleNewBmcFlagPtr =
-        reinterpret_cast<uint8_t*>(&littleNewBmcFlag);
+        reinterpret_cast<uint8_t*> (&littleNewBmcFlag);
 
     size_t writtenSize = dataInterface->write(
-        bmcFlagsPtrOffset, std::span<const uint8_t>{
-                               littleNewBmcFlagPtr,
-                               littleNewBmcFlagPtr + sizeof(little_uint32_t)});
+                             bmcFlagsPtrOffset, std::span<const uint8_t>
+    {
+        littleNewBmcFlagPtr,
+        littleNewBmcFlagPtr + sizeof(little_uint32_t)
+    });
     if (writtenSize != sizeof(little_uint32_t))
     {
         throw std::runtime_error(std::format(
-            "[updateBmcFlags] Wrote '{}' bytes, instead of expected '{}'",
-            writtenSize, sizeof(little_uint32_t)));
+                                     "[updateBmcFlags] Wrote '{}' bytes, instead of expected '{}'",
+                                     writtenSize, sizeof(little_uint32_t)));
     }
     cachedBufferHeader.bmcFlags = littleNewBmcFlag;
 }
 
 std::vector<uint8_t> BufferImpl::wraparoundRead(const uint32_t relativeOffset,
-                                                const uint32_t length)
+        const uint32_t length)
 {
     const size_t maxOffset = getMaxOffset();
 
@@ -150,14 +155,14 @@ std::vector<uint8_t> BufferImpl::wraparoundRead(const uint32_t relativeOffset,
     {
         throw std::runtime_error(
             std::format("[wraparoundRead] relativeOffset '{}' was bigger "
-                        "than maxOffset '{}'",
+                    "than maxOffset '{}'",
                         relativeOffset, maxOffset));
     }
     if (length > maxOffset)
     {
         throw std::runtime_error(std::format(
-            "[wraparoundRead] length '{}' was bigger than maxOffset '{}'",
-            length, maxOffset));
+                                     "[wraparoundRead] length '{}' was bigger than maxOffset '{}'",
+                                     length, maxOffset));
     }
 
     // Do a calculation to see if the read will wraparound
@@ -172,12 +177,12 @@ std::vector<uint8_t> BufferImpl::wraparoundRead(const uint32_t relativeOffset,
     const size_t numBytesToReadTillQueueEnd = length - numWraparoundBytesToRead;
 
     std::vector<uint8_t> bytesRead = dataInterface->read(
-        queueOffset + relativeOffset, numBytesToReadTillQueueEnd);
+                                         queueOffset + relativeOffset, numBytesToReadTillQueueEnd);
     if (bytesRead.size() != numBytesToReadTillQueueEnd)
     {
         throw std::runtime_error(
             std::format("[wraparoundRead] Read '{}' which was not "
-                        "the requested length of '{}'",
+                    "the requested length of '{}'",
                         bytesRead.size(), numBytesToReadTillQueueEnd));
     }
     size_t updatedReadPtr = relativeOffset + numBytesToReadTillQueueEnd;
@@ -197,9 +202,9 @@ std::vector<uint8_t> BufferImpl::wraparoundRead(const uint32_t relativeOffset,
         if (numWraparoundBytesToRead != wrappedBytesRead.size())
         {
             throw std::runtime_error(std::format(
-                "[wraparoundRead] Buffer wrapped around but read '{}' which "
-                "was not the requested lenght of '{}'",
-                wrappedBytesRead.size(), numWraparoundBytesToRead));
+                                         "[wraparoundRead] Buffer wrapped around but read '{}' which "
+                                         "was not the requested lenght of '{}'",
+                                         wrappedBytesRead.size(), numWraparoundBytesToRead));
         }
         bytesRead.insert(bytesRead.end(), wrappedBytesRead.begin(),
                          wrappedBytesRead.end());
@@ -216,10 +221,10 @@ struct QueueEntryHeader BufferImpl::readEntryHeader()
     // wraparonudRead will throw if it did not read all the bytes, let it
     // propagate up the stack
     std::vector<uint8_t> bytesRead = wraparoundRead(
-        boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
-        headerSize);
+                                         boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
+                                         headerSize);
 
-    return *reinterpret_cast<struct QueueEntryHeader*>(bytesRead.data());
+    return *reinterpret_cast<struct QueueEntryHeader*> (bytesRead.data());
 }
 
 EntryPair BufferImpl::readEntry()
@@ -230,11 +235,11 @@ EntryPair BufferImpl::readEntry()
     // wraparonudRead may throw if entrySize was bigger than the buffer or if it
     // was not able to read all the bytes, let it propagate up the stack
     std::vector<uint8_t> entry = wraparoundRead(
-        boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
-        entrySize);
+                                     boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
+                                     entrySize);
 
     // Calculate the checksum
-    uint8_t* entryHeaderPtr = reinterpret_cast<uint8_t*>(&entryHeader);
+    uint8_t* entryHeaderPtr = reinterpret_cast<uint8_t*> (&entryHeader);
     uint8_t checksum =
         std::accumulate(entryHeaderPtr,
                         entryHeaderPtr + sizeof(struct QueueEntryHeader), 0,
@@ -244,7 +249,7 @@ EntryPair BufferImpl::readEntry()
     if (checksum != 0)
     {
         throw std::runtime_error(std::format(
-            "[readEntry] Checksum was '{}', expected '0'", checksum));
+                                     "[readEntry] Checksum was '{}', expected '0'", checksum));
     }
 
     return {entryHeader, entry};
@@ -261,18 +266,18 @@ std::vector<EntryPair> BufferImpl::readErrorLogs()
     if (currentBiosWritePtr > maxOffset)
     {
         throw std::runtime_error(std::format(
-            "[readErrorLogs] currentBiosWritePtr was '{}' which was bigger "
-            "than maxOffset '{}'",
-            currentBiosWritePtr, maxOffset));
+                                     "[readErrorLogs] currentBiosWritePtr was '{}' which was bigger "
+                                     "than maxOffset '{}'",
+                                     currentBiosWritePtr, maxOffset));
     }
     size_t currentReadPtr =
         boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr);
     if (currentReadPtr > maxOffset)
     {
         throw std::runtime_error(std::format(
-            "[readErrorLogs] currentReadPtr was '{}' which was bigger "
-            "than maxOffset '{}'",
-            currentReadPtr, maxOffset));
+                                     "[readErrorLogs] currentReadPtr was '{}' which was bigger "
+                                     "than maxOffset '{}'",
+                                     currentReadPtr, maxOffset));
     }
 
     size_t bytesToRead;
@@ -309,9 +314,9 @@ std::vector<EntryPair> BufferImpl::readErrorLogs()
     if (currentBiosWritePtr != currentReadPtr)
     {
         throw std::runtime_error(std::format(
-            "[readErrorLogs] biosWritePtr '{}' and bmcReaddPtr '{}' "
-            "are not identical after reading through all the logs",
-            currentBiosWritePtr, currentReadPtr));
+                                     "[readErrorLogs] biosWritePtr '{}' and bmcReaddPtr '{}' "
+                                     "are not identical after reading through all the logs",
+                                     currentBiosWritePtr, currentReadPtr));
     }
     return entryPairs;
 }
@@ -326,16 +331,16 @@ size_t BufferImpl::getMaxOffset()
     if (queueSize != QUEUE_REGION_SIZE)
     {
         throw std::runtime_error(std::format(
-            "[{}] runtime queueSize '{}' did not match compile-time queueSize "
-            "'{}'. This indicates that the buffer was corrupted",
-            __FUNCTION__, queueSize, QUEUE_REGION_SIZE));
+                                     "[{}] runtime queueSize '{}' did not match compile-time queueSize "
+                                     "'{}'. This indicates that the buffer was corrupted",
+                                     __FUNCTION__, queueSize, QUEUE_REGION_SIZE));
     }
     if (ueRegionSize != UE_REGION_SIZE)
     {
         throw std::runtime_error(std::format(
-            "[{}] runtime ueRegionSize '{}' did not match compile-time "
-            "ueRegionSize '{}'. This indicates that the buffer was corrupted",
-            __FUNCTION__, ueRegionSize, UE_REGION_SIZE));
+                                     "[{}] runtime ueRegionSize '{}' did not match compile-time "
+                                     "ueRegionSize '{}'. This indicates that the buffer was corrupted",
+                                     __FUNCTION__, ueRegionSize, UE_REGION_SIZE));
     }
 
     return queueSize - ueRegionSize - sizeof(struct CircularBufferHeader);
@@ -349,9 +354,9 @@ size_t BufferImpl::getQueueOffset()
     if (ueRegionSize != UE_REGION_SIZE)
     {
         throw std::runtime_error(std::format(
-            "[{}] runtime ueRegionSize '{}' did not match compile-time "
-            "ueRegionSize '{}'. This indicates that the buffer was corrupted",
-            __FUNCTION__, ueRegionSize, UE_REGION_SIZE));
+                                     "[{}] runtime ueRegionSize '{}' did not match compile-time "
+                                     "ueRegionSize '{}'. This indicates that the buffer was corrupted",
+                                     __FUNCTION__, ueRegionSize, UE_REGION_SIZE));
     }
     return sizeof(struct CircularBufferHeader) + ueRegionSize;
 }
