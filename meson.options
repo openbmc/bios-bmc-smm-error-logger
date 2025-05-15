@@ -1,4 +1,5 @@
 option('tests', type: 'feature', value: 'enabled', description: 'Build tests')
+option('fuzzing', type : 'boolean', value : false, description : 'Enable building the fuzzer.')
 
 # Timer constant
 option(
