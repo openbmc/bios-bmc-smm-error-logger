@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d778b3ea_7ea76948",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2025-05-22T19:48:39Z",
+      "side": 1,
+      "message": "Include the change log in each patch.\nYes we enforce 50/72.  \n\nConsider adding a file with the fuzzing instructions if it\u0027s beyond invoking `meson test`.   This might suggest splitting into the prep and adding the fuzz build and instructions.  Then again the prep maybe trivial and not warrant splitting.\n\n\nYour original PR [1] submission used active voice, but included distracting reasoning for each minor point.  if we need clarification why something is needed to meet fuzzing requirements we can request here or you can describe after listing the changes.\n\nThe pull request initial message sould be considered a cover letter to a patch series.  The GitHub tooling might also incorporate it into a merge commit message or a squashed merge depending on the strategy, We don\u0027t use those with Gerrit, instead using rebase to head and repeat unit test CI before merging and additional CI when bumping the bitbake recipe into our build.\n\n\n[1](https://github.com/openbmc/bios-bmc-smm-error-logger/pull/2#issuecomment-2901954325).",
+      "revId": "d5562ba4dc5a6ac2f4dd9345bb8fe37837a58494",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51584455_0e3a3046",
+        "filename": "src/fuzzer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2025-05-22T19:48:39Z",
+      "side": 1,
+      "message": "this moved text has trailing whitespace.   not sure how the owner wants to handle.",
+      "revId": "d5562ba4dc5a6ac2f4dd9345bb8fe37837a58494",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dda43203_253f757a",
+        "filename": "src/pci_handler.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000021
+      },
+      "writtenOn": "2025-05-22T19:48:39Z",
+      "side": 1,
+      "message": "I haven\u0027t looked at this daemon before. I just saw the pr and looked for this.  I feel this approach is hiding a large class of TOC TOU exploits. I expect the PCI memory could be modified at anytime by an aggressive host.\n\nit probably should be refactored to read PCI shared memory into a private buffer before parsing.   from your PR experience you likely need to engage the owners.\n\n\nespecially when I see rde command handler in the name and know that reddish device enablement is highly a encoded binary format (maybe it\u0027s not related for all that know about this).",
+      "revId": "d5562ba4dc5a6ac2f4dd9345bb8fe37837a58494",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
