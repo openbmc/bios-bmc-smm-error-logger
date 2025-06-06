@@ -1,7 +1,7 @@
 #pragma once
 
+#include "bej_decoder_json.hpp"
 #include "external_storer_interface.hpp"
-#include "libbej/bej_decoder_json.hpp"
 #include "rde_dictionary_manager.hpp"
 
 #include <cstdint>
