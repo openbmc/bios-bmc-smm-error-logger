@@ -1,13 +1,10 @@
 project(
-  'bios-bmc-smm-error-logger',
-  'cpp',
-  version: '0.1',
-  meson_version: '>=1.1.1',
-  default_options: [
-    'cpp_std=c++23',
-    'warning_level=3',
-    'werror=true',
-  ])
+    'bios-bmc-smm-error-logger',
+    'cpp',
+    version: '0.1',
+    meson_version: '>=1.1.1',
+    default_options: ['cpp_std=c++23', 'warning_level=3', 'werror=true'],
+)
 
 root_inc = include_directories('.')
 bios_bmc_smm_error_logger_inc = include_directories('include')
@@ -29,14 +26,12 @@ conf_data.set('MAGIC_NUMBER_BYTE2', get_option('magic-number-byte2'))
 conf_data.set('MAGIC_NUMBER_BYTE3', get_option('magic-number-byte3'))
 conf_data.set('MAGIC_NUMBER_BYTE4', get_option('magic-number-byte4'))
 
-conf_h = configure_file(
-  output: 'config.h',
-  configuration: conf_data)
+conf_h = configure_file(output: 'config.h', configuration: conf_data)
 
 subdir('src/rde')
 subdir('src')
 if get_option('tests').allowed()
-  subdir('test')
+    subdir('test')
 endif
 
 # installation of systemd service files

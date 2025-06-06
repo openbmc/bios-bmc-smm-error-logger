@@ -65,7 +65,7 @@ void readLoop(boost::asio::steady_timer* t,
         }
     }
 
-    t->expires_from_now(readIntervalinMs);
+    t->expires_after(readIntervalinMs);
     t->async_wait(
         std::bind_front(readLoop, t, bufferInterface, rdeCommandHandler));
 }
