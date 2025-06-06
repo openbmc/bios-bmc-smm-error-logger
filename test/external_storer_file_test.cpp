@@ -47,6 +47,13 @@ class ExternalStorerFileTest : public ::testing::Test
                     "/xyz/openbmc_project/external_storer/bios_bmc_smm_error_logger/CPER")))
             .WillOnce(Return(0));
 
+        EXPECT_CALL(*busMock, sd_bus_get_unique_name(_, _))
+            .WillRepeatedly(Return(0));
+        EXPECT_CALL(*busMock, sd_bus_add_object_vtable(_, _, _, _, _, _))
+            .WillRepeatedly(Return(0));
+        EXPECT_CALL(*busMock, sd_bus_slot_unref(_))
+            .WillRepeatedly(Return(nullptr));
+
         exStorer = std::make_unique<ExternalStorerFileInterface>(
             bus, rootPath, std::move(mockFileWriter));
     }
