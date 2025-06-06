@@ -51,8 +51,7 @@ class BufferTest : public ::testing::Test
     static constexpr size_t bufferHeaderSize =
         sizeof(struct CircularBufferHeader);
 
-    struct CircularBufferHeader testInitializationHeader
-    {};
+    struct CircularBufferHeader testInitializationHeader{};
 
     std::unique_ptr<DataInterfaceMock> dataInterfaceMock;
     DataInterfaceMock* dataInterfaceMockPtr;
@@ -594,8 +593,7 @@ class BufferEntryTest : public BufferWraparoundReadTest
         (testSequenceId ^ testEntrySize ^ testRdeCommandType);
     size_t testOffset = 0x0;
 
-    struct QueueEntryHeader testEntryHeader
-    {};
+    struct QueueEntryHeader testEntryHeader{};
 };
 
 TEST_F(BufferEntryTest, ReadEntryHeaderPass)

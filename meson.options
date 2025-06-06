@@ -1,19 +1,69 @@
 option('tests', type: 'feature', value: 'enabled', description: 'Build tests')
 
 # Timer constant
-option('read-interval-ms', type: 'integer', value: 10, description: 'Read loop interval in millisecond (ms)')
+option(
+    'read-interval-ms',
+    type: 'integer',
+    value: 10,
+    description: 'Read loop interval in millisecond (ms)',
+)
 
 # Memory constants
-option('memory-region-size', type: 'integer', value: 16384, description: 'Memory size allcated')
+option(
+    'memory-region-size',
+    type: 'integer',
+    value: 16384,
+    description: 'Memory size allcated',
+)
 # Default value 4035215360 is 0xF0848000 below
-option('memory-region-offset', type: 'integer', value: 4035215360, description: 'Where the memory region is located')
+option(
+    'memory-region-offset',
+    type: 'integer',
+    value: 4035215360,
+    description: 'Where the memory region is located',
+)
 
 # Circular Buffer header constants
-option('bmc-interface-version', type: 'integer', value: 0, description: 'BMC interface version to easily see compatibility')
-option('queue-region-size', type: 'integer', value: 512, description: 'Normal error queue region size')
-option('ue-region-size', type: 'integer', value: 80, description: 'Uncorrectable error region size')
+option(
+    'bmc-interface-version',
+    type: 'integer',
+    value: 0,
+    description: 'BMC interface version to easily see compatibility',
+)
+option(
+    'queue-region-size',
+    type: 'integer',
+    value: 512,
+    description: 'Normal error queue region size',
+)
+option(
+    'ue-region-size',
+    type: 'integer',
+    value: 80,
+    description: 'Uncorrectable error region size',
+)
 # Magic Number Array Constants
-option('magic-number-byte1', type: 'integer', value: 1, description: 'Magic Number array[0] for validity, consists of 4 * uint32_t')
-option('magic-number-byte2', type: 'integer', value: 2, description: 'Magic Number array[1] for validity, consists of 4 * uint32_t')
-option('magic-number-byte3', type: 'integer', value: 3, description: 'Magic Number array[2] for validity, consists of 4 * uint32_t')
-option('magic-number-byte4', type: 'integer', value: 4, description: 'Magic Number array[3] for validity, consists of 4 * uint32_t')
+option(
+    'magic-number-byte1',
+    type: 'integer',
+    value: 1,
+    description: 'Magic Number array[0] for validity, consists of 4 * uint32_t',
+)
+option(
+    'magic-number-byte2',
+    type: 'integer',
+    value: 2,
+    description: 'Magic Number array[1] for validity, consists of 4 * uint32_t',
+)
+option(
+    'magic-number-byte3',
+    type: 'integer',
+    value: 3,
+    description: 'Magic Number array[2] for validity, consists of 4 * uint32_t',
+)
+option(
+    'magic-number-byte4',
+    type: 'integer',
+    value: 4,
+    description: 'Magic Number array[3] for validity, consists of 4 * uint32_t',
+)
