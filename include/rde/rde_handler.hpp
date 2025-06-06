@@ -1,6 +1,7 @@
 #pragma once
 
 #include "external_storer_interface.hpp"
+// For local unit testing, remove "libbej/" prefix below
 #include "libbej/bej_decoder_json.hpp"
 #include "rde_dictionary_manager.hpp"
 
