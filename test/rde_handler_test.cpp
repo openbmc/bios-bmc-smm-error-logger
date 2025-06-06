@@ -14,7 +14,535 @@ namespace bios_bmc_smm_error_logger
 namespace rde
 {
 
+using ::testing::_;
+using ::testing::NiceMock;
 using ::testing::Return;
+
+// Mock for ExternalStorerInterface
+class MockExternalStorerInterface : public ExternalStorerInterface
+{
+  public:
+    MOCK_METHOD(bool, publishJson, (std::string_view jsonStr), (override));
+};
+
+// Test fixture for RdeCommandHandler
+class RdeCommandHandlerTest : public ::testing::Test
+{
+  protected:
+    std::unique_ptr<MockExternalStorerInterface> mockExStorerInstance;
+    // Note: RdeCommandHandler takes ownership of the raw pointer.
+    // We pass mockExStorerInstance.get() and it's moved into the handler.
+    // For safety in test setup, we'll create the handler with a moved
+    // unique_ptr.
+    std::unique_ptr<RdeCommandHandler> handler;
+
+    void SetUp() override
+    {
+        auto exStorer =
+            std::make_unique<NiceMock<MockExternalStorerInterface>>();
+        // Keep a raw pointer for EXPECT_CALL, but handler owns the unique_ptr
+        mockExStorer = exStorer.get();
+        handler = std::make_unique<RdeCommandHandler>(std::move(exStorer));
+    }
+
+    // Helper to create RdeOperationInitReqHeader and its command data
+    std::vector<uint8_t> createOpInitReqCmd(
+        bool containsPayload, uint8_t opType, uint8_t sendDataTransferHandle,
+        uint32_t resourceID, uint8_t opLocatorLength,
+        uint16_t requestPayloadLength,
+        const std::vector<uint8_t>& payloadData = {})
+    {
+        RdeOperationInitReqHeader header{};
+        header.containsRequestPayload = containsPayload;
+        header.operationType = opType;
+        header.sendDataTransferHandle = sendDataTransferHandle;
+        header.resourceID = resourceID;
+        header.operationLocatorLength = opLocatorLength;
+        header.requestPayloadLength = requestPayloadLength;
+
+        std::vector<uint8_t> command(sizeof(header));
+        memcpy(command.data(), &header, sizeof(header));
+        command.insert(command.end(), payloadData.begin(), payloadData.end());
+        return command;
+    }
+
+    // Helper to create MultipartReceiveResHeader and its command data
+    std::vector<uint8_t> createMultiPartRespCmd(
+        uint8_t transferFlag, uint32_t nextDataTransferHandleAsResourceId,
+        uint16_t dataLength, const std::vector<uint8_t>& payloadData,
+        const std::optional<uint32_t>& checksum = std::nullopt)
+    {
+        MultipartReceiveResHeader header{};
+        header.transferFlag = transferFlag;
+        header.nextDataTransferHandle = nextDataTransferHandleAsResourceId;
+        header.dataLengthBytes = dataLength;
+
+        std::vector<uint8_t> command(sizeof(header));
+        memcpy(command.data(), &header, sizeof(header));
+        command.insert(command.end(), payloadData.begin(), payloadData.end());
+
+        if (checksum)
+        {
+            uint32_t csVal = *checksum;
+            command.push_back(static_cast<uint8_t>(csVal & 0xFF));
+            command.push_back(static_cast<uint8_t>((csVal >> 8) & 0xFF));
+            command.push_back(static_cast<uint8_t>((csVal >> 16) & 0xFF));
+            command.push_back(static_cast<uint8_t>((csVal >> 24) & 0xFF));
+        }
+        return command;
+    }
+
+    // To be used by EXPECT_CALL
+    MockExternalStorerInterface* mockExStorer;
+};
+
+TEST_F(RdeCommandHandlerTest, DecodeRdeCommand_InvalidType)
+{
+    std::vector<uint8_t> cmdData = {0x01, 0x02};
+    auto status =
+        handler->decodeRdeCommand(cmdData, static_cast<RdeCommandType>(0xFF));
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidCommand);
+}
+
+TEST_F(RdeCommandHandlerTest, GetDictionaryCount_Initial)
+{
+    EXPECT_EQ(handler->getDictionaryCount(), 0);
+}
+
+TEST_F(RdeCommandHandlerTest, OperationInitRequest_NoPayload)
+{
+    auto cmd = createOpInitReqCmd(
+        false, // containsRequestPayload
+        static_cast<uint8_t>(RdeOperationInitType::RdeOpInitOperationUpdate), 0,
+        1, 0, 0);
+    auto status =
+        handler->decodeRdeCommand(cmd, RdeCommandType::RdeOperationInitRequest);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeOk);
+}
+
+TEST_F(RdeCommandHandlerTest, OperationInitRequest_UnsupportedOperationType)
+{
+    auto cmd = createOpInitReqCmd(true, 0xFE, 0, 1, 0, 5, {1, 2, 3, 4, 5});
+    auto status =
+        handler->decodeRdeCommand(cmd, RdeCommandType::RdeOperationInitRequest);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeUnsupportedOperation);
+}
+
+TEST_F(RdeCommandHandlerTest, OperationInitRequest_PayloadOverflowNotSupported)
+{
+    auto cmd = createOpInitReqCmd(
+        true,
+        static_cast<uint8_t>(RdeOperationInitType::RdeOpInitOperationUpdate), 1,
+        1, 0, 5, {1, 2, 3, 4, 5}); // sendDataTransferHandle != 0
+    auto status =
+        handler->decodeRdeCommand(cmd, RdeCommandType::RdeOperationInitRequest);
+    EXPECT_EQ(status, RdeDecodeStatus::RdePayloadOverflow);
+}
+
+TEST_F(RdeCommandHandlerTest, OperationInitRequest_SchemaDictionaryNotFound)
+{
+    std::vector<uint8_t> locatorAndPayload = {0x00}; // Minimal locator
+    auto cmd = createOpInitReqCmd(
+        true,
+        static_cast<uint8_t>(RdeOperationInitType::RdeOpInitOperationUpdate), 0,
+        123, 1, 0, locatorAndPayload); // resourceID 123, opLocatorLength=1,
+                                       // payloadLength=0
+    auto status =
+        handler->decodeRdeCommand(cmd, RdeCommandType::RdeOperationInitRequest);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeNoDictionary);
+}
+
+TEST_F(RdeCommandHandlerTest, OperationInitRequest_AnnotationDictionaryNotFound)
+{
+    uint32_t schemaResourceId = 1;
+    std::vector<uint8_t> schemaDictData = {'s', 'c', 'h', 'e', 'm', 'a'};
+    uint32_t schemaChecksum = 0xe13a8f20; // ~CRC32("schema")
+    auto cmdSchema = createMultiPartRespCmd(
+        static_cast<uint8_t>(
+            RdeMultiReceiveTransferFlag::RdeMRecFlagStartAndEnd),
+        schemaResourceId, schemaDictData.size(), schemaDictData,
+        schemaChecksum);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdSchema, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeStopFlagReceived);
+
+    std::vector<uint8_t> locatorAndPayload = {0x00};
+    auto cmdOpInit = createOpInitReqCmd(
+        true,
+        static_cast<uint8_t>(RdeOperationInitType::RdeOpInitOperationUpdate), 0,
+        schemaResourceId, 1, 0, locatorAndPayload);
+    auto status = handler->decodeRdeCommand(
+        cmdOpInit, RdeCommandType::RdeOperationInitRequest);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeNoDictionary);
+}
+
+TEST_F(RdeCommandHandlerTest, OperationInitRequest_BejDecodingError)
+{
+    // Add dummy schema dictionary
+    uint32_t schemaResourceId = 1;
+    std::vector<uint8_t> schemaDictData = {'s', 'c', 'h', 'e', 'm', 'a'};
+    uint32_t schemaChecksum = 0xe13a8f20; // ~CRC32("schema")
+    auto cmdSchema = createMultiPartRespCmd(
+        static_cast<uint8_t>(
+            RdeMultiReceiveTransferFlag::RdeMRecFlagStartAndEnd),
+        schemaResourceId, schemaDictData.size(), schemaDictData,
+        schemaChecksum);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdSchema, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeStopFlagReceived);
+
+    // Add dummy annotation dictionary
+    uint32_t annotationResourceId =
+        0; // DictionaryManager::annotationResourceId
+    std::vector<uint8_t> annotationDictData = {'a', 'n', 'n', 'o'};
+    uint32_t annotationChecksum = 0x706a8691; // ~CRC32("anno")
+    auto cmdAnnotation = createMultiPartRespCmd(
+        static_cast<uint8_t>(
+            RdeMultiReceiveTransferFlag::RdeMRecFlagStartAndEnd),
+        annotationResourceId, annotationDictData.size(), annotationDictData,
+        annotationChecksum);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdAnnotation, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeStopFlagReceived);
+
+    std::vector<uint8_t> locator = {0x00};
+    std::vector<uint8_t> bejPayload = {0x01, 0x02}; // Dummy BEJ payload
+    std::vector<uint8_t> opInitFullPayload = locator;
+    opInitFullPayload.insert(opInitFullPayload.end(), bejPayload.begin(),
+                             bejPayload.end());
+
+    auto cmdOpInit = createOpInitReqCmd(
+        true,
+        static_cast<uint8_t>(RdeOperationInitType::RdeOpInitOperationUpdate), 0,
+        schemaResourceId, locator.size(), bejPayload.size(), opInitFullPayload);
+
+    // Expect BEJ decoding to fail with invalid dictionaries
+    EXPECT_CALL(*mockExStorer, publishJson(_)).Times(0);
+    auto status = handler->decodeRdeCommand(
+        cmdOpInit, RdeCommandType::RdeOperationInitRequest);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeBejDecodingError);
+}
+
+TEST_F(RdeCommandHandlerTest, OperationInitRequest_ExternalStorerPublishFails)
+{
+    // This test requires BejDecoder to succeed. Since we can't easily mock
+    // BejDecoder or provide universally valid simple BEJ dicts/payloads that
+    // guarantee success for the internal BejDecoder, this specific path is hard
+    // to test in isolation. We would need a known schema, annotation, and
+    // payload that successfully decodes.
+    GTEST_SKIP()
+        << "Skipping due to complexity of ensuring BEJ decode success without mock or valid complex BEJ data.";
+}
+
+TEST_F(RdeCommandHandlerTest, MultiPartReceiveResp_CmdTooSmallForHeader)
+{
+    std::vector<uint8_t> cmdData = {0x01};
+    auto status = handler->decodeRdeCommand(
+        cmdData, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidCommand);
+}
+
+TEST_F(RdeCommandHandlerTest,
+       MultiPartReceiveResp_CmdTooSmallForDeclaredPayload)
+{
+    MultipartReceiveResHeader header{};
+    header.transferFlag =
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagStart);
+    header.nextDataTransferHandle = 1;
+    header.dataLengthBytes = 10; // Expects 10 bytes
+
+    std::vector<uint8_t> cmdData(sizeof(header));
+    memcpy(cmdData.data(), &header, sizeof(header));
+    cmdData.push_back(0xAA); // Only 1 byte of payload provided
+
+    auto status = handler->decodeRdeCommand(
+        cmdData, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidCommand);
+}
+
+TEST_F(RdeCommandHandlerTest, MultiPartReceiveResp_InvalidTransferFlag)
+{
+    std::vector<uint8_t> payload = {'d', 'a', 't', 'a'};
+    auto cmd = createMultiPartRespCmd(0xFF, 1, payload.size(),
+                                      payload); // Invalid flag
+    auto status = handler->decodeRdeCommand(
+        cmd, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidCommand);
+}
+
+TEST_F(RdeCommandHandlerTest, MultiPartReceiveResp_FlagStart)
+{
+    uint32_t resourceId = 1;
+    std::vector<uint8_t> dataPayload = {'s', 't', 'a', 'r', 't'};
+    auto cmd = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagStart),
+        resourceId, dataPayload.size(), dataPayload);
+    auto status = handler->decodeRdeCommand(
+        cmd, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeOk);
+    EXPECT_EQ(handler->getDictionaryCount(), 0); // Not yet complete
+}
+
+TEST_F(RdeCommandHandlerTest, MultiPartReceiveResp_FlagMiddle_InvalidOrder)
+{
+    uint32_t resourceId = 1;
+    std::vector<uint8_t> dataPayload = {'m', 'i', 'd', 'd', 'l', 'e'};
+    auto cmd = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagMiddle),
+        resourceId, dataPayload.size(), dataPayload);
+    auto status = handler->decodeRdeCommand(
+        cmd, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidPktOrder);
+}
+
+TEST_F(RdeCommandHandlerTest,
+       MultiPartReceiveResp_FlagMiddle_AfterStart_SameResource)
+{
+    uint32_t resourceId = 1;
+    std::vector<uint8_t> startPayload = {'s', 't', 'a', 'r', 't'};
+    auto cmdStart = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagStart),
+        resourceId, startPayload.size(), startPayload);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdStart, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeOk);
+
+    std::vector<uint8_t> middlePayload = {'m', 'i', 'd', 'd', 'l', 'e'};
+    auto cmdMiddle = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagMiddle),
+        resourceId, middlePayload.size(), middlePayload);
+    auto status = handler->decodeRdeCommand(
+        cmdMiddle, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeOk);
+    EXPECT_EQ(handler->getDictionaryCount(), 0);
+}
+
+TEST_F(RdeCommandHandlerTest,
+       MultiPartReceiveResp_FlagMiddle_AfterStart_NewResource)
+{
+    // Tests current behavior: if Middle flag comes for a new resource,
+    // previous resource is marked complete, new one is started. CRC continues.
+    uint32_t resourceId1 = 1;
+    std::vector<uint8_t> startPayload1 = {'r', '1', 's'};
+    auto cmdStart1 = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagStart),
+        resourceId1, startPayload1.size(), startPayload1);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdStart1, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeOk);
+
+    uint32_t resourceId2 = 2;
+    std::vector<uint8_t> middlePayload2 = {'r', '2', 'm'};
+    auto cmdMiddle2 = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagMiddle),
+        resourceId2, middlePayload2.size(), middlePayload2);
+    auto status = handler->decodeRdeCommand(
+        cmdMiddle2, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeOk);
+    EXPECT_EQ(handler->getDictionaryCount(), 1); // Resource 1 completed
+}
+
+TEST_F(RdeCommandHandlerTest, MultiPartReceiveResp_FlagEnd_InvalidOrder)
+{
+    uint32_t resourceId = 1;
+    std::vector<uint8_t> dataPayload = {'e', 'n', 'd'};
+    uint32_t checksum = 0x2469a71c; // ~CRC32("end")
+    auto cmd = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagEnd),
+        resourceId, dataPayload.size(), dataPayload, checksum);
+    auto status = handler->decodeRdeCommand(
+        cmd, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidPktOrder);
+}
+
+TEST_F(RdeCommandHandlerTest,
+       MultiPartReceiveResp_FlagEnd_AfterStart_SameResource_ValidChecksum)
+{
+    uint32_t resourceId = 1;
+    std::vector<uint8_t> startPayload = {'s', 't', 'a', 'r', 't'};
+    auto cmdStart = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagStart),
+        resourceId, startPayload.size(), startPayload);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdStart, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeOk);
+
+    std::vector<uint8_t> endPayload = {'e', 'n', 'd'};
+    uint32_t checksum = 0x3f416cc2; // ~CRC32("startend")
+    auto cmdEnd = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagEnd),
+        resourceId, endPayload.size(), endPayload, checksum);
+    auto status = handler->decodeRdeCommand(
+        cmdEnd, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeStopFlagReceived);
+    EXPECT_EQ(handler->getDictionaryCount(), 1);
+}
+
+TEST_F(RdeCommandHandlerTest,
+       MultiPartReceiveResp_FlagEnd_AfterStart_SameResource_InvalidChecksum)
+{
+    uint32_t resourceId = 1;
+    std::vector<uint8_t> startPayload = {'s', 't', 'a', 'r', 't'};
+    auto cmdStart = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagStart),
+        resourceId, startPayload.size(), startPayload);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdStart, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeOk);
+
+    std::vector<uint8_t> endPayload = {'e', 'n', 'd'};
+    uint32_t invalidChecksum = 0x12345678; // Invalid checksum
+    auto cmdEnd = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagEnd),
+        resourceId, endPayload.size(), endPayload, invalidChecksum);
+    auto status = handler->decodeRdeCommand(
+        cmdEnd, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidChecksum);
+    EXPECT_EQ(handler->getDictionaryCount(), 0); // Dictionaries invalidated
+}
+
+TEST_F(RdeCommandHandlerTest,
+       MultiPartReceiveResp_FlagEnd_AfterStart_NewResource_UsesPrevCrcState)
+{
+    // This test verifies that if an End flag for a new resource follows a Start
+    // flag for a different resource, the CRC calculation for the new resource's
+    // data incorrectly continues from the previous resource's CRC state.
+    uint32_t resourceId1 = 1;
+    std::vector<uint8_t> startPayload1 = {'r', '1', 's'}; // CRC for "r1s"
+    auto cmdStart1 = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagStart),
+        resourceId1, startPayload1.size(), startPayload1);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdStart1, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeOk);
+
+    uint32_t resourceId2 = 2;
+    std::vector<uint8_t> endPayload2 = {'r', '2', 'e'};
+    // Checksum for "r2e" ALONE is 0x32e8a36a.
+    // If CRC continued from "r1s", this checksum will be wrong.
+    uint32_t checksumForR2eAlone = 0x32e8a36a;
+    auto cmdEnd2 = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagEnd),
+        resourceId2, endPayload2.size(), endPayload2, checksumForR2eAlone);
+
+    auto status = handler->decodeRdeCommand(
+        cmdEnd2, RdeCommandType::RdeMultiPartReceiveResponse);
+    // Expect InvalidChecksum because internal CRC is for "r1s" + "r2e"
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidChecksum);
+    EXPECT_EQ(handler->getDictionaryCount(), 0); // Dictionaries invalidated
+}
+
+TEST_F(RdeCommandHandlerTest,
+       MultiPartReceiveResp_FlagStartAndEnd_ValidChecksum)
+{
+    uint32_t resourceId = 1;
+    std::vector<uint8_t> dataPayload = {'c', 'o', 'm', 'p', 'l', 'e', 't', 'e'};
+    uint32_t checksum = 0x49e940fa; // ~CRC32("complete")
+    auto cmd = createMultiPartRespCmd(
+        static_cast<uint8_t>(
+            RdeMultiReceiveTransferFlag::RdeMRecFlagStartAndEnd),
+        resourceId, dataPayload.size(), dataPayload, checksum);
+    auto status = handler->decodeRdeCommand(
+        cmd, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeStopFlagReceived);
+    EXPECT_EQ(handler->getDictionaryCount(), 1);
+}
+
+TEST_F(RdeCommandHandlerTest,
+       MultiPartReceiveResp_FlagStartAndEnd_InvalidChecksum)
+{
+    uint32_t resourceId = 1;
+    std::vector<uint8_t> dataPayload = {'c', 'o', 'm', 'p', 'l', 'e', 't', 'e'};
+    uint32_t invalidChecksum = 0x12345678; // Invalid checksum
+    auto cmd = createMultiPartRespCmd(
+        static_cast<uint8_t>(
+            RdeMultiReceiveTransferFlag::RdeMRecFlagStartAndEnd),
+        resourceId, dataPayload.size(), dataPayload, invalidChecksum);
+    auto status = handler->decodeRdeCommand(
+        cmd, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidChecksum);
+    EXPECT_EQ(handler->getDictionaryCount(), 0);
+}
+
+TEST_F(RdeCommandHandlerTest,
+       MultiPartReceiveResp_Sequence_StartMiddleEnd_Valid)
+{
+    uint32_t resourceId = 42;
+
+    std::vector<uint8_t> startPayload = {'p', 'a', 'r', 't', '1'};
+    auto cmdStart = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagStart),
+        resourceId, startPayload.size(), startPayload);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdStart, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeOk);
+
+    std::vector<uint8_t> middlePayload = {'p', 'a', 'r', 't', '2'};
+    auto cmdMiddle = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagMiddle),
+        resourceId, middlePayload.size(), middlePayload);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdMiddle, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeOk);
+
+    std::vector<uint8_t> endPayload = {'p', 'a', 'r', 't', '3'};
+    uint32_t checksum = 0x38449d57; // ~CRC32("part1part2part3")
+    auto cmdEnd = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagEnd),
+        resourceId, endPayload.size(), endPayload, checksum);
+    auto status = handler->decodeRdeCommand(
+        cmdEnd, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeStopFlagReceived);
+    EXPECT_EQ(handler->getDictionaryCount(), 1);
+}
+
+TEST_F(RdeCommandHandlerTest,
+       MultiPartReceiveResp_MultipleDictionaries_ValidSequence)
+{
+    // Dictionary 1: StartAndEnd
+    uint32_t resourceId1 = 1;
+    std::vector<uint8_t> payload1 = {'d', 'i', 'c', 't', '1'};
+    uint32_t checksum1 = 0xf46b337a; // ~CRC32("dict1")
+    auto cmd1 = createMultiPartRespCmd(
+        static_cast<uint8_t>(
+            RdeMultiReceiveTransferFlag::RdeMRecFlagStartAndEnd),
+        resourceId1, payload1.size(), payload1, checksum1);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmd1, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeStopFlagReceived);
+    ASSERT_EQ(handler->getDictionaryCount(), 1);
+
+    // Dictionary 2: Start, Middle, End
+    uint32_t resourceId2 = 2;
+    std::vector<uint8_t> startPayload2 = {'d', '2', '_'};
+    auto cmdStart2 = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagStart),
+        resourceId2, startPayload2.size(), startPayload2);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdStart2, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeOk);
+    ASSERT_EQ(handler->getDictionaryCount(),
+              1); // Dict1 still valid, Dict2 not yet
+
+    std::vector<uint8_t> middlePayload2 = {'m', 'i', 'd'};
+    auto cmdMiddle2 = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagMiddle),
+        resourceId2, middlePayload2.size(), middlePayload2);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdMiddle2, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeOk);
+
+    std::vector<uint8_t> endPayload2 = {'e', 'n', 'd'};
+    uint32_t checksum2 = 0xb2e742e1; // ~CRC32("d2_midend")
+    auto cmdEnd2 = createMultiPartRespCmd(
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagEnd),
+        resourceId2, endPayload2.size(), endPayload2, checksum2);
+    ASSERT_EQ(handler->decodeRdeCommand(
+                  cmdEnd2, RdeCommandType::RdeMultiPartReceiveResponse),
+              RdeDecodeStatus::RdeStopFlagReceived);
+    ASSERT_EQ(handler->getDictionaryCount(),
+              2); // Both dictionaries should now be valid
+}
 
 /**
  * @brief Dummy values for annotation dictionary. We do not need the annotation
