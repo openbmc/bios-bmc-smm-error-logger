@@ -122,8 +122,24 @@ RdeDecodeStatus RdeCommandHandler::operationInitRequest(
 RdeDecodeStatus RdeCommandHandler::multiPartReceiveResp(
     std::span<const uint8_t> rdeCommand)
 {
+    if (rdeCommand.size() < sizeof(MultipartReceiveResHeader))
+    {
+        stdplus::print(
+            stderr, "RDE command is smaller than the expected header size.\n");
+        return RdeDecodeStatus::RdeInvalidCommand;
+    }
+
     const MultipartReceiveResHeader* header =
         reinterpret_cast<const MultipartReceiveResHeader*>(rdeCommand.data());
+
+    if (rdeCommand.size() <
+        sizeof(MultipartReceiveResHeader) + header->dataLengthBytes)
+    {
+        stdplus::print(
+            stderr,
+            "RDE command size is smaller than header + declared payload size.\n");
+        return RdeDecodeStatus::RdeInvalidCommand;
+    }
 
     // This is a hack to get the resource ID for the dictionary data. Even
     // though nextDataTransferHandle field is supposed to be used for something
