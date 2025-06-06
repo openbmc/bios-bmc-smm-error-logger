@@ -31,7 +31,7 @@ class PciHandlerTest : public ::testing::Test
         fdMock(std::make_unique<stdplus::fd::FdMock>()), fdMockPtr(fdMock.get())
     {
         // Verify that the constructor is called as expected
-        EXPECT_CALL(*fdMockPtr, mmap(_, _, _, _))
+        EXPECT_CALL(*fdMockPtr, mmap(_, _, _, _, _))
             .WillOnce(Return(std::span<std::byte>(testMapped)));
         pciDataHandler = std::make_unique<PciDataHandler>(
             testRegionAddress, testRegionSize, std::move(fdMock));
