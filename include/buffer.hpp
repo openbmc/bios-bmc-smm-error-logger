@@ -22,10 +22,14 @@ using boost::endian::little_uint64_t;
 // EntryPair.second = Error entry in vector of bytes
 using EntryPair = std::pair<struct QueueEntryHeader, std::vector<uint8_t>>;
 
+enum class BufferFlags : uint32_t
+{
+    ueSwitch = 1 << 0,
+    overflow = 1 << 1,
+};
+
 enum class BmcFlags : uint32_t
 {
-    ueSwitch = 1,
-    overflow = 1 << 1,
     ready = 1 << 2,
 };
 
@@ -99,6 +103,10 @@ class BufferInterface
     virtual void initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
                             uint16_t ueRegionSize,
                             const std::array<uint32_t, 4>& magicNumber) = 0;
+    /**
+     * Check for unread Uncorrecatble Error (UE) logs and read them if present
+     */
+    virtual std::vector<uint8_t> readUeLogFromReservedRegion() = 0;
 
     /**
      * Read the buffer header from shared buffer
@@ -182,6 +190,7 @@ class BufferImpl : public BufferInterface
     void initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
                     uint16_t ueRegionSize,
                     const std::array<uint32_t, 4>& magicNumber) override;
+    std::vector<uint8_t> readUeLogFromReservedRegion() override;
     void readBufferHeader() override;
     struct CircularBufferHeader getCachedBufferHeader() const override;
     void updateReadPtr(const uint32_t newReadPtr) override;
