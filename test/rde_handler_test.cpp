@@ -121,6 +121,32 @@ TEST_F(RdeCommandHandlerTest, OperationInitRequest_NoPayload)
     EXPECT_EQ(status, RdeDecodeStatus::RdeOk);
 }
 
+TEST_F(RdeCommandHandlerTest, OperationInitRequest_CmdTooSmallForHeader)
+{
+    std::vector<uint8_t> cmdData = {0x01, 0x02}; // Smaller than header
+    auto status = handler->decodeRdeCommand(
+        cmdData, RdeCommandType::RdeOperationInitRequest);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidCommand);
+}
+
+TEST_F(RdeCommandHandlerTest,
+       OperationInitRequest_CmdTooSmallForDeclaredPayload)
+{
+    // Header declares payload, but actual data is too short.
+    // Header: containsPayload=true, opLocatorLength=1, requestPayloadLength=5
+    // Actual payload data provided: only 1 byte for locator, 0 for payload.
+    RdeOperationInitReqHeader header{};
+    header.containsRequestPayload = true;
+    header.operationLocatorLength = 1;
+    header.requestPayloadLength = 5; // Expects 5 bytes of payload
+    std::vector<uint8_t> cmdData(sizeof(header));
+    memcpy(cmdData.data(), &header, sizeof(header));
+    cmdData.push_back(0xAA); // Only 1 byte for locator, payload missing
+    auto status = handler->decodeRdeCommand(
+        cmdData, RdeCommandType::RdeOperationInitRequest);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidCommand);
+}
+
 TEST_F(RdeCommandHandlerTest, OperationInitRequest_UnsupportedOperationType)
 {
     auto cmd = createOpInitReqCmd(true, 0xFE, 0, 1, 0, 5, {1, 2, 3, 4, 5});

@@ -50,12 +50,37 @@ uint32_t RdeCommandHandler::getDictionaryCount()
 RdeDecodeStatus RdeCommandHandler::operationInitRequest(
     std::span<const uint8_t> rdeCommand)
 {
+    // Ensure rdeCommand is large enough for the header.
+    if (rdeCommand.size() < sizeof(RdeOperationInitReqHeader))
+    {
+        stdplus::print(
+            stderr,
+            "RDE OperationInitRequest command is smaller than the expected header size. Received: {}, Expected: {}\n",
+            rdeCommand.size(), sizeof(RdeOperationInitReqHeader));
+        return RdeDecodeStatus::RdeInvalidCommand;
+    }
+
     const RdeOperationInitReqHeader* header =
         reinterpret_cast<const RdeOperationInitReqHeader*>(rdeCommand.data());
+
     // Check if there is a payload. If not, we are not doing anything.
     if (!header->containsRequestPayload)
     {
         return RdeDecodeStatus::RdeOk;
+    }
+
+    // Ensure rdeCommand is large enough for header + locator + declared
+    // payload.
+    size_t expectedTotalSize =
+        sizeof(RdeOperationInitReqHeader) + header->operationLocatorLength +
+        header->requestPayloadLength;
+    if (rdeCommand.size() < expectedTotalSize)
+    {
+        stdplus::print(
+            stderr,
+            "RDE OperationInitRequest command size is smaller than header + locator + declared payload size. Received: {}, Expected: {}\n",
+            rdeCommand.size(), expectedTotalSize);
+        return RdeDecodeStatus::RdeInvalidCommand;
     }
 
     if (header->operationType !=
