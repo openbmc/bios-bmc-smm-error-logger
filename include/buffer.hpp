@@ -18,8 +18,12 @@ using boost::endian::little_uint24_t;
 using boost::endian::little_uint32_t;
 using boost::endian::little_uint64_t;
 
-// EntryPair.first = QueueEntryHeader
-// EntryPair.second = Error entry in vector of bytes
+namespace BufferFlags
+{
+static constexpr uint32_t UE_LOG_PRESENT = (1 << 0);    // 0x01
+static constexpr uint32_t OVERFLOW_OCCURRED = (1 << 1); // 0x02
+} // namespace BufferFlags
+
 using EntryPair = std::pair<struct QueueEntryHeader, std::vector<uint8_t>>;
 
 enum class BmcFlags : uint32_t
@@ -99,6 +103,10 @@ class BufferInterface
     virtual void initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
                             uint16_t ueRegionSize,
                             const std::array<uint32_t, 4>& magicNumber) = 0;
+    /**
+     * Check for UE logs and read them if present and unread
+     */
+    virtual std::vector<uint8_t> readUeLogFromReservedRegion() = 0;
 
     /**
      * Read the buffer header from shared buffer
@@ -182,6 +190,7 @@ class BufferImpl : public BufferInterface
     void initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
                     uint16_t ueRegionSize,
                     const std::array<uint32_t, 4>& magicNumber) override;
+    std::vector<uint8_t> readUeLogFromReservedRegion() override;
     void readBufferHeader() override;
     struct CircularBufferHeader getCachedBufferHeader() const override;
     void updateReadPtr(const uint32_t newReadPtr) override;
