@@ -46,20 +46,116 @@ void readLoop(boost::asio::steady_timer* t,
         stdplus::print(stderr, "Async wait failed {}\n", error.message());
         return;
     }
-    std::vector<EntryPair> entryPairs = bufferInterface->readErrorLogs();
-    for (const auto& [entryHeader, entry] : entryPairs)
+
+    try
     {
-        rde::RdeDecodeStatus rdeDecodeStatus =
-            rdeCommandHandler->decodeRdeCommand(
-                entry,
-                static_cast<rde::RdeCommandType>(entryHeader.rdeCommandType));
-        if (rdeDecodeStatus == rde::RdeDecodeStatus::RdeStopFlagReceived)
+        std::vector<uint8_t> ueLog =
+            bufferInterface->readUeLogFromReservedRegion();
+        if (!ueLog.empty())
         {
-            auto bufferHeader = bufferInterface->getCachedBufferHeader();
-            auto newbmcFlags =
-                boost::endian::little_to_native(bufferHeader.bmcFlags) |
-                static_cast<uint32_t>(BmcFlags::ready);
-            bufferInterface->updateBmcFlags(newbmcFlags);
+            stdplus::print(
+                stdout,
+                "UE log found in reserved region, attempting to process\n");
+
+            // UE log is BEJ encoded data, requiring RdeOperationInitRequest
+            rde::RdeDecodeStatus ueDecodeStatus =
+                rdeCommandHandler->decodeRdeCommand(
+                    ueLog, rde::RdeCommandType::RdeOperationInitRequest);
+
+            if (ueDecodeStatus == rde::RdeDecodeStatus::RdeOk ||
+                ueDecodeStatus == rde::RdeDecodeStatus::RdeStopFlagReceived)
+            {
+                stdplus::print(stdout, "UE log processed successfully.\n");
+                // Successfully processed. Toggle BMC's view of ueSwitch flag.
+                auto bufferHeader = bufferInterface->getCachedBufferHeader();
+                uint32_t bmcSideFlags =
+                    boost::endian::little_to_native(bufferHeader.bmcFlags);
+                uint32_t newBmcFlags =
+                    bmcSideFlags ^ static_cast<uint32_t>(BufferFlags::ueSwitch);
+                bufferInterface->updateBmcFlags(newBmcFlags);
+            }
+            else
+            {
+                throw std::runtime_error(std::format(
+                    "Corruption detected processing UE log from reserved region. RDE decode status: {}",
+                    static_cast<int>(ueDecodeStatus)));
+            }
+        }
+
+        std::vector<EntryPair> entryPairs = bufferInterface->readErrorLogs();
+        for (const auto& [entryHeader, entry] : entryPairs)
+        {
+            rde::RdeDecodeStatus rdeDecodeStatus =
+                rdeCommandHandler->decodeRdeCommand(
+                    entry, static_cast<rde::RdeCommandType>(
+                               entryHeader.rdeCommandType));
+            if (rdeDecodeStatus == rde::RdeDecodeStatus::RdeStopFlagReceived)
+            {
+                auto bufferHeader = bufferInterface->getCachedBufferHeader();
+                auto newbmcFlags =
+                    boost::endian::little_to_native(bufferHeader.bmcFlags) |
+                    static_cast<uint32_t>(BmcFlags::ready);
+                bufferInterface->updateBmcFlags(newbmcFlags);
+            }
+        }
+    }
+    catch (const std::exception& e)
+    {
+        stdplus::print(
+            stderr,
+            "Error during log processing (std::exception): {}. Attempting to reinitialize buffer.\n",
+            e.what());
+        try
+        {
+            bufferInterface->initialize(bmcInterfaceVersion, queueSize,
+                                        ueRegionSize, magicNumber);
+            stdplus::print(
+                stdout,
+                "Buffer reinitialized successfully after std::exception.\n");
+        }
+        catch (const std::exception& reinit_e)
+        {
+            stdplus::print(
+                stderr,
+                "CRITICAL: Failed to reinitialize buffer (std::exception): {}. Terminating read loop.\n",
+                reinit_e.what());
+            return;
+        }
+        catch (...)
+        {
+            stdplus::print(
+                stderr,
+                "CRITICAL: Failed to reinitialize buffer (unknown exception). Terminating read loop.\n");
+            return;
+        }
+    }
+    catch (...)
+    {
+        stdplus::print(
+            stderr,
+            "Unknown error during log processing. Attempting to reinitialize buffer.\n");
+        try
+        {
+            bufferInterface->initialize(bmcInterfaceVersion, queueSize,
+                                        ueRegionSize, magicNumber);
+            stdplus::print(
+                stdout,
+                "Buffer reinitialized successfully after unknown error.\n");
+        }
+        catch (const std::exception& reinit_e)
+        {
+            stdplus::print(
+                stderr,
+                "CRITICAL: Failed to reinitialize buffer (std::exception): {}. Terminating read loop.\n",
+                reinit_e.what());
+            return;
+        }
+        catch (...)
+        {
+            stdplus::print(
+                stderr,
+                "CRITICAL: Failed to reinitialize buffer (unknown exception). Terminating read loop.\n");
+            return;
         }
     }
 

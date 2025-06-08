@@ -323,6 +323,103 @@ TEST_F(BufferTest, GetOffsetUeRegionSizeFail)
         std::runtime_error);
 }
 
+TEST_F(BufferTest, ReadUeLog_NoUeRegionConfigured)
+{
+    struct CircularBufferHeader header = testInitializationHeader;
+    header.ueRegionSize =
+        boost::endian::native_to_little<uint16_t>(0); // No UE region
+
+    uint8_t* headerPtr = reinterpret_cast<uint8_t*>(&header);
+    std::vector<uint8_t> headerBytes(headerPtr, headerPtr + bufferHeaderSize);
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(headerBytes));
+
+    auto result = bufferImpl->readUeLogFromReservedRegion();
+    EXPECT_TRUE(result.empty());
+}
+
+TEST_F(BufferTest, ReadUeLog_NotPresentDueToFlags)
+{
+    struct CircularBufferHeader header = testInitializationHeader;
+    header.ueRegionSize = boost::endian::native_to_little<uint16_t>(0x20);
+    // Flags are the same, so no new UE log
+    header.biosFlags =
+        boost::endian::native_to_little<uint32_t>(BufferFlags::ueSwitch);
+    header.bmcFlags =
+        boost::endian::native_to_little<uint32_t>(BufferFlags::ueSwitch);
+
+    uint8_t* headerPtr = reinterpret_cast<uint8_t*>(&header);
+    std::vector<uint8_t> headerBytes(headerPtr, headerPtr + bufferHeaderSize);
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(headerBytes));
+
+    auto result = bufferImpl->readUeLogFromReservedRegion();
+    EXPECT_TRUE(result.empty());
+}
+
+TEST_F(BufferTest, ReadUeLog_PresentAndSuccessfullyRead)
+{
+    struct CircularBufferHeader header = testInitializationHeader;
+    uint16_t ueSize = 0x20;
+    header.ueRegionSize = boost::endian::native_to_little(ueSize);
+    header.biosFlags =
+        boost::endian::native_to_little<uint32_t>(BufferFlags::ueSwitch);
+    header.bmcFlags =
+        boost::endian::native_to_little<uint32_t>(0); // BIOS set, BMC not yet
+
+    uint8_t* headerPtr = reinterpret_cast<uint8_t*>(&header);
+    std::vector<uint8_t> headerBytes(headerPtr, headerPtr + bufferHeaderSize);
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(headerBytes));
+
+    size_t ueRegionOffset = bufferHeaderSize;
+    std::vector<uint8_t> ueData(ueSize, 0xAA);
+    EXPECT_CALL(*dataInterfaceMockPtr, read(ueRegionOffset, ueSize))
+        .WillOnce(Return(ueData));
+
+    auto result = bufferImpl->readUeLogFromReservedRegion();
+    ASSERT_FALSE(result.empty());
+    EXPECT_THAT(result, ElementsAreArray(ueData));
+
+    // The initial bmcFlags (0) should remain unchanged in the cache
+    struct CircularBufferHeader cachedHeaderAfterRead =
+        bufferImpl->getCachedBufferHeader();
+    EXPECT_EQ(boost::endian::little_to_native(cachedHeaderAfterRead.bmcFlags),
+              0);
+}
+
+TEST_F(BufferTest, ReadUeLog_PresentButReadFails)
+{
+    struct CircularBufferHeader header = testInitializationHeader;
+    uint16_t ueSize = 0x20;
+    header.ueRegionSize = boost::endian::native_to_little(ueSize);
+    header.biosFlags =
+        boost::endian::native_to_little<uint32_t>(BufferFlags::ueSwitch);
+    header.bmcFlags = boost::endian::native_to_little<uint32_t>(0);
+
+    uint8_t* headerPtr = reinterpret_cast<uint8_t*>(&header);
+    std::vector<uint8_t> headerBytes(headerPtr, headerPtr + bufferHeaderSize);
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(headerBytes));
+
+    size_t ueRegionOffset = bufferHeaderSize;
+    std::vector<uint8_t> shortUeData(ueSize - 1, 0xAA); // Short read
+    EXPECT_CALL(*dataInterfaceMockPtr, read(ueRegionOffset, ueSize))
+        .WillOnce(Return(shortUeData));
+
+    // Expect an exception due to short read, which is treated as corruption for
+    // UE log
+    EXPECT_THROW(
+        try {
+            bufferImpl->readUeLogFromReservedRegion();
+        } catch (const std::runtime_error& e) {
+            EXPECT_THAT(e.what(),
+                        ::testing::HasSubstr("Failed to read full UE log"));
+            throw;
+        },
+        std::runtime_error);
+}
+
 class BufferWraparoundReadTest : public BufferTest
 {
   protected:
