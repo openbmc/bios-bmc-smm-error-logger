@@ -6,6 +6,7 @@
 
 #include <boost/endian/arithmetic.hpp>
 #include <boost/endian/conversion.hpp>
+#include <stdplus/print.hpp>
 
 #include <algorithm>
 #include <array>
@@ -220,6 +221,52 @@ struct QueueEntryHeader BufferImpl::readEntryHeader()
         headerSize);
 
     return *reinterpret_cast<struct QueueEntryHeader*>(bytesRead.data());
+}
+
+std::vector<uint8_t> BufferImpl::readUeLogFromReservedRegion()
+{
+    // Ensure cachedBufferHeader is up-to-date
+    readBufferHeader();
+
+    uint16_t currentUeRegionSize =
+        boost::endian::little_to_native(cachedBufferHeader.ueRegionSize);
+    if (currentUeRegionSize == 0)
+    {
+        stdplus::print(stderr,
+                       "[readUeLogFromReservedRegion] UE Region size is 0\n");
+        return {};
+    }
+
+    uint32_t biosSideFlags =
+        boost::endian::little_to_native(cachedBufferHeader.biosFlags);
+    uint32_t bmcSideFlags =
+        boost::endian::little_to_native(cachedBufferHeader.bmcFlags);
+
+    // (BIOS_switch ^ BMC_switch) & BIT0 == BIT0 -> unread log
+    // This means if the ueSwitch bit differs, there's an unread log.
+    if (!((biosSideFlags ^ bmcSideFlags) &
+          static_cast<uint32_t>(BufferFlags::ueSwitch)))
+    {
+        return {};
+    }
+    // UE log should be present and unread by BMC, read from end of header
+    // (0x30) to the size of the UE region specified in the header.
+    size_t ueRegionOffset = sizeof(struct CircularBufferHeader);
+    std::vector<uint8_t> ueLogData =
+        dataInterface->read(ueRegionOffset, currentUeRegionSize);
+
+    if (ueLogData.size() == currentUeRegionSize)
+    {
+        return ueLogData;
+    }
+    stdplus::print(stderr,
+                   "[readUeLogFromReservedRegion] Failed to read "
+                   "full UE log. Expected {}, got {}\n",
+                   currentUeRegionSize, ueLogData.size());
+    // Throwing an exception allows main loop to handle re-init.
+    throw std::runtime_error(
+        std::format("Failed to read full UE log. Expected {}, got {}",
+                    currentUeRegionSize, ueLogData.size()));
 }
 
 EntryPair BufferImpl::readEntry()
