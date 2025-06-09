@@ -269,6 +269,36 @@ std::vector<uint8_t> BufferImpl::readUeLogFromReservedRegion()
                     currentUeRegionSize, ueLogData.size()));
 }
 
+bool BufferImpl::checkForOverflowAndAcknowledge()
+{
+    // Ensure cachedBufferHeader is up-to-date
+    readBufferHeader();
+
+    uint32_t biosSideFlags =
+        boost::endian::little_to_native(cachedBufferHeader.biosFlags);
+    uint32_t bmcSideFlags =
+        boost::endian::little_to_native(cachedBufferHeader.bmcFlags);
+
+    // Design: (BIOS_switch ^ BMC_switch) & BIT1 == BIT1 -> unlogged overflow
+    // This means if the overflow bit differs, there's an
+    // unacknowledged overflow.
+    if ((biosSideFlags ^ bmcSideFlags) &
+        static_cast<uint32_t>(BufferFlags::overflow))
+    {
+        // Overflow incident has occurred and BMC has not acknowledged it.
+        // Toggle BMC's view of the overflow flag to acknowledge.
+        uint32_t newBmcFlags =
+            bmcSideFlags ^ static_cast<uint32_t>(BufferFlags::overflow);
+        updateBmcFlags(newBmcFlags);
+
+        // Overflow was detected and acknowledged
+        return true;
+    }
+
+    // No new overflow incident or already acknowledged
+    return false;
+}
+
 EntryPair BufferImpl::readEntry()
 {
     struct QueueEntryHeader entryHeader = readEntryHeader();

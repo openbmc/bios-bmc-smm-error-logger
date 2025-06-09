@@ -79,6 +79,13 @@ void readLoop(boost::asio::steady_timer* t,
             bufferInterface->updateBmcFlags(newBmcFlags);
         }
 
+        if (bufferInterface->checkForOverflowAndAcknowledge())
+        {
+            stdplus::print(
+                stdout,
+                "[WARN] Buffer overflow had occured and has been acked\n");
+        }
+
         std::vector<EntryPair> entryPairs = bufferInterface->readErrorLogs();
         for (const auto& [entryHeader, entry] : entryPairs)
         {
