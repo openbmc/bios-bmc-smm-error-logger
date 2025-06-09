@@ -109,6 +109,11 @@ class BufferInterface
     virtual std::vector<uint8_t> readUeLogFromReservedRegion() = 0;
 
     /**
+     * Check for overflow and ackknolwedge if not acked yet
+     */
+    virtual bool checkForOverflowAndAcknowledge() = 0;
+
+    /**
      * Read the buffer header from shared buffer
      */
     virtual void readBufferHeader() = 0;
@@ -191,6 +196,7 @@ class BufferImpl : public BufferInterface
                     uint16_t ueRegionSize,
                     const std::array<uint32_t, 4>& magicNumber) override;
     std::vector<uint8_t> readUeLogFromReservedRegion() override;
+    bool checkForOverflowAndAcknowledge() override;
     void readBufferHeader() override;
     struct CircularBufferHeader getCachedBufferHeader() const override;
     void updateReadPtr(const uint32_t newReadPtr) override;

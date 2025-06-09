@@ -420,6 +420,59 @@ TEST_F(BufferTest, ReadUeLog_PresentButReadFails)
         std::runtime_error);
 }
 
+TEST_F(BufferTest, CheckOverflow_NotPresentDueToFlags)
+{
+    struct CircularBufferHeader header = testInitializationHeader;
+    // Flags are the same, so no new overflow
+    header.biosFlags =
+        boost::endian::native_to_little<uint32_t>(BufferFlags::overflow);
+    header.bmcFlags =
+        boost::endian::native_to_little<uint32_t>(BufferFlags::overflow);
+
+    uint8_t* headerPtr = reinterpret_cast<uint8_t*>(&header);
+    std::vector<uint8_t> headerBytes(headerPtr, headerPtr + bufferHeaderSize);
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(headerBytes));
+
+    bool overflowDetected = bufferImpl->checkForOverflowAndAcknowledge();
+    ASSERT_FALSE(overflowDetected);
+}
+
+TEST_F(BufferTest, CheckOverflow_PresentAndAcknowledged)
+{
+    struct CircularBufferHeader header = testInitializationHeader;
+    header.biosFlags =
+        boost::endian::native_to_little<uint32_t>(BufferFlags::overflow);
+    header.bmcFlags =
+        boost::endian::native_to_little<uint32_t>(0); // BIOS set, BMC not yet
+
+    uint8_t* headerPtr = reinterpret_cast<uint8_t*>(&header);
+    std::vector<uint8_t> headerBytes(headerPtr, headerPtr + bufferHeaderSize);
+    EXPECT_CALL(*dataInterfaceMockPtr, read(0, bufferHeaderSize))
+        .WillOnce(Return(headerBytes));
+
+    uint32_t expectedNewBmcFlags = BufferFlags::overflow; // BMC toggles its bit
+    little_uint32_t littleExpectedNewBmcFlags =
+        boost::endian::native_to_little(expectedNewBmcFlags);
+    uint8_t* flagPtr = reinterpret_cast<uint8_t*>(&littleExpectedNewBmcFlags);
+    std::vector<uint8_t> expectedFlagWrite(flagPtr,
+                                           flagPtr + sizeof(little_uint32_t));
+    constexpr uint8_t bmcFlagsOffset =
+        offsetof(struct CircularBufferHeader, bmcFlags);
+
+    EXPECT_CALL(*dataInterfaceMockPtr,
+                write(bmcFlagsOffset, ElementsAreArray(expectedFlagWrite)))
+        .WillOnce(Return(sizeof(little_uint32_t)));
+
+    bool overflowDetected = bufferImpl->checkForOverflowAndAcknowledge();
+    ASSERT_TRUE(overflowDetected);
+
+    struct CircularBufferHeader updatedCachedHeader =
+        bufferImpl->getCachedBufferHeader();
+    EXPECT_EQ(boost::endian::little_to_native(updatedCachedHeader.bmcFlags),
+              expectedNewBmcFlags);
+}
+
 class BufferWraparoundReadTest : public BufferTest
 {
   protected:
