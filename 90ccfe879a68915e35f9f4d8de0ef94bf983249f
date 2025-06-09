@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89934b46_ddcd88f6",
+        "filename": "src/rde/rde_handler.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1001138
+      },
+      "writtenOn": "2025-06-09T17:44:08Z",
+      "side": 1,
+      "message": "We could check for \"not equal\" to make it more restrictive",
+      "range": {
+        "startLine": 135,
+        "startChar": 26,
+        "endLine": 135,
+        "endChar": 27
+      },
+      "revId": "90ccfe879a68915e35f9f4d8de0ef94bf983249f",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
