@@ -3,6 +3,75 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3c6c60da_8300147a",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2025-06-10T17:33:20Z",
+      "side": 1,
+      "message": "```suggestion\n    // (BIOS_switch ^ BMC_switch) \u0026 BIT0 \u003d\u003d BIT0 -\u003e unread log\n    // This means if the ueSwitch bit differs, there\u0027s an unread log.\n    if (!((biosSideFlags ^ bmcSideFlags) \u0026\n        static_cast\u003cuint32_t\u003e(BufferFlags::ueSwitch)))\n    {\n        return {};\n    }\n    // UE log should be present and unread by BMC, read from end of header\n    // (0x30) to the size of the UE region specified in the header.\n    size_t ueRegionOffset \u003d sizeof(struct CircularBufferHeader);\n    std::vector\u003cuint8_t\u003e ueLogData \u003d\n        dataInterface-\u003eread(ueRegionOffset, currentUeRegionSize);\n\n    if (ueLogData.size() \u003d\u003d currentUeRegionSize)\n    {\n        return ueLogData;\n    }\n    stdplus::print(stderr,\n                   \"[readUeLogFromReservedRegion] Failed to read \"\n                   \"full UE log. Expected {}, got {}\\n\",\n                   currentUeRegionSize, ueLogData.size());\n    // Throwing an exception allows main loop to handle re-init.\n    throw std::runtime_error(\n        std::format(\"Failed to read full UE log. Expected {}, got {}\",\n                    currentUeRegionSize, ueLogData.size()));\n\n```",
+      "range": {
+        "startLine": 245,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 14
+      },
+      "revId": "291f7d88b77879228677e347f35bc36becad80b7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93affbd3_8a874d4d",
+        "filename": "src/main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2025-06-10T17:33:20Z",
+      "side": 1,
+      "message": "```suggestion\n            if (ueDecodeStatus !\u003d rde::RdeDecodeStatus::RdeOk \u0026\u0026\n                ueDecodeStatus !\u003d rde::RdeDecodeStatus::RdeStopFlagReceived)\n            {\n                throw std::runtime_error(std::format(\n                    \"Corruption detected processing UE log from reserved region. RDE decode status: {}\",\n                    static_cast\u003cint\u003e(ueDecodeStatus)));\n            }\n            stdplus::print(stdout, \"UE log processed successfully.\\n\");\n            // Successfully processed. Toggle BMC\u0027s view of ueSwitch flag.\n            auto bufferHeader \u003d bufferInterface-\u003egetCachedBufferHeader();\n            uint32_t bmcSideFlags \u003d\n                boost::endian::little_to_native(bufferHeader.bmcFlags);\n            uint32_t newBmcFlags \u003d\n                bmcSideFlags ^ static_cast\u003cuint32_t\u003e(BufferFlags::ueSwitch);\n            bufferInterface-\u003eupdateBmcFlags(newBmcFlags);\n```",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 13
+      },
+      "revId": "291f7d88b77879228677e347f35bc36becad80b7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd61463a_7e560808",
+        "filename": "src/main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2025-06-10T17:33:20Z",
+      "side": 1,
+      "message": "should it exit the loop after it gets to this point?",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 13
+      },
+      "revId": "291f7d88b77879228677e347f35bc36becad80b7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "14812253_b16d0dbb",
         "filename": "src/main.cpp",
         "patchSetId": 6
