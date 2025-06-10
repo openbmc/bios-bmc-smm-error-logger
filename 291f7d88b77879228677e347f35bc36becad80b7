@@ -22,6 +22,30 @@
       },
       "revId": "291f7d88b77879228677e347f35bc36becad80b7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f46fa49_42ecc90a",
+        "filename": "src/main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2025-06-10T06:25:25Z",
+      "side": 1,
+      "message": "Hmmm yes but I think this is needed to catch all the cases while being as verbose as possible to print out e.what(). Without using lambda or a reinitialize helper function, I can\u0027t think of a good way to separate out the catch for exception vs. (...)",
+      "parentUuid": "14812253_b16d0dbb",
+      "range": {
+        "startLine": 137,
+        "startChar": 0,
+        "endLine": 159,
+        "endChar": 9
+      },
+      "revId": "291f7d88b77879228677e347f35bc36becad80b7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
