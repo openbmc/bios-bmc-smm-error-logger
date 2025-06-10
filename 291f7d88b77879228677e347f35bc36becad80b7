@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad0cdcd7_4f555cf8",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2025-06-10T19:52:42Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "3c6c60da_8300147a",
+      "range": {
+        "startLine": 245,
+        "startChar": 0,
+        "endLine": 270,
+        "endChar": 14
+      },
+      "revId": "291f7d88b77879228677e347f35bc36becad80b7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "93affbd3_8a874d4d",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d7068f5_7e9fde78",
+        "filename": "src/main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2025-06-10T19:52:42Z",
+      "side": 1,
+      "message": "Nice - yeah this is better logic.",
+      "parentUuid": "93affbd3_8a874d4d",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 13
+      },
+      "revId": "291f7d88b77879228677e347f35bc36becad80b7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cd61463a_7e560808",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-06-10T17:33:20Z",
       "side": 1,
       "message": "should it exit the loop after it gets to this point?",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 13
+      },
+      "revId": "291f7d88b77879228677e347f35bc36becad80b7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "200af8bc_1089bbcf",
+        "filename": "src/main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2025-06-10T19:52:42Z",
+      "side": 1,
+      "message": "No, I think it\u0027s possible for multiple messages to be unread, so we should keep reading until we get through all the messages.",
+      "parentUuid": "cd61463a_7e560808",
       "range": {
         "startLine": 92,
         "startChar": 0,
