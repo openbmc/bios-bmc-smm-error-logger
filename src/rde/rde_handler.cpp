@@ -241,6 +241,19 @@ RdeDecodeStatus RdeCommandHandler::handleCrc(
     const MultipartReceiveResHeader* header =
         reinterpret_cast<const MultipartReceiveResHeader*>(
             multiReceiveRespCmd.data());
+
+    // Validate that the total message size (header + data + checksum) does not
+    // exceed the actual size of the received buffer.
+    size_t expectedSize = sizeof(MultipartReceiveResHeader) +
+                          header->dataLengthBytes + sizeof(uint32_t);
+    if (expectedSize != multiReceiveRespCmd.size())
+    {
+        stdplus::print(
+            stderr,
+            "Corruption detected: Invalid dataLengthBytes in header or not enough bytes for checksum.\n");
+        return RdeDecodeStatus::RdeInvalidCommand;
+    }
+
     const uint8_t* checksumPtr =
         multiReceiveRespCmd.data() + sizeof(MultipartReceiveResHeader) +
         header->dataLengthBytes;

@@ -571,6 +571,28 @@ TEST_F(RdeCommandHandlerTest,
               2); // Both dictionaries should now be valid
 }
 
+TEST_F(RdeCommandHandlerTest, MultiPartReceiveResp_HandleCrc_MismatchedSize)
+{
+    // Header will claim 10 bytes of data.
+    MultipartReceiveResHeader header{};
+    header.transferFlag = static_cast<uint8_t>(
+        RdeMultiReceiveTransferFlag::RdeMRecFlagStartAndEnd);
+    header.nextDataTransferHandle = 1; // dummy resource ID
+    header.dataLengthBytes = 10;
+
+    // Create a command that is exactly the size of the header + data, which
+    // means it is missing the 4-byte checksum. This will pass the initial size
+    // check but fail the one in handleCrc.
+    size_t actualSize =
+        sizeof(MultipartReceiveResHeader) + header.dataLengthBytes;
+    std::vector<uint8_t> command(actualSize);
+    memcpy(command.data(), &header, sizeof(header));
+
+    auto status = handler->decodeRdeCommand(
+        command, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidCommand);
+}
+
 /**
  * @brief Dummy values for annotation dictionary. We do not need the annotation
  * dictionary. So this contains a dictionary with some dummy values. But the RDE
