@@ -115,9 +115,13 @@ RdeDecodeStatus RdeCommandHandler::operationInitRequest(
 
     BejDictionaries dictionaries = {
         .schemaDictionary = (*schemaDictOrErr).data(),
+        .schemaDictionarySize = (uint32_t)(*schemaDictOrErr).size_bytes(),
         .annotationDictionary = (*annotationDictOrErr).data(),
+        .annotationDictionarySize =
+            (uint32_t)(*annotationDictOrErr).size_bytes(),
         // We do not use the error dictionary.
         .errorDictionary = nullptr,
+        .errorDictionarySize = 0,
     };
 
     // Soon after header, we have bejLocator field. Then we have the encoded
