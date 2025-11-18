@@ -61,10 +61,22 @@ class FileHandlerInterface
 class ExternalStorerFileWriter : public FileHandlerInterface
 {
   public:
+    explicit ExternalStorerFileWriter(std::string_view baseDir);
     bool createFolder(const std::string& folderPath) const override;
     bool createFile(const std::string& folderPath,
                     const nlohmann::json& jsonPdr) const override;
     bool removeAll(const std::string& filePath) const override;
+
+  private:
+    /**
+     * @brief Check if the provided path is valid.
+     *
+     * @param[in] folderPath - folder path.
+     * @return true if successful.
+     */
+    bool isValidPath(const std::string& folderPath) const;
+
+    std::filesystem::path baseDir;
 };
 
 /**
