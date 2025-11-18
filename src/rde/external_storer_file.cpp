@@ -13,16 +13,86 @@ namespace bios_bmc_smm_error_logger
 namespace rde
 {
 
+ExternalStorerFileWriter::ExternalStorerFileWriter(std::string_view baseDir) :
+    baseDir
+{}
+
+bool ExternalStorerFileWriter::isValidPath(const std::string& folderPath) const
+{
+    // Combine base path and user-controlled path
+    std::filesystem::path combinedPath = m_baseDir / folderPath;
+
+    // Canonicalize the combined path to resolve '..', etc.
+    std::filesystem::path canonicalBase;
+    std::filesystem::path canonicalCombined;
+
+    try
+    {
+        canonicalBase = std::filesystem::canonical(m_baseDir);
+        canonicalCombined = std::filesystem::canonical(combinedPath);
+    }
+    catch (const std::filesystem::filesystem_error& e)
+    {
+        // Handle case where path doesn't exist (e.g., if a new folder is being
+        // created) A safer check might be to check if the parent directory
+        // exists and is still within baseDir. For simplicity, we'll try an
+        // existence check first.
+
+        // If the path doesn't exist, we must canonicalize its *parent* and
+        // check that.
+        std::filesystem::path parentCanonical;
+        try
+        {
+            parentCanonical =
+                std::filesystem::canonical(combinedPath.parent_path());
+        }
+        catch (...)
+        {
+            // Parent path doesn't exist either, assume bad path or handle
+            // based on policy
+            return false;
+        }
+
+        // Check if the parent path is still within the canonical base path
+        try
+        {
+            canonicalBase = std::filesystem::canonical(m_baseDir);
+        }
+        catch (...)
+        {
+            return false;
+        }
+        if (parentCanonical.string().rfind(canonicalBase.string(), 0) == 0)
+        {
+            // The parent path is safe, so we can allow the folder/file
+            // creation.
+            return true;
+        }
+
+        return false;
+    }
+
+    // Check if the canonical combined path starts with the canonical base path
+    // The string comparison (rfind starting at 0) checks for a prefix match.
+    return canonicalCombined.string().rfind(canonicalBase.string(), 0) == 0;
+}
+
 bool ExternalStorerFileWriter::createFolder(const std::string& folderPath) const
 {
-    std::filesystem::path path(folderPath);
+    if (!isValidPath(folderPath))
+    {
+        stdplus::print(stderr, "Invalid path detected: {}\n", folderPath);
+        return false;
+    }
+    std::filesystem::path path(m_baseDir / folderPath);
     if (!std::filesystem::is_directory(path))
     {
-        stdplus::print(stderr, "no directory at {}, creating.\n", folderPath);
+        stdplus::print(stderr, "no directory at {}, creating.\n",
+                       path.string());
         if (!std::filesystem::create_directories(path))
         {
             stdplus::print(stderr, "Failed to create a folder at {}\n",
-                           folderPath);
+                           path.string());
             return false;
         }
     }
@@ -32,11 +102,16 @@ bool ExternalStorerFileWriter::createFolder(const std::string& folderPath) const
 bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
                                           const nlohmann::json& jsonPdr) const
 {
+    if (!isValidPath(folderPath))
+    {
+        stdplus::print(stderr, "Invalid path detected: {}\n", folderPath);
+        return false;
+    }
     if (!createFolder(folderPath))
     {
         return false;
     }
-    std::filesystem::path path(folderPath);
+    std::filesystem::path path(m_baseDir / folderPath);
     path /= "index.json";
     // If the file already exist, overwrite it.
     std::ofstream output(path);
@@ -47,9 +122,14 @@ bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
 
 bool ExternalStorerFileWriter::removeAll(const std::string& filePath) const
 {
+    if (!isValidPath(filePath))
+    {
+        stdplus::print(stderr, "Invalid path detected: {}\n", filePath);
+        return false;
+    }
     // Attempt to delete the file
     std::error_code ec;
-    std::filesystem::remove_all(filePath, ec);
+    std::filesystem::remove_all(m_baseDir / filePath, ec);
     if (ec)
     {
         return false;
@@ -62,7 +142,8 @@ ExternalStorerFileInterface::ExternalStorerFileInterface(
     std::string_view rootPath,
     std::unique_ptr<FileHandlerInterface> fileHandler,
     uint32_t numSavedLogEntries, uint32_t numLogEntries) :
-    rootPath(rootPath), fileHandler(std::move(fileHandler)), logServiceId(""),
+    rootPath(rootPath),
+    fileHandler(std::move(fileHandler)), logServiceId(""),
     cperNotifier(std::make_unique<CperFileNotifierHandler>(conn)),
     maxNumSavedLogEntries(numSavedLogEntries), maxNumLogEntries(numLogEntries)
 {}
@@ -150,9 +231,9 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
     }
 
     std::string id = boost::uuids::to_string(randomGen());
-    std::string fullPath =
-        std::format("{}/redfish/v1/Systems/system/LogServices/{}/Entries/{}",
-                    rootPath, logServiceId, id);
+    std::string subPath =
+        std::format("/redfish/v1/Systems/system/LogServices/{}/Entries/{}",
+                    logServiceId, id);
 
     // Populate the "Id" with the UUID we generated.
     logEntry["Id"] = id;
@@ -160,26 +241,27 @@ bool ExternalStorerFileInterface::processLogEntry(nlohmann::json& logEntry)
     // a client.
     logEntry.erase("@odata.id");
 
-    stdplus::print(stderr, "Creating CPER file under path: {}. \n", fullPath);
-    if (!fileHandler->createFile(fullPath, logEntry))
+    stdplus::print(stderr, "Creating CPER file under path: {}. \n",
+                   rootPath + subPath);
+    if (!fileHandler->createFile(subPath, logEntry))
     {
         stdplus::print(stderr,
                        "Failed to create a file for log entry path: {}\n",
-                       fullPath);
+                       rootPath + subPath);
         return false;
     }
 
-    cperNotifier->createEntry(fullPath + "/index.json");
+    cperNotifier->createEntry(rootPath + subPath + "/index.json");
 
     // Attempt to push to logEntrySavedQueue first, before pushing to
     // logEntryQueue that can be popped
     if (logEntrySavedQueue.size() < maxNumSavedLogEntries)
     {
-        logEntrySavedQueue.push(std::move(fullPath));
+        logEntrySavedQueue.push(std::move(subPath));
     }
     else
     {
-        logEntryQueue.push(std::move(fullPath));
+        logEntryQueue.push(std::move(subPath));
     }
 
     return true;
@@ -238,7 +320,7 @@ bool ExternalStorerFileInterface::processOtherTypes(
 bool ExternalStorerFileInterface::createFile(
     const std::string& subPath, const nlohmann::json& jsonPdr) const
 {
-    return fileHandler->createFile(rootPath + subPath, jsonPdr);
+    return fileHandler->createFile(subPath, jsonPdr);
 }
 
 } // namespace rde
