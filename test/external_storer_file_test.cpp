@@ -22,6 +22,8 @@ using ::testing::SaveArg;
 class MockFileWriter : public FileHandlerInterface
 {
   public:
+    // The mock needs a constructor that calls the base class constructor.
+    explicit MockFileWriter(const std::string& baseDir) {}
     MOCK_METHOD(bool, createFolder, (const std::string& path),
                 (const, override));
     MOCK_METHOD(bool, createFile,
@@ -30,12 +32,73 @@ class MockFileWriter : public FileHandlerInterface
     MOCK_METHOD(bool, removeAll, (const std::string& path), (const, override));
 };
 
+class ExternalStorerFileWriterTest : public ::testing::Test
+{
+  protected:
+    void SetUp() override
+    {
+        // Create a temporary directory for testing.
+        baseDir = std::filesystem::temp_directory_path() / "test_dir";
+        std::filesystem::create_directories(baseDir);
+        fileWriter = std::make_unique<ExternalStorerFileWriter>(baseDir);
+    }
+
+    void TearDown() override
+    {
+        // Clean up the temporary directory.
+        std::filesystem::remove_all(baseDir);
+    }
+
+    std::filesystem::path baseDir;
+    std::unique_ptr<ExternalStorerFileWriter> fileWriter;
+};
+
+TEST_F(ExternalStorerFileWriterTest, CreateValidFolder)
+{
+    EXPECT_TRUE(fileWriter->createFolder("valid_folder"));
+    EXPECT_TRUE(std::filesystem::is_directory(baseDir / "valid_folder"));
+}
+
+TEST_F(ExternalStorerFileWriterTest, CreateFolderTraversal)
+{
+    EXPECT_FALSE(fileWriter->createFolder("../invalid_folder"));
+    EXPECT_FALSE(std::filesystem::is_directory(baseDir / "../invalid_folder"));
+}
+
+TEST_F(ExternalStorerFileWriterTest, CreateValidFile)
+{
+    nlohmann::json testJson = {{"key", "value"}};
+    EXPECT_TRUE(fileWriter->createFile("valid_file", testJson));
+    EXPECT_TRUE(std::filesystem::exists(baseDir / "valid_file" / "index.json"));
+}
+
+TEST_F(ExternalStorerFileWriterTest, CreateFileTraversal)
+{
+    nlohmann::json testJson = {{"key", "value"}};
+    EXPECT_FALSE(fileWriter->createFile("../invalid_file", testJson));
+    EXPECT_FALSE(
+        std::filesystem::exists(baseDir / "../invalid_file" / "index.json"));
+}
+
+TEST_F(ExternalStorerFileWriterTest, RemoveValidFile)
+{
+    nlohmann::json testJson = {{"key", "value"}};
+    fileWriter->createFile("file_to_remove", testJson);
+    EXPECT_TRUE(fileWriter->removeAll("file_to_remove"));
+    EXPECT_FALSE(std::filesystem::exists(baseDir / "file_to_remove"));
+}
+
+TEST_F(ExternalStorerFileWriterTest, RemoveFileTraversal)
+{
+    EXPECT_FALSE(fileWriter->removeAll("../some_other_file"));
+}
+
 class ExternalStorerFileTest : public ::testing::Test
 {
   public:
     ExternalStorerFileTest() :
         conn(std::make_shared<sdbusplus::asio::connection>(io)),
-        mockFileWriter(std::make_unique<MockFileWriter>())
+        mockFileWriter(std::make_unique<MockFileWriter>(rootPath))
     {
         mockFileWriterPtr = dynamic_cast<MockFileWriter*>(mockFileWriter.get());
         // Set the queue of LogEntry to 1 saved entry and 2 non saved entry
@@ -105,9 +168,9 @@ TEST_F(ExternalStorerFileTest, LogServiceTest)
         }
       )";
     std::string exServiceFolder =
-        "/some/path/redfish/v1/Systems/system/LogServices/6F7-C1A7C";
+        "/redfish/v1/Systems/system/LogServices/6F7-C1A7C";
     std::string exEntriesFolder =
-        "/some/path/redfish/v1/Systems/system/LogServices/6F7-C1A7C/Entries";
+        "/redfish/v1/Systems/system/LogServices/6F7-C1A7C/Entries";
     nlohmann::json exEntriesJson = "{}"_json;
     nlohmann::json exServiceJson = nlohmann::json::parse(jsonStr);
     EXPECT_CALL(*mockFileWriterPtr, createFile(exServiceFolder, exServiceJson))
@@ -139,9 +202,9 @@ TEST_F(ExternalStorerFileTest, LogEntryTest)
       }
     )";
     std::string exServiceFolder =
-        "/some/path/redfish/v1/Systems/system/LogServices/6F7-C1A7C";
+        "/redfish/v1/Systems/system/LogServices/6F7-C1A7C";
     std::string exEntriesFolder =
-        "/some/path/redfish/v1/Systems/system/LogServices/6F7-C1A7C/Entries";
+        "/redfish/v1/Systems/system/LogServices/6F7-C1A7C/Entries";
     nlohmann::json exEntriesJson = "{}"_json;
     nlohmann::json exServiceJson = nlohmann::json::parse(jsonLogSerivce);
     EXPECT_CALL(*mockFileWriterPtr, createFile(exServiceFolder, exServiceJson))
@@ -233,7 +296,7 @@ TEST_F(ExternalStorerFileTest, OtherSchemaTypeTest)
       }
     )";
     std::string exFolder =
-        "/some/path/redfish/v1/Systems/system/Memory/dimm0/MemoryMetrics";
+        "/redfish/v1/Systems/system/Memory/dimm0/MemoryMetrics";
     nlohmann::json exJson = nlohmann::json::parse(jsonStr);
     EXPECT_CALL(*mockFileWriterPtr, createFile(exFolder, exJson))
         .WillOnce(Return(true));
