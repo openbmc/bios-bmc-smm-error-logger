@@ -191,7 +191,7 @@ int main()
     conn->request_name("xyz.openbmc_project.bios_bmc_smm_error_logger");
 
     std::unique_ptr<rde::FileHandlerInterface> fileIface =
-        std::make_unique<rde::ExternalStorerFileWriter>();
+        std::make_unique<rde::ExternalStorerFileWriter>("/run/bmcweb");
     std::unique_ptr<rde::ExternalStorerInterface> exFileIface =
         std::make_unique<rde::ExternalStorerFileInterface>(
             conn, "/run/bmcweb", std::move(fileIface));
