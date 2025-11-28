@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42a59ae0_5fa585a6",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2025-11-28T23:53:46Z",
+      "side": 1,
+      "message": "```suggestion\nbool ExternalStorerFileWriter::isValidPath(const std::string\u0026 folderPath) const\n{\n    // Canonicalize the combined path to resolve \u0027..\u0027, etc.\n    std::filesystem::path canonicalBase;\n    // Check if the parent path is still within the canonical base path\n    try\n    {\n        canonicalBase \u003d std::filesystem::canonical(baseDir);\n    }\n    catch (...)\n    {\n        return false;\n    }\n    \n    \n    // Combine base path and user-controlled path\n    std::filesystem::path combinedPath \u003d baseDir / folderPath;\n    \n    try\n    {\n        // Check if the canonical combined path starts with the canonical base path\n        // The string comparison (rfind starting at 0) checks for a prefix match. \n        return std::filesystem::canonical(combinedPath).string()\n                   .rfind(canonicalBase.string(), 0) \u003d\u003d 0;\n    }\n    catch (const std::filesystem::filesystem_error\u0026 e)\n    {\n        // Handle case where path doesn\u0027t exist (e.g., if a new folder is being\n        // created) A safer check might be to check if the parent directory\n        // exists and is still within baseDir. For simplicity, we\u0027ll try an\n        // existence check first.\n\n        // If the path doesn\u0027t exist, we must canonicalize its *parent* and\n        // check that.\n        std::filesystem::path parentCanonical;\n        try\n        {\n            parentCanonical \u003d\n                std::filesystem::canonical(combinedPath.parent_path());\n        }\n        catch (...)\n        {\n            // Parent path doesn\u0027t exist either, assume bad path or handle\n            // based on policy\n            return false;\n        }\n\n        // Return true if the parent path is safe, so we can allow the folder/file\n        // creation.\n        return parentCanonical.string().rfind(canonicalBase.string(), 0) \u003d\u003d 0;\n    }\n}\n```",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 1
+      },
+      "revId": "37010178d9a0e78c16e156ac703b1cf52d611eec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "963a72cf_083f2db0",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2025-11-28T23:53:46Z",
+      "side": 1,
+      "message": "`isValidPath` is not needed since `createFolder` already checked it.",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 34
+      },
+      "revId": "37010178d9a0e78c16e156ac703b1cf52d611eec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54e9bb22_05d41d8d",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2025-11-28T23:53:46Z",
+      "side": 1,
+      "message": "can combine?",
+      "range": {
+        "startLine": 114,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 25
+      },
+      "revId": "37010178d9a0e78c16e156ac703b1cf52d611eec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
