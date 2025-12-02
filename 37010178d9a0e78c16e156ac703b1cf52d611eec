@@ -24,6 +24,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "45266d0d_7f3128b9",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2025-12-02T19:00:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42a59ae0_5fa585a6",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 1
+      },
+      "revId": "37010178d9a0e78c16e156ac703b1cf52d611eec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "963a72cf_083f2db0",
@@ -47,6 +71,30 @@
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e27d448_4c033da8",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2025-12-02T19:00:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "963a72cf_083f2db0",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 34
+      },
+      "revId": "37010178d9a0e78c16e156ac703b1cf52d611eec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54e9bb22_05d41d8d",
@@ -60,6 +108,30 @@
       "writtenOn": "2025-11-28T23:53:46Z",
       "side": 1,
       "message": "can combine?",
+      "range": {
+        "startLine": 114,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 25
+      },
+      "revId": "37010178d9a0e78c16e156ac703b1cf52d611eec",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b0b70c3_96efd06f",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2025-12-02T19:00:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54e9bb22_05d41d8d",
       "range": {
         "startLine": 114,
         "startChar": 0,
