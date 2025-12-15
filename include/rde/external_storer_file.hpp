@@ -76,6 +76,14 @@ class ExternalStorerFileWriter : public FileHandlerInterface
      */
     bool isValidPath(const std::string& folderPath) const;
 
+    /**
+     * @briefGet a relative path from the input string.
+     *
+     * @param[in] path_str - path string.
+     * @return std::filesystem::path
+     */
+    std::filesystem::path getRelativePath(const std::string& path_str) const;
+
     std::filesystem::path baseDir;
 };
 

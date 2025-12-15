@@ -17,6 +17,17 @@ ExternalStorerFileWriter::ExternalStorerFileWriter(std::string_view baseDir) :
     baseDir(baseDir)
 {}
 
+std::filesystem::path ExternalStorerFileWriter::getRelativePath(
+    const std::string& path_str) const
+{
+    std::filesystem::path path = path_str;
+    if (path.has_root_directory())
+    {
+        path = path.relative_path();
+    }
+    return path;
+}
+
 bool ExternalStorerFileWriter::isValidPath(const std::string& folderPath) const
 {
     // Canonicalize the combined path to resolve '..', etc.
@@ -32,7 +43,7 @@ bool ExternalStorerFileWriter::isValidPath(const std::string& folderPath) const
     }
 
     // Combine base path and user-controlled path
-    std::filesystem::path combinedPath = baseDir / folderPath;
+    std::filesystem::path combinedPath = baseDir / getRelativePath(folderPath);
 
     try
     {
@@ -78,7 +89,7 @@ bool ExternalStorerFileWriter::createFolder(const std::string& folderPath) const
         stdplus::print(stderr, "Invalid path detected: {}\n", folderPath);
         return false;
     }
-    std::filesystem::path path(baseDir / folderPath);
+    std::filesystem::path path(baseDir / getRelativePath(folderPath));
     if (!std::filesystem::is_directory(path))
     {
         stdplus::print(stderr, "no directory at {}, creating.\n",
@@ -101,7 +112,8 @@ bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
     {
         return false;
     }
-    std::filesystem::path path(baseDir / folderPath / "index.json");
+    std::filesystem::path path(
+        baseDir / getRelativePath(folderPath) / "index.json");
     // If the file already exist, overwrite it.
     std::ofstream output(path);
     output << jsonPdr;
@@ -118,7 +130,7 @@ bool ExternalStorerFileWriter::removeAll(const std::string& filePath) const
     }
     // Attempt to delete the file
     std::error_code ec;
-    std::filesystem::remove_all(baseDir / filePath, ec);
+    std::filesystem::remove_all(baseDir / getRelativePath(filePath), ec);
     if (ec)
     {
         return false;
