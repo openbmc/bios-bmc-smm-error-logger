@@ -46,6 +46,30 @@
       },
       "revId": "90117ca1b841ff68c5f159e0de07fb161bc10cd7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a32fd26_a1c7cc3f",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2025-12-15T22:21:00Z",
+      "side": 1,
+      "message": "although current version is more verbose - combining the conditionals actually introduces more edge cases and corner cases.\n\nThe suggested edit makes it so \"..\" gets caught by the if below. Even if it was else if, it would be caught by \"..\" that has --depth \u003c0, which would depth++, evening out the depth.\n\nAlthough verbose I believe the current solution is best.",
+      "parentUuid": "4f869656_f4872bfa",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 9
+      },
+      "revId": "90117ca1b841ff68c5f159e0de07fb161bc10cd7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
