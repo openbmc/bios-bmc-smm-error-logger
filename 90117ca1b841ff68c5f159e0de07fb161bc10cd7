@@ -22,6 +22,30 @@
       },
       "revId": "90117ca1b841ff68c5f159e0de07fb161bc10cd7",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a9ed6b2_3b3d65ac",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2025-12-15T22:19:59Z",
+      "side": 1,
+      "message": "nvm. this will break it.",
+      "parentUuid": "4f869656_f4872bfa",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 9
+      },
+      "revId": "90117ca1b841ff68c5f159e0de07fb161bc10cd7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
