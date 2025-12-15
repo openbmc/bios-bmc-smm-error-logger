@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f869656_f4872bfa",
+        "filename": "src/rde/external_storer_file.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000885
+      },
+      "writtenOn": "2025-12-15T21:20:10Z",
+      "side": 1,
+      "message": "```suggestion\n        if (part \u003d\u003d \"..\" \u0026\u0026 --depth \u003c 0)\n        {\n            // Path traversal attempt\n            return false;\n        }\n        if (part !\u003d \".\")\n        {\n            depth++;\n        }\n```",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 9
+      },
+      "revId": "90117ca1b841ff68c5f159e0de07fb161bc10cd7",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    }
+  ]
+}
