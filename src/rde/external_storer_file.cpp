@@ -17,59 +17,42 @@ ExternalStorerFileWriter::ExternalStorerFileWriter(std::string_view baseDir) :
     baseDir(baseDir)
 {}
 
+std::filesystem::path ExternalStorerFileWriter::getRelativePath(
+    const std::string& path_str) const
+{
+    std::filesystem::path path = path_str;
+    if (path.has_root_directory())
+    {
+        path = path.relative_path();
+    }
+    return path;
+}
+
+
 bool ExternalStorerFileWriter::isValidPath(const std::string& folderPath) const
 {
-    // Canonicalize the combined path to resolve '..', etc.
-    std::filesystem::path canonicalBase;
-    // Check if the parent path is still within the canonical base path
-    try
-    {
-        canonicalBase = std::filesystem::canonical(baseDir);
-    }
-    catch (...)
-    {
-        return false;
-    }
+    std::filesystem::path relativePath = getRelativePath(folderPath);
 
-    // Combine base path and user-controlled path
-    std::filesystem::path combinedPath = baseDir / folderPath;
-
-    try
+    int depth = 0;
+    for (const auto& part : relativePath)
     {
-        // Check if the canonical combined path starts with the canonical base
-        // path The string comparison (rfind starting at 0) checks for a prefix
-        // match.
-        return std::filesystem::canonical(combinedPath)
-                   .string()
-                   .rfind(canonicalBase.string(), 0) == 0;
-    }
-    catch (const std::filesystem::filesystem_error& e)
-    {
-        // Handle case where path doesn't exist (e.g., if a new folder is being
-        // created) A safer check might be to check if the parent directory
-        // exists and is still within baseDir. For simplicity, we'll try an
-        // existence check first.
-
-        // If the path doesn't exist, we must canonicalize its *parent* and
-        // check that.
-        std::filesystem::path parentCanonical;
-        try
+        if (part == "..")
         {
-            parentCanonical =
-                std::filesystem::canonical(combinedPath.parent_path());
+            depth--;
+            if (depth < 0)
+            {
+                return false; // Path traversal attempt
+            }
         }
-        catch (...)
+        else if (part != ".")
         {
-            // Parent path doesn't exist either, assume bad path or handle
-            // based on policy
-            return false;
+            depth++;
         }
-
-        // Return true if the parent path is safe, so we can allow the
-        // folder/file creation.
-        return parentCanonical.string().rfind(canonicalBase.string(), 0) == 0;
     }
+
+    return true;
 }
+
 
 bool ExternalStorerFileWriter::createFolder(const std::string& folderPath) const
 {
@@ -78,7 +61,7 @@ bool ExternalStorerFileWriter::createFolder(const std::string& folderPath) const
         stdplus::print(stderr, "Invalid path detected: {}\n", folderPath);
         return false;
     }
-    std::filesystem::path path(baseDir / folderPath);
+    std::filesystem::path path(baseDir / getRelativePath(folderPath));
     if (!std::filesystem::is_directory(path))
     {
         stdplus::print(stderr, "no directory at {}, creating.\n",
@@ -101,7 +84,8 @@ bool ExternalStorerFileWriter::createFile(const std::string& folderPath,
     {
         return false;
     }
-    std::filesystem::path path(baseDir / folderPath / "index.json");
+    std::filesystem::path path(
+        baseDir / getRelativePath(folderPath) / "index.json");
     // If the file already exist, overwrite it.
     std::ofstream output(path);
     output << jsonPdr;
@@ -118,7 +102,7 @@ bool ExternalStorerFileWriter::removeAll(const std::string& filePath) const
     }
     // Attempt to delete the file
     std::error_code ec;
-    std::filesystem::remove_all(baseDir / filePath, ec);
+    std::filesystem::remove_all(baseDir / getRelativePath(filePath), ec);
     if (ec)
     {
         return false;

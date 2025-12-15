@@ -94,6 +94,58 @@ TEST_F(ExternalStorerFileWriterTest, RemoveFileTraversal)
     EXPECT_FALSE(fileWriter->removeAll("../some_other_file"));
 }
 
+TEST_F(ExternalStorerFileWriterTest, CreateFolderLeadingSlash)
+{
+    EXPECT_TRUE(fileWriter->createFolder("/valid_folder_leading_slash"));
+    EXPECT_TRUE(
+        std::filesystem::is_directory(baseDir / "valid_folder_leading_slash"));
+    EXPECT_TRUE(fileWriter->createFolder("/valid/sub/directories"));
+    EXPECT_TRUE(
+        std::filesystem::is_directory(baseDir / "valid/sub/directories"));
+}
+
+TEST_F(ExternalStorerFileWriterTest, CreateFileLeadingSlash)
+{
+    nlohmann::json testJson = {{"key", "value"}};
+    EXPECT_TRUE(fileWriter->createFile("/valid_file_leading_slash", testJson));
+    EXPECT_TRUE(std::filesystem::exists(
+        baseDir / "valid_file_leading_slash" / "index.json"));
+    EXPECT_TRUE(fileWriter->createFile("/valid/sub/directories", testJson));
+    EXPECT_TRUE(std::filesystem::exists(
+        baseDir / "valid" / "sub" / "directories" / "index.json"));
+}
+
+TEST_F(ExternalStorerFileWriterTest, RemoveFileLeadingSlash)
+{
+    nlohmann::json testJson = {{"key", "value"}};
+    fileWriter->createFile("/file_to_remove_leading_slash", testJson);
+    EXPECT_TRUE(fileWriter->removeAll("/file_to_remove_leading_slash"));
+    EXPECT_FALSE(
+        std::filesystem::exists(baseDir / "file_to_remove_leading_slash"));
+}
+
+TEST_F(ExternalStorerFileWriterTest, MoreCreateFolderTraversal)
+{
+    EXPECT_FALSE(fileWriter->createFolder("test1/../../test2"));
+    EXPECT_FALSE(fileWriter->createFolder("/../test3"));
+    EXPECT_FALSE(fileWriter->createFolder("../app/test4"));
+}
+
+TEST_F(ExternalStorerFileWriterTest, MoreCreateFileTraversal)
+{
+    nlohmann::json testJson = {{"key", "value"}};
+    EXPECT_FALSE(fileWriter->createFile("test1/../../test2", testJson));
+    EXPECT_FALSE(fileWriter->createFile("/../test3", testJson));
+    EXPECT_FALSE(fileWriter->createFile("../app/test4", testJson));
+}
+
+TEST_F(ExternalStorerFileWriterTest, MoreRemoveFileTraversal)
+{
+    EXPECT_FALSE(fileWriter->removeAll("test1/../../test2"));
+    EXPECT_FALSE(fileWriter->removeAll("/../test3"));
+    EXPECT_FALSE(fileWriter->removeAll("../app/test4"));
+}
+
 class ExternalStorerFileTest : public ::testing::Test
 {
   public:
