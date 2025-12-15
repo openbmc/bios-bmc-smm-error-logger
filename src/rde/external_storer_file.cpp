@@ -32,7 +32,12 @@ bool ExternalStorerFileWriter::isValidPath(const std::string& folderPath) const
     }
 
     // Combine base path and user-controlled path
-    std::filesystem::path combinedPath = baseDir / folderPath;
+    std::filesystem::path relativePath = folderPath;
+    if (relativePath.has_root_directory())
+    {
+        relativePath = relativePath.relative_path();
+    }
+    std::filesystem::path combinedPath = baseDir / relativePath;
 
     try
     {
