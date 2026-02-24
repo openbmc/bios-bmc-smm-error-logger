@@ -90,7 +90,7 @@ RdeDecodeStatus RdeCommandHandler::operationInitRequest(
         return RdeDecodeStatus::RdeUnsupportedOperation;
     }
 
-    // OperationInit payload overflows are not suported.
+    // OperationInit payload overflows are not supported.
     if (header->sendDataTransferHandle != 0)
     {
         stdplus::print(stderr, "Payload should fit in within the request\n");

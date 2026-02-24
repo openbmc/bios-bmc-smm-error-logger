@@ -83,7 +83,7 @@ void readLoop(boost::asio::steady_timer* t,
         {
             stdplus::print(
                 stdout,
-                "[WARN] Buffer overflow had occured and has been acked\n");
+                "[WARN] Buffer overflow had occurred and has been acked\n");
         }
 
         std::vector<EntryPair> entryPairs = bufferInterface->readErrorLogs();

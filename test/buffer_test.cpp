@@ -623,7 +623,7 @@ TEST_F(BufferWraparoundReadTest, WrapAroundReadFails)
             EXPECT_STREQ(
                 e.what(),
                 "[wraparoundRead] Buffer wrapped around but read '2' which was "
-                "not the requested lenght of '3'");
+                "not the requested length of '3'");
             throw;
         },
         std::runtime_error);
@@ -963,7 +963,7 @@ TEST_F(BufferReadErrorLogsTest, WraparoundMismatchingPtrsFail)
 {
     InSequence s;
     testInitializationHeader.bmcReadPtr = boost::endian::native_to_little(0);
-    // Make the biosWritePtr intentially 1 smaller than expected
+    // Make the biosWritePtr intentionally 1 smaller than expected
     testInitializationHeader.biosWritePtr =
         boost::endian::native_to_little(entryAndHeaderSize - 1);
     initializeFuncMock();

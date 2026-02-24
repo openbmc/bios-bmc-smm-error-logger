@@ -199,7 +199,7 @@ std::vector<uint8_t> BufferImpl::wraparoundRead(const uint32_t relativeOffset,
         {
             throw std::runtime_error(std::format(
                 "[wraparoundRead] Buffer wrapped around but read '{}' which "
-                "was not the requested lenght of '{}'",
+                "was not the requested length of '{}'",
                 wrappedBytesRead.size(), numWraparoundBytesToRead));
         }
         bytesRead.insert(bytesRead.end(), wrappedBytesRead.begin(),
