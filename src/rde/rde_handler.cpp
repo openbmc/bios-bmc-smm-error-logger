@@ -71,16 +71,30 @@ RdeDecodeStatus RdeCommandHandler::operationInitRequest(
 
     // Ensure rdeCommand is large enough for header + locator + declared
     // payload.
-    size_t expectedTotalSize =
-        sizeof(RdeOperationInitReqHeader) + header->operationLocatorLength +
-        header->requestPayloadLength;
-    if (rdeCommand.size() < expectedTotalSize)
+    if (rdeCommand.size() - sizeof(RdeOperationInitReqHeader) <
+        header->operationLocatorLength)
     {
-        stdplus::print(stderr,
-                       "RDE OperationInitRequest command size is smaller than "
-                       "header + locator + declared payload size. "
-                       "Received: {}, Expected: {}\n",
-                       rdeCommand.size(), expectedTotalSize);
+        stdplus::print(
+            stderr,
+            "RDE OperationInitRequest command size is too small "
+            "for locator. Received: {}, Expected at least: {}\n",
+            rdeCommand.size(),
+            sizeof(RdeOperationInitReqHeader) + header->operationLocatorLength);
+        return RdeDecodeStatus::RdeInvalidCommand;
+    }
+
+    size_t remainingBytes =
+        rdeCommand.size() - sizeof(RdeOperationInitReqHeader) -
+        header->operationLocatorLength;
+    if (remainingBytes < header->requestPayloadLength)
+    {
+        stdplus::print(
+            stderr,
+            "RDE OperationInitRequest command size is too small "
+            "for payload. Received: {}, Expected at least: {}\n",
+            rdeCommand.size(),
+            sizeof(RdeOperationInitReqHeader) + header->operationLocatorLength +
+                header->requestPayloadLength);
         return RdeDecodeStatus::RdeInvalidCommand;
     }
 
@@ -162,8 +176,8 @@ RdeDecodeStatus RdeCommandHandler::multiPartReceiveResp(
     const MultipartReceiveResHeader* header =
         reinterpret_cast<const MultipartReceiveResHeader*>(rdeCommand.data());
 
-    if (rdeCommand.size() <
-        sizeof(MultipartReceiveResHeader) + header->dataLengthBytes)
+    if (rdeCommand.size() - sizeof(MultipartReceiveResHeader) <
+        header->dataLengthBytes)
     {
         stdplus::print(stderr,
                        "RDE command size is smaller than header + declared "
@@ -245,13 +259,23 @@ RdeDecodeStatus RdeCommandHandler::handleCrc(
 
     // Validate that the total message size (header + data + checksum) does not
     // exceed the actual size of the received buffer.
-    size_t expectedSize = sizeof(MultipartReceiveResHeader) +
-                          header->dataLengthBytes + sizeof(uint32_t);
-    if (expectedSize != multiReceiveRespCmd.size())
+    if (multiReceiveRespCmd.size() <
+        sizeof(MultipartReceiveResHeader) + sizeof(uint32_t))
     {
         stdplus::print(stderr,
-                       "Corruption detected: Invalid dataLengthBytes in "
-                       "header or not enough bytes for checksum.\n");
+                       "Corruption detected: Message size is too small to "
+                       "contain header and checksum.\n");
+        return RdeDecodeStatus::RdeInvalidCommand;
+    }
+
+    size_t remainingBytes =
+        multiReceiveRespCmd.size() - sizeof(MultipartReceiveResHeader) -
+        sizeof(uint32_t);
+    if (remainingBytes != header->dataLengthBytes)
+    {
+        stdplus::print(
+            stderr, "Corruption detected: Invalid dataLengthBytes in header or "
+                    "not enough bytes for checksum.\n");
         return RdeDecodeStatus::RdeInvalidCommand;
     }
 
