@@ -87,8 +87,7 @@ void BufferImpl::readBufferHeader()
                         bytesRead.size(), headerSize));
     }
 
-    cachedBufferHeader =
-        *reinterpret_cast<struct CircularBufferHeader*>(bytesRead.data());
+    std::memcpy(&cachedBufferHeader, bytesRead.data(), headerSize);
 };
 
 struct CircularBufferHeader BufferImpl::getCachedBufferHeader() const
@@ -220,7 +219,9 @@ struct QueueEntryHeader BufferImpl::readEntryHeader()
         boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
         headerSize);
 
-    return *reinterpret_cast<struct QueueEntryHeader*>(bytesRead.data());
+    struct QueueEntryHeader entryHeader;
+    std::memcpy(&entryHeader, bytesRead.data(), headerSize);
+    return entryHeader;
 }
 
 std::vector<uint8_t> BufferImpl::readUeLogFromReservedRegion()
