@@ -22,6 +22,30 @@
       },
       "revId": "aa89ae6d9d3657282e68de0b7a1031f4d4e87ec3",
       "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec5bc99f_a8197d1d",
+        "filename": "src/buffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000388
+      },
+      "writtenOn": "2026-05-20T18:01:03Z",
+      "side": 1,
+      "message": "Yes, it\u0027s a struct instance within the BufferImpl class so this should be safe.",
+      "parentUuid": "148c2fed_9be0b76e",
+      "range": {
+        "startLine": 90,
+        "startChar": 17,
+        "endLine": 90,
+        "endChar": 35
+      },
+      "revId": "aa89ae6d9d3657282e68de0b7a1031f4d4e87ec3",
+      "serverId": "adbd0a64-1f21-4d83-b585-671fe73cb6e4"
     }
   ]
 }
