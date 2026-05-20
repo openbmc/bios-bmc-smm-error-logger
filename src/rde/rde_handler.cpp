@@ -53,10 +53,10 @@ RdeDecodeStatus RdeCommandHandler::operationInitRequest(
     // Ensure rdeCommand is large enough for the header.
     if (rdeCommand.size() < sizeof(RdeOperationInitReqHeader))
     {
-        stdplus::print(
-            stderr,
-            "RDE OperationInitRequest command is smaller than the expected header size. Received: {}, Expected: {}\n",
-            rdeCommand.size(), sizeof(RdeOperationInitReqHeader));
+        stdplus::print(stderr,
+                       "RDE OperationInitRequest command is smaller than "
+                       "the expected header size. Received: {}, Expected: {}\n",
+                       rdeCommand.size(), sizeof(RdeOperationInitReqHeader));
         return RdeDecodeStatus::RdeInvalidCommand;
     }
 
@@ -76,10 +76,11 @@ RdeDecodeStatus RdeCommandHandler::operationInitRequest(
         header->requestPayloadLength;
     if (rdeCommand.size() < expectedTotalSize)
     {
-        stdplus::print(
-            stderr,
-            "RDE OperationInitRequest command size is smaller than header + locator + declared payload size. Received: {}, Expected: {}\n",
-            rdeCommand.size(), expectedTotalSize);
+        stdplus::print(stderr,
+                       "RDE OperationInitRequest command size is smaller than "
+                       "header + locator + declared payload size. "
+                       "Received: {}, Expected: {}\n",
+                       rdeCommand.size(), expectedTotalSize);
         return RdeDecodeStatus::RdeInvalidCommand;
     }
 
@@ -153,8 +154,8 @@ RdeDecodeStatus RdeCommandHandler::multiPartReceiveResp(
 {
     if (rdeCommand.size() < sizeof(MultipartReceiveResHeader))
     {
-        stdplus::print(
-            stderr, "RDE command is smaller than the expected header size.\n");
+        stdplus::print(stderr,
+                       "RDE command is smaller than the expected header size.\n");
         return RdeDecodeStatus::RdeInvalidCommand;
     }
 
@@ -164,9 +165,9 @@ RdeDecodeStatus RdeCommandHandler::multiPartReceiveResp(
     if (rdeCommand.size() <
         sizeof(MultipartReceiveResHeader) + header->dataLengthBytes)
     {
-        stdplus::print(
-            stderr,
-            "RDE command size is smaller than header + declared payload size.\n");
+        stdplus::print(stderr,
+                       "RDE command size is smaller than header + declared "
+                       "payload size.\n");
         return RdeDecodeStatus::RdeInvalidCommand;
     }
 
@@ -184,7 +185,7 @@ RdeDecodeStatus RdeCommandHandler::multiPartReceiveResp(
     {
         case static_cast<uint8_t>(
             RdeMultiReceiveTransferFlag::RdeMRecFlagStart):
-            handleFlagStart(header, data, resourceId);
+            ret = handleFlagStart(header, data, resourceId);
             break;
         case static_cast<uint8_t>(
             RdeMultiReceiveTransferFlag::RdeMRecFlagMiddle):
@@ -248,9 +249,9 @@ RdeDecodeStatus RdeCommandHandler::handleCrc(
                           header->dataLengthBytes + sizeof(uint32_t);
     if (expectedSize != multiReceiveRespCmd.size())
     {
-        stdplus::print(
-            stderr,
-            "Corruption detected: Invalid dataLengthBytes in header or not enough bytes for checksum.\n");
+        stdplus::print(stderr,
+                       "Corruption detected: Invalid dataLengthBytes in "
+                       "header or not enough bytes for checksum.\n");
         return RdeDecodeStatus::RdeInvalidCommand;
     }
 
@@ -270,17 +271,24 @@ RdeDecodeStatus RdeCommandHandler::handleCrc(
     return RdeDecodeStatus::RdeOk;
 }
 
-void RdeCommandHandler::handleFlagStart(const MultipartReceiveResHeader* header,
-                                        const uint8_t* data,
-                                        uint32_t resourceId)
+RdeDecodeStatus RdeCommandHandler::handleFlagStart(
+    const MultipartReceiveResHeader* header, const uint8_t* data,
+    uint32_t resourceId)
 {
     // This is a beginning of a dictionary. Reset CRC.
     crc = 0xFFFFFFFF;
     std::span dataS(data, header->dataLengthBytes);
-    dictionaryManager.startDictionaryEntry(resourceId, dataS);
+    if (!dictionaryManager.startDictionaryEntry(resourceId, dataS))
+    {
+        stdplus::print(stderr,
+                       "Failed to start dictionary entry: ResourceId: {}\n",
+                       resourceId);
+        return RdeDecodeStatus::RdeDictionaryError;
+    }
     // Start checksum calculation only for the data portion.
     updateCrc(dataS);
     flagState = RdeDictTransferFlagState::RdeStateStartRecvd;
+    return RdeDecodeStatus::RdeOk;
 }
 
 RdeDecodeStatus RdeCommandHandler::handleFlagMiddle(
@@ -289,9 +297,9 @@ RdeDecodeStatus RdeCommandHandler::handleFlagMiddle(
 {
     if (flagState != RdeDictTransferFlagState::RdeStateStartRecvd)
     {
-        stdplus::print(
-            stderr,
-            "Invalid dictionary packet order. Need start before middle.\n");
+        stdplus::print(stderr,
+                       "Invalid dictionary packet order. Need start before
+                       middle.\n");
         return RdeDecodeStatus::RdeInvalidPktOrder;
     }
 
@@ -301,7 +309,13 @@ RdeDecodeStatus RdeCommandHandler::handleFlagMiddle(
         // Start of a new dictionary. Mark previous dictionary as
         // complete.
         dictionaryManager.markDataComplete(prevDictResourceId);
-        dictionaryManager.startDictionaryEntry(resourceId, dataS);
+        if (!dictionaryManager.startDictionaryEntry(resourceId, dataS))
+        {
+            stdplus::print(stderr,
+                           "Failed to start dictionary entry: ResourceId: {}\n",
+                           resourceId);
+            return RdeDecodeStatus::RdeDictionaryError;
+        }
     }
     else
     {
@@ -327,9 +341,9 @@ RdeDecodeStatus RdeCommandHandler::handleFlagEnd(
 {
     if (flagState != RdeDictTransferFlagState::RdeStateStartRecvd)
     {
-        stdplus::print(
-            stderr,
-            "Invalid dictionary packet order. Need start before middle.\n");
+        stdplus::print(stderr,
+                       "Invalid dictionary packet order. Need start before
+                       middle.\n");
         return RdeDecodeStatus::RdeInvalidPktOrder;
     }
     flagState = RdeDictTransferFlagState::RdeStateIdle;
@@ -340,7 +354,13 @@ RdeDecodeStatus RdeCommandHandler::handleFlagEnd(
         // Start of a new dictionary. Mark previous dictionary as
         // complete.
         dictionaryManager.markDataComplete(prevDictResourceId);
-        dictionaryManager.startDictionaryEntry(resourceId, dataS);
+        if (!dictionaryManager.startDictionaryEntry(resourceId, dataS))
+        {
+            stdplus::print(stderr,
+                           "Failed to start dictionary entry: ResourceId: {}\n",
+                           resourceId);
+            return RdeDecodeStatus::RdeDictionaryError;
+        }
     }
     else
     {
@@ -374,8 +394,14 @@ RdeDecodeStatus RdeCommandHandler::handleFlagStartAndEnd(
     // This is a beginning of a dictionary. Reset CRC.
     crc = 0xFFFFFFFF;
     // This is a beginning and end of a dictionary.
-    dictionaryManager.startDictionaryEntry(
-        resourceId, std::span(data, header->dataLengthBytes));
+    if (!dictionaryManager.startDictionaryEntry(
+            resourceId, std::span(data, header->dataLengthBytes)))
+    {
+        stdplus::print(stderr,  
+                       "Failed to start dictionary entry: ResourceId: {}\n",
+                       resourceId);
+        return RdeDecodeStatus::RdeDictionaryError;
+    }
     dictionaryManager.markDataComplete(resourceId);
     flagState = RdeDictTransferFlagState::RdeStateIdle;
 
