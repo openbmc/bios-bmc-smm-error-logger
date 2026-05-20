@@ -67,6 +67,15 @@ TEST_F(PciHandlerTest, BoundaryChecksReadFail)
                 ElementsAreArray(emptyVector));
 }
 
+TEST_F(PciHandlerTest, BoundaryChecksReadOverflow)
+{
+    // Offset + length overflows uint32_t (e.g., 4 + 0xFFFFFFFD = 1 < 8)
+    // It should be safely capped to the remaining 4 bytes in the buffer and not crash or read out of bounds.
+    std::vector<uint8_t> expectedVector{44, 55, 66, 77};
+    EXPECT_THAT(pciDataHandler->read(4, 0xFFFFFFFD),
+                ElementsAreArray(expectedVector));
+}
+
 TEST_F(PciHandlerTest, BoundaryChecksWriteFail)
 {
     std::vector<uint8_t> emptyVector;
