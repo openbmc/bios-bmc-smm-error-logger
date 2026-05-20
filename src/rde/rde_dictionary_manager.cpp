@@ -11,16 +11,30 @@ namespace rde
 
 DictionaryManager::DictionaryManager() : validDictionaryCount(0) {}
 
-void DictionaryManager::startDictionaryEntry(
+bool DictionaryManager::startDictionaryEntry(
     uint32_t resourceId, const std::span<const uint8_t> data)
 {
+    if (data.size() > maxDictionarySize)
+    {
+        stdplus::print(stderr, "Dictionary size {} exceeds max limit of {}.\n",
+                       data.size(), maxDictionarySize);
+        return false;
+    }
+
     // Check whether the resourceId is already available.
     auto itemIt = dictionaries.find(resourceId);
     if (itemIt == dictionaries.end())
     {
+        if (dictionaries.size() >= maxDictionaries)
+        {
+            stdplus::print(stderr,
+                           "Maximum number of dictionaries reached: {}\n",
+                           maxDictionaries);
+            return false;
+        }
         dictionaries[resourceId] =
             std::make_unique<DictionaryEntry>(false, data);
-        return;
+        return true;
     }
 
     // Since we are creating a new dictionary on an existing entry, invalidate
@@ -31,6 +45,7 @@ void DictionaryManager::startDictionaryEntry(
     itemIt->second->data.clear();
     itemIt->second->data.insert(itemIt->second->data.begin(), data.begin(),
                                 data.end());
+    return true;
 }
 
 bool DictionaryManager::markDataComplete(uint32_t resourceId)
@@ -54,6 +69,15 @@ bool DictionaryManager::addDictionaryData(uint32_t resourceId,
         stdplus::print(stderr, "Resource ID {} not found.\n", resourceId);
         return false;
     }
+
+    if (itemIt->second->data.size() + data.size() > maxDictionarySize)
+    {
+        stdplus::print(stderr, "Dictionary size {} exceeds max limit of {}.\n",
+                       itemIt->second->data.size() + data.size(),
+                       maxDictionarySize);
+        return false;
+    }
+
     // Since we are modifying an existing entry, invalidate the existing entry.
     invalidateDictionaryEntry(*itemIt->second);
     itemIt->second->data.insert(itemIt->second->data.end(), data.begin(),
