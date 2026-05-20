@@ -27,18 +27,18 @@ PciDataHandler::PciDataHandler(uint32_t regionAddress, size_t regionSize,
 std::vector<uint8_t> PciDataHandler::read(const uint32_t offset,
                                           const uint32_t length)
 {
-    if (offset > regionSize || length == 0)
+    if (offset >= regionSize || length == 0)
     {
-        stdplus::print(stderr,
-                       "[read] Offset [{}] was bigger than regionSize [{}] "
-                       "OR length [{}] was equal to 0\n",
-                       offset, regionSize, length);
-        return {};
+        stdplus::print(
+            stderr,
+            "[read] Offset [{}] was bigger than or equal to regionSize [{}] "
+            "OR length [{}] was equal to 0\n",
+            offset, regionSize, length);
     }
 
     // Read up to regionSize in case the offset + length overflowed
     uint32_t finalLength =
-        (offset + length < regionSize) ? length : regionSize - offset;
+        (length < regionSize - offset) ? length : regionSize - offset;
     std::vector<uint8_t> results(finalLength);
 
     // Use a volatile pointer to ensure every access reads directly from the
@@ -59,25 +59,26 @@ uint32_t PciDataHandler::write(const uint32_t offset,
                                const std::span<const uint8_t> bytes)
 {
     const size_t length = bytes.size();
-    if (offset > regionSize || length == 0)
+    if (offset >= regionSize || length == 0)
     {
-        stdplus::print(stderr,
-                       "[write] Offset [{}] was bigger than regionSize [{}] "
-                       "OR length [{}] was equal to 0\n",
-                       offset, regionSize, length);
+        stdplus::print(
+            stderr,
+            "[write] Offset [{}] was bigger than or equal to regionSize [{}] "
+            "OR length [{}] was equal to 0\n",
+            offset, regionSize, length);
         return 0;
     }
 
     // Write up to regionSize in case the offset + length overflowed
-    uint16_t finalLength =
-        (offset + length < regionSize) ? length : regionSize - offset;
+    uint32_t finalLength =
+        (length < regionSize - offset) ? length : regionSize - offset;
     // Use a volatile pointer to ensure every access writes directly to the
     // memory-mapped region.
     volatile uint8_t* dest =
         reinterpret_cast<volatile uint8_t*>(mmap.get().data() + offset);
 
     // Perform a byte-by-byte copy to ensure volatile semantics.
-    for (uint16_t i = 0; i < finalLength; ++i)
+    for (uint32_t i = 0; i < finalLength; ++i)
     {
         dest[i] = bytes[i];
     }
