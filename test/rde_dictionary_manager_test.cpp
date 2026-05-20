@@ -164,6 +164,38 @@ TEST_F(RdeDictionaryManagerTest, DictionaryOverrideWithAddDataTest)
     EXPECT_THAT(dm.getDictionaryCount(), 1);
 }
 
+TEST_F(RdeDictionaryManagerTest, DictionaryLimitCountTest)
+{
+    // Start maxDictionaries entries.
+    for (uint32_t i = 1; i <= maxDictionaries; ++i)
+    {
+        EXPECT_TRUE(dm.startDictionaryEntry(i, std::span(dummyDictionary1)));
+    }
+
+    // Creating one more should fail.
+    EXPECT_FALSE(dm.startDictionaryEntry(maxDictionaries + 1,
+                                         std::span(dummyDictionary1)));
+
+    // Overwriting an existing entry is allowed (doesn't increase count).
+    EXPECT_TRUE(dm.startDictionaryEntry(1, std::span(dummyDictionary2)));
+}
+
+TEST_F(RdeDictionaryManagerTest, DictionaryLimitSizeTest)
+{
+    // Max size is 1MB. Create a 1MB + 1 byte payload.
+    std::vector<uint8_t> hugePayload(maxDictionarySize + 1, 0xFF);
+    EXPECT_FALSE(dm.startDictionaryEntry(resourceId, hugePayload));
+
+    // Start a normal dictionary.
+    std::vector<uint8_t> normalPayload(maxDictionarySize - 10, 0xFF);
+    EXPECT_TRUE(dm.startDictionaryEntry(resourceId, normalPayload));
+
+    // Try adding data that would exceed the 1MB limit.
+    // (maxDictionarySize - 10) + 11 = maxDictionarySize + 1
+    std::vector<uint8_t> extraPayload(11, 0xFF);
+    EXPECT_FALSE(dm.addDictionaryData(resourceId, extraPayload));
+}
+
 TEST_F(RdeDictionaryManagerTest, DictionaryInvalidateTest)
 {
     dm.startDictionaryEntry(resourceId, std::span(dummyDictionary1));

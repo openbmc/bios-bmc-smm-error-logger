@@ -20,6 +20,12 @@ namespace rde
 constexpr uint32_t annotationResourceId = 0;
 
 /**
+ * @brief Safety limits to prevent memory exhaustion (DoS).
+ */
+constexpr uint32_t maxDictionaries = 64;
+constexpr size_t maxDictionarySize = 1024 * 1024; // 1MB
+
+/**
  * @brief Holds an RDE BEJ dictionary entry.
  */
 struct DictionaryEntry
@@ -45,8 +51,9 @@ class DictionaryManager
      *
      * @param[in] resourceId - PDR resource id corresponding to the dictionary.
      * @param[in] data - dictionary data.
+     * @return true if successful, false if size or count limits are exceeded.
      */
-    void startDictionaryEntry(uint32_t resourceId,
+    bool startDictionaryEntry(uint32_t resourceId,
                               const std::span<const uint8_t> data);
 
     /**
