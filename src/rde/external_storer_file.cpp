@@ -32,22 +32,23 @@ bool ExternalStorerFileWriter::isValidPath(const std::string& folderPath) const
 {
     std::filesystem::path relativePath = getRelativePath(folderPath);
 
-    int depth = 0;
     for (const auto& part : relativePath)
     {
-        if (part == "..")
+        if (part == ".." || part == ".")
         {
-            depth--;
-            if (depth < 0)
-            {
-                // Path traversal attempt
-                return false;
-            }
+            // Forbid any path traversal or relative directory components
+            return false;
         }
-        else if (part != ".")
-        {
-            depth++;
-        }
+    }
+
+    // Verify resolved path remains strictly within baseDir
+    std::filesystem::path resolvedPath =
+        (baseDir / relativePath).lexically_normal();
+    std::filesystem::path normalBase = baseDir.lexically_normal();
+    auto rel = resolvedPath.lexically_relative(normalBase);
+    if (rel.empty() || rel.string().starts_with(".."))
+    {
+        return false;
     }
 
     return true;
