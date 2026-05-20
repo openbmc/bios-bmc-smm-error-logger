@@ -127,6 +127,7 @@ TEST_F(ExternalStorerFileWriterTest, RemoveFileLeadingSlash)
 TEST_F(ExternalStorerFileWriterTest, MoreCreateFolderTraversal)
 {
     EXPECT_FALSE(fileWriter->createFolder("test1/../../test2"));
+    EXPECT_FALSE(fileWriter->createFolder("test1/test2/../../test3"));
     EXPECT_FALSE(fileWriter->createFolder("/../test3"));
     EXPECT_FALSE(fileWriter->createFolder("../app/test4"));
 }
@@ -135,6 +136,7 @@ TEST_F(ExternalStorerFileWriterTest, MoreCreateFileTraversal)
 {
     nlohmann::json testJson = {{"key", "value"}};
     EXPECT_FALSE(fileWriter->createFile("test1/../../test2", testJson));
+    EXPECT_FALSE(fileWriter->createFile("test1/test2/../../test3", testJson));
     EXPECT_FALSE(fileWriter->createFile("/../test3", testJson));
     EXPECT_FALSE(fileWriter->createFile("../app/test4", testJson));
 }
@@ -142,6 +144,7 @@ TEST_F(ExternalStorerFileWriterTest, MoreCreateFileTraversal)
 TEST_F(ExternalStorerFileWriterTest, MoreRemoveFileTraversal)
 {
     EXPECT_FALSE(fileWriter->removeAll("test1/../../test2"));
+    EXPECT_FALSE(fileWriter->removeAll("test1/test2/../../test3"));
     EXPECT_FALSE(fileWriter->removeAll("/../test3"));
     EXPECT_FALSE(fileWriter->removeAll("../app/test4"));
 }
