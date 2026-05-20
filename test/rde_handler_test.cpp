@@ -287,6 +287,40 @@ TEST_F(RdeCommandHandlerTest,
     EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidCommand);
 }
 
+TEST_F(RdeCommandHandlerTest, OperationInitRequest_PayloadLengthOverflow)
+{
+    RdeOperationInitReqHeader header{};
+    header.containsRequestPayload = true;
+    header.operationType =
+        static_cast<uint8_t>(RdeOperationInitType::RdeOpInitOperationUpdate);
+    header.operationLocatorLength = 1;
+    header.requestPayloadLength = 0xFFFFFFFD; // Overflowing length!
+
+    std::vector<uint8_t> cmdData(sizeof(header));
+    memcpy(cmdData.data(), &header, sizeof(header));
+    cmdData.push_back(0xAA); // locator payload
+
+    auto status = handler->decodeRdeCommand(
+        cmdData, RdeCommandType::RdeOperationInitRequest);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidCommand);
+}
+
+TEST_F(RdeCommandHandlerTest, MultiPartReceiveResp_DataLengthOverflow)
+{
+    MultipartReceiveResHeader header{};
+    header.transferFlag =
+        static_cast<uint8_t>(RdeMultiReceiveTransferFlag::RdeMRecFlagStart);
+    header.dataLengthBytes = 0xFFFFFFF6; // Overflowing length!
+
+    std::vector<uint8_t> cmdData(sizeof(header));
+    memcpy(cmdData.data(), &header, sizeof(header));
+    cmdData.push_back(0xAA); // 1 byte of payload
+
+    auto status = handler->decodeRdeCommand(
+        cmdData, RdeCommandType::RdeMultiPartReceiveResponse);
+    EXPECT_EQ(status, RdeDecodeStatus::RdeInvalidCommand);
+}
+
 TEST_F(RdeCommandHandlerTest, MultiPartReceiveResp_InvalidTransferFlag)
 {
     std::vector<uint8_t> payload = {'d', 'a', 't', 'a'};
