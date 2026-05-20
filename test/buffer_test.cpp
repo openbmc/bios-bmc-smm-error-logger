@@ -137,6 +137,60 @@ TEST_F(BufferTest, BufferInitializePass)
     EXPECT_EQ(bufferImpl->getCachedBufferHeader(), testInitializationHeader);
 }
 
+TEST_F(BufferTest, EndiannessWireFormatTest)
+{
+    InSequence s;
+    // Initialize with specific values
+    uint32_t bmcVersion = 0x12345678;
+    uint16_t qSize = 0x0200;
+    uint16_t ueSize = 0x0050;
+    std::array<uint32_t, 4> magic = {0x11223344, 0x55667788, 0x99AABBCC,
+                                     0xDDEEFF00};
+
+    EXPECT_CALL(*dataInterfaceMockPtr, getMemoryRegionSize())
+        .WillOnce(Return(testRegionSize));
+
+    // We expect the whole buffer erase write first
+    const std::vector<uint8_t> emptyArray(qSize, 0);
+    EXPECT_CALL(*dataInterfaceMockPtr, write(0, ElementsAreArray(emptyArray)))
+        .WillOnce(Return(qSize));
+
+    std::vector<uint8_t> writtenHeaderBytes;
+    EXPECT_CALL(*dataInterfaceMockPtr, write(0, _))
+        .WillOnce(::testing::Invoke(
+            [&writtenHeaderBytes](const uint32_t,
+                                  const std::span<const uint8_t> bytes) {
+                writtenHeaderBytes.assign(bytes.begin(), bytes.end());
+                return bufferHeaderSize;
+            }));
+
+    EXPECT_NO_THROW(bufferImpl->initialize(bmcVersion, qSize, ueSize, magic));
+
+    // Verify the exact little-endian wire format byte-by-byte
+    ASSERT_EQ(writtenHeaderBytes.size(), bufferHeaderSize);
+
+    // bmcInterfaceVersion (Offset 0x0 - 0x3) -> little-endian 0x12345678
+    EXPECT_EQ(writtenHeaderBytes[0], 0x78);
+    EXPECT_EQ(writtenHeaderBytes[1], 0x56);
+    EXPECT_EQ(writtenHeaderBytes[2], 0x34);
+    EXPECT_EQ(writtenHeaderBytes[3], 0x12);
+
+    // queueSize (Offset 0x18 - 0x1A) -> little-endian 0x0200 (24-bit)
+    EXPECT_EQ(writtenHeaderBytes[0x18], 0x00);
+    EXPECT_EQ(writtenHeaderBytes[0x19], 0x02);
+    EXPECT_EQ(writtenHeaderBytes[0x1A], 0x00);
+
+    // ueRegionSize (Offset 0x1B - 0x1C) -> little-endian 0x0050 (16-bit)
+    EXPECT_EQ(writtenHeaderBytes[0x1B], 0x50);
+    EXPECT_EQ(writtenHeaderBytes[0x1C], 0x00);
+
+    // magicNumber[0] (Offset 0x8 - 0xB) -> little-endian 0x11223344
+    EXPECT_EQ(writtenHeaderBytes[8], 0x44);
+    EXPECT_EQ(writtenHeaderBytes[9], 0x33);
+    EXPECT_EQ(writtenHeaderBytes[10], 0x22);
+    EXPECT_EQ(writtenHeaderBytes[11], 0x11);
+}
+
 TEST_F(BufferTest, BufferHeaderReadFail)
 {
     std::vector<std::uint8_t> testBytesRead{};
