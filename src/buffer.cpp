@@ -48,16 +48,11 @@ void BufferImpl::initialize(uint32_t bmcInterfaceVersion, uint16_t queueSize,
 
     // Create an initial buffer header and write to it
     struct CircularBufferHeader initializationHeader = {};
-    initializationHeader.bmcInterfaceVersion =
-        boost::endian::native_to_little(bmcInterfaceVersion);
-    initializationHeader.queueSize = boost::endian::native_to_little(queueSize);
-    initializationHeader.ueRegionSize =
-        boost::endian::native_to_little(ueRegionSize);
-    std::transform(magicNumber.begin(), magicNumber.end(),
-                   initializationHeader.magicNumber.begin(),
-                   [](uint32_t number) -> little_uint32_t {
-                       return boost::endian::native_to_little(number);
-                   });
+    initializationHeader.bmcInterfaceVersion = bmcInterfaceVersion;
+    initializationHeader.queueSize = queueSize;
+    initializationHeader.ueRegionSize = ueRegionSize;
+    std::copy(magicNumber.begin(), magicNumber.end(),
+              initializationHeader.magicNumber.begin());
 
     uint8_t* initializationHeaderPtr =
         reinterpret_cast<uint8_t*>(&initializationHeader);
@@ -100,8 +95,7 @@ void BufferImpl::updateReadPtr(const uint32_t newReadPtr)
     constexpr uint8_t bmcReadPtrOffset =
         offsetof(struct CircularBufferHeader, bmcReadPtr);
 
-    little_uint24_t truncatedReadPtr =
-        boost::endian::native_to_little(newReadPtr & 0xffffff);
+    little_uint24_t truncatedReadPtr = newReadPtr & 0xffffff;
     uint8_t* truncatedReadPtrPtr =
         reinterpret_cast<uint8_t*>(&truncatedReadPtr);
 
@@ -123,8 +117,7 @@ void BufferImpl::updateBmcFlags(const uint32_t newBmcFlag)
     constexpr uint8_t bmcFlagsPtrOffset =
         offsetof(struct CircularBufferHeader, bmcFlags);
 
-    little_uint32_t littleNewBmcFlag =
-        boost::endian::native_to_little(newBmcFlag);
+    little_uint32_t littleNewBmcFlag = newBmcFlag;
     uint8_t* littleNewBmcFlagPtr =
         reinterpret_cast<uint8_t*>(&littleNewBmcFlag);
 
@@ -215,9 +208,8 @@ struct QueueEntryHeader BufferImpl::readEntryHeader()
     size_t headerSize = sizeof(struct QueueEntryHeader);
     // wraparonudRead will throw if it did not read all the bytes, let it
     // propagate up the stack
-    std::vector<uint8_t> bytesRead = wraparoundRead(
-        boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
-        headerSize);
+    std::vector<uint8_t> bytesRead =
+        wraparoundRead(cachedBufferHeader.bmcReadPtr, headerSize);
 
     struct QueueEntryHeader entryHeader;
     std::memcpy(&entryHeader, bytesRead.data(), headerSize);
@@ -229,8 +221,7 @@ std::vector<uint8_t> BufferImpl::readUeLogFromReservedRegion()
     // Ensure cachedBufferHeader is up-to-date
     readBufferHeader();
 
-    uint16_t currentUeRegionSize =
-        boost::endian::little_to_native(cachedBufferHeader.ueRegionSize);
+    uint16_t currentUeRegionSize = cachedBufferHeader.ueRegionSize;
     if (currentUeRegionSize == 0)
     {
         stdplus::print(stderr,
@@ -238,10 +229,8 @@ std::vector<uint8_t> BufferImpl::readUeLogFromReservedRegion()
         return {};
     }
 
-    uint32_t biosSideFlags =
-        boost::endian::little_to_native(cachedBufferHeader.biosFlags);
-    uint32_t bmcSideFlags =
-        boost::endian::little_to_native(cachedBufferHeader.bmcFlags);
+    uint32_t biosSideFlags = cachedBufferHeader.biosFlags;
+    uint32_t bmcSideFlags = cachedBufferHeader.bmcFlags;
 
     // (BIOS_switch ^ BMC_switch) & BIT0 == BIT0 -> unread log
     // This means if the ueSwitch bit differs, there's an unread log.
@@ -275,10 +264,8 @@ bool BufferImpl::checkForOverflowAndAcknowledge()
     // Ensure cachedBufferHeader is up-to-date
     readBufferHeader();
 
-    uint32_t biosSideFlags =
-        boost::endian::little_to_native(cachedBufferHeader.biosFlags);
-    uint32_t bmcSideFlags =
-        boost::endian::little_to_native(cachedBufferHeader.bmcFlags);
+    uint32_t biosSideFlags = cachedBufferHeader.biosFlags;
+    uint32_t bmcSideFlags = cachedBufferHeader.bmcFlags;
 
     // Design: (BIOS_switch ^ BMC_switch) & BIT1 == BIT1 -> unlogged overflow
     // This means if the overflow bit differs, there's an
@@ -303,13 +290,12 @@ bool BufferImpl::checkForOverflowAndAcknowledge()
 EntryPair BufferImpl::readEntry()
 {
     struct QueueEntryHeader entryHeader = readEntryHeader();
-    size_t entrySize = boost::endian::little_to_native(entryHeader.entrySize);
+    size_t entrySize = entryHeader.entrySize;
 
     // wraparonudRead may throw if entrySize was bigger than the buffer or if it
     // was not able to read all the bytes, let it propagate up the stack
-    std::vector<uint8_t> entry = wraparoundRead(
-        boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr),
-        entrySize);
+    std::vector<uint8_t> entry =
+        wraparoundRead(cachedBufferHeader.bmcReadPtr, entrySize);
 
     // Calculate the checksum
     uint8_t* entryHeaderPtr = reinterpret_cast<uint8_t*>(&entryHeader);
@@ -334,8 +320,7 @@ std::vector<EntryPair> BufferImpl::readErrorLogs()
     readBufferHeader();
 
     const size_t maxOffset = getMaxOffset();
-    size_t currentBiosWritePtr =
-        boost::endian::little_to_native(cachedBufferHeader.biosWritePtr);
+    size_t currentBiosWritePtr = cachedBufferHeader.biosWritePtr;
     if (currentBiosWritePtr > maxOffset)
     {
         throw std::runtime_error(std::format(
@@ -343,8 +328,7 @@ std::vector<EntryPair> BufferImpl::readErrorLogs()
             "than maxOffset '{}'",
             currentBiosWritePtr, maxOffset));
     }
-    size_t currentReadPtr =
-        boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr);
+    size_t currentReadPtr = cachedBufferHeader.bmcReadPtr;
     if (currentReadPtr > maxOffset)
     {
         throw std::runtime_error(std::format(
@@ -381,8 +365,7 @@ std::vector<EntryPair> BufferImpl::readErrorLogs()
         entryPairs.push_back(entryPair);
 
         // Note: readEntry() will update cachedBufferHeader.bmcReadPtr
-        currentReadPtr =
-            boost::endian::little_to_native(cachedBufferHeader.bmcReadPtr);
+        currentReadPtr = cachedBufferHeader.bmcReadPtr;
     }
     if (currentBiosWritePtr != currentReadPtr)
     {
@@ -396,10 +379,8 @@ std::vector<EntryPair> BufferImpl::readErrorLogs()
 
 size_t BufferImpl::getMaxOffset()
 {
-    size_t queueSize =
-        boost::endian::little_to_native(cachedBufferHeader.queueSize);
-    size_t ueRegionSize =
-        boost::endian::little_to_native(cachedBufferHeader.ueRegionSize);
+    size_t queueSize = cachedBufferHeader.queueSize;
+    size_t ueRegionSize = cachedBufferHeader.ueRegionSize;
 
     if (queueSize != QUEUE_REGION_SIZE)
     {
@@ -421,8 +402,7 @@ size_t BufferImpl::getMaxOffset()
 
 size_t BufferImpl::getQueueOffset()
 {
-    size_t ueRegionSize =
-        boost::endian::little_to_native(cachedBufferHeader.ueRegionSize);
+    size_t ueRegionSize = cachedBufferHeader.ueRegionSize;
 
     if (ueRegionSize != UE_REGION_SIZE)
     {
