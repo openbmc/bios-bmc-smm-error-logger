@@ -228,9 +228,10 @@ class RdeCommandHandler
      * @param[in] header -  RDE header portion of the RDE command.
      * @param[in] data - data portion of the RDE command.
      * @param[in] resourceId - PDR resource ID of the dictionary.
+     * @return RdeDecodeStatus
      */
-    void handleFlagStart(const MultipartReceiveResHeader* header,
-                         const uint8_t* data, uint32_t resourceId);
+    RdeDecodeStatus handleFlagStart(const MultipartReceiveResHeader* header,
+                                    const uint8_t* data, uint32_t resourceId);
 
     /**
      * @brief Handle dictionary data with flag Middle.

@@ -184,7 +184,7 @@ RdeDecodeStatus RdeCommandHandler::multiPartReceiveResp(
     {
         case static_cast<uint8_t>(
             RdeMultiReceiveTransferFlag::RdeMRecFlagStart):
-            handleFlagStart(header, data, resourceId);
+            ret = handleFlagStart(header, data, resourceId);
             break;
         case static_cast<uint8_t>(
             RdeMultiReceiveTransferFlag::RdeMRecFlagMiddle):
@@ -270,17 +270,24 @@ RdeDecodeStatus RdeCommandHandler::handleCrc(
     return RdeDecodeStatus::RdeOk;
 }
 
-void RdeCommandHandler::handleFlagStart(const MultipartReceiveResHeader* header,
-                                        const uint8_t* data,
-                                        uint32_t resourceId)
+RdeDecodeStatus RdeCommandHandler::handleFlagStart(
+    const MultipartReceiveResHeader* header, const uint8_t* data,
+    uint32_t resourceId)
 {
     // This is a beginning of a dictionary. Reset CRC.
     crc = 0xFFFFFFFF;
     std::span dataS(data, header->dataLengthBytes);
-    dictionaryManager.startDictionaryEntry(resourceId, dataS);
+    if (!dictionaryManager.startDictionaryEntry(resourceId, dataS))
+    {
+        stdplus::print(
+            stderr, "Failed to start dictionary entry: ResourceId: {}\n",
+            resourceId);
+        return RdeDecodeStatus::RdeDictionaryError;
+    }
     // Start checksum calculation only for the data portion.
     updateCrc(dataS);
     flagState = RdeDictTransferFlagState::RdeStateStartRecvd;
+    return RdeDecodeStatus::RdeOk;
 }
 
 RdeDecodeStatus RdeCommandHandler::handleFlagMiddle(
@@ -301,7 +308,13 @@ RdeDecodeStatus RdeCommandHandler::handleFlagMiddle(
         // Start of a new dictionary. Mark previous dictionary as
         // complete.
         dictionaryManager.markDataComplete(prevDictResourceId);
-        dictionaryManager.startDictionaryEntry(resourceId, dataS);
+        if (!dictionaryManager.startDictionaryEntry(resourceId, dataS))
+        {
+            stdplus::print(
+                stderr, "Failed to start dictionary entry: ResourceId: {}\n",
+                resourceId);
+            return RdeDecodeStatus::RdeDictionaryError;
+        }
     }
     else
     {
@@ -340,7 +353,13 @@ RdeDecodeStatus RdeCommandHandler::handleFlagEnd(
         // Start of a new dictionary. Mark previous dictionary as
         // complete.
         dictionaryManager.markDataComplete(prevDictResourceId);
-        dictionaryManager.startDictionaryEntry(resourceId, dataS);
+        if (!dictionaryManager.startDictionaryEntry(resourceId, dataS))
+        {
+            stdplus::print(
+                stderr, "Failed to start dictionary entry: ResourceId: {}\n",
+                resourceId);
+            return RdeDecodeStatus::RdeDictionaryError;
+        }
     }
     else
     {
@@ -374,8 +393,14 @@ RdeDecodeStatus RdeCommandHandler::handleFlagStartAndEnd(
     // This is a beginning of a dictionary. Reset CRC.
     crc = 0xFFFFFFFF;
     // This is a beginning and end of a dictionary.
-    dictionaryManager.startDictionaryEntry(
-        resourceId, std::span(data, header->dataLengthBytes));
+    if (!dictionaryManager.startDictionaryEntry(
+            resourceId, std::span(data, header->dataLengthBytes)))
+    {
+        stdplus::print(
+            stderr, "Failed to start dictionary entry: ResourceId: {}\n",
+            resourceId);
+        return RdeDecodeStatus::RdeDictionaryError;
+    }
     dictionaryManager.markDataComplete(resourceId);
     flagState = RdeDictTransferFlagState::RdeStateIdle;
 
