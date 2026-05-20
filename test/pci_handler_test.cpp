@@ -62,9 +62,23 @@ TEST_F(PciHandlerTest, BoundaryChecksReadFail)
     // Zero size
     EXPECT_THAT(pciDataHandler->read(0, 0), ElementsAreArray(emptyVector));
 
+    // Offset exactly at region boundary (invalid offset)
+    EXPECT_THAT(pciDataHandler->read(testRegionSize, 1),
+                ElementsAreArray(emptyVector));
+
     const int offsetTooBig = testRegionSize + 1;
     EXPECT_THAT(pciDataHandler->read(offsetTooBig, 1),
                 ElementsAreArray(emptyVector));
+}
+
+TEST_F(PciHandlerTest, BoundaryChecksReadOverflow)
+{
+    // Offset + length overflows uint32_t (e.g., 4 + 0xFFFFFFFD = 1 < 8)
+    // It should be safely capped to the remaining 4 bytes in the buffer and not
+    // crash or read out of bounds.
+    std::vector<uint8_t> expectedVector{44, 55, 66, 77};
+    EXPECT_THAT(pciDataHandler->read(4, 0xFFFFFFFD),
+                ElementsAreArray(expectedVector));
 }
 
 TEST_F(PciHandlerTest, BoundaryChecksWriteFail)
@@ -73,8 +87,11 @@ TEST_F(PciHandlerTest, BoundaryChecksWriteFail)
     // Zero size
     EXPECT_EQ(pciDataHandler->write(0, emptyVector), 0);
 
-    const int offsetTooBig = testRegionSize + 1;
+    // Offset exactly at region boundary (invalid offset)
     std::vector<uint8_t> testVector(testRegionSize - 1);
+    EXPECT_EQ(pciDataHandler->write(testRegionSize, testVector), 0);
+
+    const int offsetTooBig = testRegionSize + 1;
     EXPECT_EQ(pciDataHandler->write(offsetTooBig, testVector), 0);
 }
 
