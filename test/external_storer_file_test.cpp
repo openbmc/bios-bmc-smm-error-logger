@@ -251,7 +251,7 @@ TEST_F(ExternalStorerFileTest, LogEntryTest)
 {
     InSequence s;
     // Before sending a LogEntry, first we need to push a LogService.
-    std::string jsonLogSerivce = R"(
+    std::string jsonLogService = R"(
       {
         "@odata.id": "/redfish/v1/Systems/system/LogServices/6F7-C1A7C",
         "@odata.type": "#LogService.v1_1_0.LogService","Id":"6F7-C1A7C"
@@ -262,12 +262,12 @@ TEST_F(ExternalStorerFileTest, LogEntryTest)
     std::string exEntriesFolder =
         "/redfish/v1/Systems/system/LogServices/6F7-C1A7C/Entries";
     nlohmann::json exEntriesJson = "{}"_json;
-    nlohmann::json exServiceJson = nlohmann::json::parse(jsonLogSerivce);
+    nlohmann::json exServiceJson = nlohmann::json::parse(jsonLogService);
     EXPECT_CALL(*mockFileWriterPtr, createFile(exServiceFolder, exServiceJson))
         .WillOnce(Return(true));
     EXPECT_CALL(*mockFileWriterPtr, createFile(exEntriesFolder, exEntriesJson))
         .WillOnce(Return(true));
-    EXPECT_THAT(exStorer->publishJson(jsonLogSerivce), true);
+    EXPECT_THAT(exStorer->publishJson(jsonLogService), true);
 
     // Now send a LogEntry#1, which will not be deleted
     std::string jsonLogEntry = R"(

@@ -761,28 +761,28 @@ class BufferEntryTest : public BufferWraparoundReadTest
     ~BufferEntryTest() override = default;
 
     void wraparoundReadMock(const uint32_t relativeOffset,
-                            std::span<std::uint8_t> expetedBytesOutput)
+                            std::span<std::uint8_t> expectedBytesOutput)
     {
         InSequence s;
         const uint32_t queueSizeToQueueEnd = testMaxOffset - relativeOffset;
 
         // This will wrap, split the read mocks in 2
-        if (expetedBytesOutput.size() > queueSizeToQueueEnd)
+        if (expectedBytesOutput.size() > queueSizeToQueueEnd)
         {
             EXPECT_CALL(*dataInterfaceMockPtr, read(_, _))
                 .WillOnce(Return(std::vector<std::uint8_t>(
-                    expetedBytesOutput.begin(),
-                    expetedBytesOutput.begin() + queueSizeToQueueEnd)));
+                    expectedBytesOutput.begin(),
+                    expectedBytesOutput.begin() + queueSizeToQueueEnd)));
             EXPECT_CALL(*dataInterfaceMockPtr, read(_, _))
                 .WillOnce(Return(std::vector<std::uint8_t>(
-                    expetedBytesOutput.begin() + queueSizeToQueueEnd,
-                    expetedBytesOutput.end())));
+                    expectedBytesOutput.begin() + queueSizeToQueueEnd,
+                    expectedBytesOutput.end())));
         }
         else
         {
             EXPECT_CALL(*dataInterfaceMockPtr, read(_, _))
                 .WillOnce(Return(std::vector<std::uint8_t>(
-                    expetedBytesOutput.begin(), expetedBytesOutput.end())));
+                    expectedBytesOutput.begin(), expectedBytesOutput.end())));
         }
 
         EXPECT_CALL(*dataInterfaceMockPtr, write(_, _))

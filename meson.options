@@ -13,7 +13,7 @@ option(
     'memory-region-size',
     type: 'integer',
     value: 16384,
-    description: 'Memory size allcated',
+    description: 'Memory size allocated',
 )
 # Default value 4035215360 is 0xF0848000 below
 option(
